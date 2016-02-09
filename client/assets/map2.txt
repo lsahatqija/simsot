@@ -1,0 +1,32 @@
+! Kilobolt Studios
+! http://kilobolt.com
+! Game Development Tutorial - Unit 3
+! Q-Bot Level 1
+! # = Tile Legend 
+! 5 = TileDirt
+! 8 = GrassTop
+! 2 = GrassBot
+! 4 = GrassLeft
+! 6 = GrassRight 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         #         
