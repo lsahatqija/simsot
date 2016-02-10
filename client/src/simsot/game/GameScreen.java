@@ -27,8 +27,9 @@ public class GameScreen extends Screen {
 	private static Background bg1, bg2;
 	private static Player player;
 	// public static Heliboy hb, hb2;
+	public Enemy e;
 
-	private Image image, character1, character2, characterMove1, characterMove2, currentSprite, background;
+	private Image image, characterLeft1, characterLeft2, characterRight1, characterRight2, characterClosed, currentSprite, background;
 	public static Image tileTree, tileGrass;
 	private Animation anim, hanim;
 
@@ -46,32 +47,35 @@ public class GameScreen extends Screen {
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
 		player = new Player();
-		// hb = new Heliboy(340, 360);
+		e = new Enemy(340, 360);
+		enemyarray.add(e);
 		// hb2 = new Heliboy(700, 360);
 
 		// Image Setups
-		player.character1 = Assets.character1;
-		player.character2 = Assets.character2;
-		player.characterMove1 = Assets.characterwalk1;
-		player.characterMove2 = Assets.characterwalk2;
+		player.characterLeft1 = Assets.characterLeft1;
+		player.characterLeft2 = Assets.characterLeft2;
+		player.characterRight1 = Assets.characterRight1;
+		player.characterRight2 = Assets.characterRight2;
+		player.characterClosed = Assets.characterClosed;
 		background = Assets.background;
 		tileTree = Assets.tileTree;
 		tileGrass = Assets.tileGrass;
 
-		anim = new Animation();
-		anim.addFrame(player.character1, 1250);
-		anim.addFrame(player.character2, 50);
+		//anim = new Animation();
+		//anim.addFrame(player.character1, 1250);
+		//anim.addFrame(player.character2, 50);
 		for (int i = 0; i < getEnemyarray().size(); i++) {
 			Enemy e = getEnemyarray().get(i);
-			e.characterStay = Assets.enemy1;
-			e.characterMove1 = Assets.enemy2;
-			e.characterMove2 = Assets.enemy3;
-			e.anim.addFrame(e.characterStay, 100);
-			e.currentSprite = e.anim.getImage();
+			e.characterLeft1 = Assets.enemyLeft1;
+			e.characterLeft2 = Assets.enemyLeft2;
+			e.characterRight1 = Assets.enemyRight1;
+			e.characterRight2 = Assets.enemyRight2;
+			//e.anim.addFrame(e.characterStay, 100);
+			//e.currentSprite = e.anim.getImage();
 		}
 
 		// currentSprite = anim.getImage();
-		player.currentSprite = player.character1;
+		player.currentSprite = player.characterLeft1;
 
 		loadMap();
 
@@ -168,91 +172,82 @@ public class GameScreen extends Screen {
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = (TouchEvent) touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_DOWN) {
-
 				if (inBounds(event, 50, 325, 50, 50)) {
 					player.moveUp();
-					currentSprite = anim.getImage();
 				}
-
-				else if (inBounds(event, 0, 350, 65, 65)) {
-					/*
-					 * if (player.isDucked() == false && player.isJumped() ==
-					 * false && player.isReadyToFire()) { player.shootDown(); }
-					 */
-				}
-
 				else if (inBounds(event,50, 395, 50, 50)) {
 					player.moveDown();
-
 				}
-
 				if (inBounds(event, 0, 355, 50, 50)) {
 					player.moveLeft();
-
 				}
-				
 				else if (inBounds(event, 100, 355, 50, 50)) {
 					player.moveRight();
 				}
-
 			}
 
 			if (event.type == TouchEvent.TOUCH_UP) {
-
 				if (inBounds(event, 0, 285, 65, 65)) {
-					currentSprite = anim.getImage();
 					player.stopVer();
-
 				} else if (inBounds(event, 0, 415, 65, 65)){
 					player.stopVer();
-				}
-				
+				}			
 				if (inBounds(event, 0, 355, 50, 50)) {
 					player.stopHor();
-
-				}
-				
+				}			
 				else if (inBounds(event, 100, 355, 50, 50)) {
 					player.stopHor();
 				}
-
 				if (inBounds(event, 0, 0, 35, 35)) {
 					pause();
-
-				}
-
-				if (event.x > 400) {
-					// Move right.
-					player.stopHor();
 				}
 			}
-
 		}
 
 		// Animation
-		if (player.isMovingHor() == true || player.isMovingVer() == true) {
-			if (walkCounter % 30 == 0) {
-				player.currentSprite = player.characterMove2;
-			} else if (walkCounter % 15 == 0) {
-				player.currentSprite = player.characterMove1;
+		if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() <= 0 ){
+			if (walkCounter % 40 == 0) {
+				player.currentSprite = player.characterLeft1;
+			} else if (walkCounter % 40 == 10) {
+				player.currentSprite = player.characterLeft2;
+			} else if (walkCounter % 40 == 20) {
+				player.currentSprite = player.characterClosed;
+			} else if (walkCounter % 40 == 30) {
+				player.currentSprite = player.characterLeft2;
 			}
-		} else if (player.isMovingVer() == false && player.isMovingHor() == false) {
+		} else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() > 0 ){
+			if (walkCounter % 30 == 0) {
+				player.currentSprite = player.characterRight2;
+			} else if (walkCounter % 30 == 10) {
+				player.currentSprite = player.characterRight1;
+			} else if (walkCounter % 30 == 20) {
+				player.currentSprite = player.characterClosed;
+			} else if (walkCounter % 40 == 30) {
+				player.currentSprite = player.characterRight2;
+			}
+		} /*else if (player.isMovingVer() == false && player.isMovingHor() == false) {
 			// currentSprite = anim.getImage();
 			player.currentSprite = player.character1;
-		}
+		}*/
 
 		for (int j = 0; j < getEnemyarray().size(); j++) {
 			Enemy e = getEnemyarray().get(j);
 
 			if (e.alive == true) {
-				if (e.isMoving == true) {
-					if (walkCounter % 30 == 0) {
-						e.currentSprite = Assets.enemy2;
-					} else if (walkCounter % 15 == 0) {
-						e.currentSprite = Assets.enemy3;
+				if (e.isMoving == true && e.getSpeedX() <= 0) {
+					if (walkCounter % 20 == 0) {
+						e.currentSprite = Assets.enemyLeft1;
+					} else if (walkCounter % 20 == 10) {
+						e.currentSprite = Assets.enemyLeft2;
+					}
+				} else if (e.isMoving == true && e.getSpeedX() > 0) {
+					if (walkCounter % 20 == 0) {
+						e.currentSprite = Assets.enemyRight1;
+					} else if (walkCounter % 20 == 10) {
+						e.currentSprite = Assets.enemyRight2;
 					}
 				} else if (e.isMoving == false) {
-					e.currentSprite = Assets.enemy1;
+					e.currentSprite = Assets.enemyLeft1;
 				}
 				if (e.walkCounter > 1000) {
 					e.walkCounter = 0;
@@ -263,13 +258,13 @@ public class GameScreen extends Screen {
 		player.update();
 
 		callEnemiesAIs();
-		checkTileCollisions();
+		//checkTileCollisions();
 		checkEnemiesCollision();
 		updateEnemies();
 
 		bg1.update();
 		bg2.update();
-		animate();
+		//animate();
 		updateTiles();
 		// repaint(); // this calls paint
 		if (walkCounter > 1000) {
@@ -300,7 +295,9 @@ public class GameScreen extends Screen {
 	private void checkTileCollisions() {
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = tilearray.get(i);
-			t.checkCollisions();
+			if(t.getType() != '0'){
+				t.checkCollisions();
+			}
 		}
 	}
 
@@ -359,18 +356,23 @@ public class GameScreen extends Screen {
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
 		Assets.background = g.newImage("background.png", ImageFormat.RGB565);
-		Assets.character1 = g.newImage("character1.png", ImageFormat.RGB565);
-		Assets.character2 = g.newImage("character2.png", ImageFormat.RGB565);
-		Assets.characterMove1 = g.newImage("characterwalk1.png", ImageFormat.RGB565);
-		Assets.characterMove2 = g.newImage("characterwalk2.png", ImageFormat.RGB565);
-		Assets.button = g.newImage("button.png", ImageFormat.RGB565);
+		Assets.characterClosed = g.newImage("characterclosed.png", ImageFormat.RGB565);
+		Assets.characterLeft1 = g.newImage("characterleft1.png", ImageFormat.RGB565);
+		Assets.characterLeft2 = g.newImage("characterleft2.png", ImageFormat.RGB565);
+		Assets.characterRight1 = g.newImage("characterright1.png", ImageFormat.RGB565);
+		Assets.characterRight2 = g.newImage("characterright2.png", ImageFormat.RGB565);
+		Assets.enemyLeft1 = g.newImage("enemyLeft1.png", ImageFormat.RGB565);
+		Assets.enemyLeft2 = g.newImage("enemyLeft2.png", ImageFormat.RGB565);
+		Assets.enemyRight1 = g.newImage("enemyRight1.png", ImageFormat.RGB565);
+		Assets.enemyRight2 = g.newImage("enemyRight2.png", ImageFormat.RGB565);
+		Assets.buttonUp = g.newImage("buttonUp.png", ImageFormat.RGB565);
+		Assets.buttonDown = g.newImage("buttonDown.png", ImageFormat.RGB565);
+		Assets.buttonLeft = g.newImage("buttonLeft.png", ImageFormat.RGB565);
+		Assets.buttonRight = g.newImage("buttonRight.png", ImageFormat.RGB565);
+		Assets.buttonPause = g.newImage("buttonPause.png", ImageFormat.RGB565);
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
 		paintTiles(g);
-		g.drawRect(50, 325, 50, 50, Color.WHITE);	//up
-		g.drawRect(50, 395, 50, 50, Color.BLUE);		//down
-		g.drawRect(0, 355, 50, 50, Color.YELLOW);	//left
-		g.drawRect(100, 355, 50, 50, Color.RED);		//right
 
 		ArrayList projectiles = player.getProjectiles();
 		for (int i = 0; i < projectiles.size(); i++) {
@@ -379,14 +381,11 @@ public class GameScreen extends Screen {
 		}
 		// First draw the game elements.
 
-		g.drawImage(Assets.character1, player.getCenterX() - 61, player.getCenterY() - 63);
+		g.drawImage(Assets.characterLeft1, player.getCenterX() - 61, player.getCenterY() - 63);
 
 		for (int i = 0; i < getEnemyarray().size(); i++) {
 			Enemy e = getEnemyarray().get(i);
-			Assets.enemy1 = g.newImage("enemy1.png", ImageFormat.RGB565);
-			Assets.enemy2 = g.newImage("enemy2.png", ImageFormat.RGB565);
-			Assets.enemy3 = g.newImage("enemy3.png", ImageFormat.RGB565);
-			g.drawImage(e.currentSprite, e.getCenterX() - 61, e.getCenterY() - 63);
+			g.drawImage(Assets.enemyLeft1, e.getCenterX() - 61, e.getCenterY() - 63);
 		}
 
 		// Example:
@@ -436,8 +435,11 @@ public class GameScreen extends Screen {
 		// hb = null;
 		// hb2 = null;
 		currentSprite = null;
-		character1 = null;
-		character2 = null;
+		characterLeft1 = null;
+		characterLeft2 = null;
+		characterRight1 = null;
+		characterRight2 = null;
+		characterClosed = null;
 		anim = null;
 
 		// Call garbage collector to clean up memory.
@@ -455,11 +457,11 @@ public class GameScreen extends Screen {
 
 	private void drawRunningUI() {
 		Graphics g = game.getGraphics();
-		g.drawImage(Assets.button, 0, 285, 0, 0, 65, 65);
-		g.drawImage(Assets.button, 0, 350, 0, 65, 65, 65);
-		g.drawImage(Assets.button, 0, 415, 0, 130, 65, 65);
-		g.drawImage(Assets.button, 0, 0, 0, 195, 35, 35);
-
+		g.drawImage(Assets.buttonUp, 50, 325);		//up
+		g.drawImage(Assets.buttonDown, 50, 395);	//down
+		g.drawImage(Assets.buttonLeft, 0, 355);		//left
+		g.drawImage(Assets.buttonRight, 100, 355);	//right
+		g.drawImage(Assets.buttonPause, 0, 0);	//pause
 	}
 
 	private void drawPausedUI() {

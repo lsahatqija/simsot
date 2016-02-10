@@ -25,7 +25,7 @@ public class Player {
 	// 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
 	private int isShooting = 0;
 
-	public Image character1, character2, characterMove1, characterMove2, currentSprite;
+	public Image characterLeft1, characterLeft2, characterRight1, characterRight2, characterClosed, currentSprite;
 	
 	/*
 	private static Background bg1 = GameScreen.getBg1();
@@ -36,12 +36,15 @@ public class Player {
 	public void update() {
 
 		// Moves Character or Scrolls Background accordingly.
+		/*
 		if (speedY != 0) {
 			centerY += speedY;
 		}
+		*/
 
 		// Updates X Position
 		centerX += speedX;
+		centerY += speedY;
 		
 		/*
 		if (speedY > 0 && centerY > 200) {
@@ -67,10 +70,10 @@ public class Player {
 		// Prevents going beyond Y coordinate of 150 and 330
 		if (centerY + speedY <= 30) {
 			centerY = 31;
-			scrollingSpeed = 2*speedY;
+			//scrollingSpeed = 2*speedY;
 		} else if (centerY + speedY >= 450) {
 			centerY = 449;
-			scrollingSpeed = 2*speedY;
+			//scrollingSpeed = 2*speedY;
 		}
 
 		// Collision
@@ -145,7 +148,7 @@ public class Player {
 	}
 
 	public void stopVer() {
-		this.setSpeedY(0);
+		speedY = 0;
 		setMovingVer(false);
 	}
 

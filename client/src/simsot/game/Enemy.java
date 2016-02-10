@@ -3,7 +3,7 @@ package simsot.game;
 import android.graphics.Rect;
 import simsot.framework.Image;
 
-public abstract class Enemy {
+public class Enemy {
 
 	private int speedX = 0;
 	private int speedY = 0;
@@ -29,14 +29,16 @@ public abstract class Enemy {
 	
 	//protected Firearm weapon;
 	
-	public Image characterStay, characterMove1, characterMove2, characterDie, currentSprite;
+	public Image characterLeft1, characterLeft2, characterRight1, characterRight2, currentSprite;
 	public String characterStayPath, characterMove1Path, characterMove2Path, characterDiePath, currentSpritePath;
 
-	public Enemy(int centerX, int centerY, int health, int difficultylevel) {
+	public Enemy(int centerX, int centerY) {
 		//weapon.setHolderProjectiles(projectiles);
 		//this.weapon = weapon;
 		//weapon.setFireRate(weapon.getFireRate() * (5 - difficultylevel));
-		this.health = health * difficultylevel;
+		this.health = 1;
+		this.centerX = centerX;
+		this.centerY = centerY;
 		
 	}
 
@@ -72,6 +74,9 @@ public abstract class Enemy {
 		
 		if (alive == true) {
 			
+			centerX += speedX;
+			centerY += speedY;
+			
 			// Prevents going beyond X coordinate of 0 or 800
 			if (centerX + speedX <= 60) {
 				centerX = 61;
@@ -87,7 +92,11 @@ public abstract class Enemy {
 				isMoving = false;
 			}
 			
-			walkCounter++;
+			if(walkCounter < 100){
+				walkCounter++;
+			} else {
+				walkCounter = 0;
+			}
 
 			// Collision
 			// rectX.setRect(getCenterX() - 55, getCenterY() - 55, 50, 40);
@@ -97,11 +106,15 @@ public abstract class Enemy {
 		}
 	}
 
-	public abstract void callAI();/* {
+	public void callAI() {
 		if (alive == true){
-			setSpeedX(2);
+			if (walkCounter < 50){
+				setSpeedX(10);
+			} else {
+				setSpeedX(-10);
+			}
 		}
-	}*/
+	}
 	
 	public void die() {
 		alive = false;
