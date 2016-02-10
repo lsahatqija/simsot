@@ -50,17 +50,17 @@ public class GameScreen extends Screen {
 		// hb2 = new Heliboy(700, 360);
 
 		// Image Setups
-		character1 = Assets.character1;
-		character2 = Assets.character2;
-		characterMove1 = Assets.characterwalk1;
-		characterMove2 = Assets.characterwalk2;
+		player.character1 = Assets.character1;
+		player.character2 = Assets.character2;
+		player.characterMove1 = Assets.characterwalk1;
+		player.characterMove2 = Assets.characterwalk2;
 		background = Assets.background;
 		tileTree = Assets.tileTree;
 		tileGrass = Assets.tileGrass;
 
 		anim = new Animation();
-		anim.addFrame(character1, 1250);
-		anim.addFrame(character2, 50);
+		anim.addFrame(player.character1, 1250);
+		anim.addFrame(player.character2, 50);
 		for (int i = 0; i < getEnemyarray().size(); i++) {
 			Enemy e = getEnemyarray().get(i);
 			e.characterStay = Assets.enemy1;
@@ -70,9 +70,9 @@ public class GameScreen extends Screen {
 			e.currentSprite = e.anim.getImage();
 		}
 
-		//Assets.currentSprite = anim.getImage();
-		currentSprite = character1;
-		
+		// currentSprite = anim.getImage();
+		player.currentSprite = player.character1;
+
 		loadMap();
 
 		// Defining a paint object
@@ -118,8 +118,10 @@ public class GameScreen extends Screen {
 
 				if (i < line.length()) {
 					char ch = line.charAt(i);
-					Tile t = new Tile(i, j, ch);
-					tilearray.add(t);
+					if (ch == 't') {
+						Tile t = new Tile(i, j, ch);
+						tilearray.add(t);
+					}
 				}
 
 			}
@@ -165,54 +167,115 @@ public class GameScreen extends Screen {
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = (TouchEvent) touchEvents.get(i);
-			// Animation
-			if (player.isMovingHor() == true || player.isMovingVer() == true) {
-				if (walkCounter % 30 == 0) {
-					currentSprite = characterMove2;
-				} else if (walkCounter % 15 == 0) {
-					currentSprite = characterMove1;
+			if (event.type == TouchEvent.TOUCH_DOWN) {
+
+				if (inBounds(event, 50, 325, 50, 50)) {
+					player.moveUp();
+					currentSprite = anim.getImage();
 				}
-			} else if (player.isMovingVer() == false && player.isMovingHor() == false) {
-				currentSprite = anim.getImage();
+
+				else if (inBounds(event, 0, 350, 65, 65)) {
+					/*
+					 * if (player.isDucked() == false && player.isJumped() ==
+					 * false && player.isReadyToFire()) { player.shootDown(); }
+					 */
+				}
+
+				else if (inBounds(event,50, 395, 50, 50)) {
+					player.moveDown();
+
+				}
+
+				if (inBounds(event, 0, 355, 50, 50)) {
+					player.moveLeft();
+
+				}
+				
+				else if (inBounds(event, 100, 355, 50, 50)) {
+					player.moveRight();
+				}
+
 			}
 
-			for (int j = 0; j < getEnemyarray().size(); j++) {
-				Enemy e = getEnemyarray().get(j);
+			if (event.type == TouchEvent.TOUCH_UP) {
 
-				if (e.alive == true) {
-					if (e.isMoving == true) {
-						if (walkCounter % 30 == 0) {
-							e.currentSprite = Assets.enemy2;
-						} else if (walkCounter % 15 == 0) {
-							e.currentSprite = Assets.enemy3;
-						}
-					} else if (e.isMoving == false) {
-						e.currentSprite = Assets.enemy1;
-					}
-					if (e.walkCounter > 1000) {
-						e.walkCounter = 0;
-					}
+				if (inBounds(event, 0, 285, 65, 65)) {
+					currentSprite = anim.getImage();
+					player.stopVer();
+
+				} else if (inBounds(event, 0, 415, 65, 65)){
+					player.stopVer();
+				}
+				
+				if (inBounds(event, 0, 355, 50, 50)) {
+					player.stopHor();
+
+				}
+				
+				else if (inBounds(event, 100, 355, 50, 50)) {
+					player.stopHor();
+				}
+
+				if (inBounds(event, 0, 0, 35, 35)) {
+					pause();
+
+				}
+
+				if (event.x > 400) {
+					// Move right.
+					player.stopHor();
 				}
 			}
-			
-			player.update();
-			
-			callEnemiesAIs();
-			checkTileCollisions();
-			checkEnemiesCollision();
-			updateEnemies();
-			
-			
-			bg1.update();
-			bg2.update();
-			animate();
-			updateTiles();
-			//repaint(); // this calls paint
-			if (walkCounter > 1000) {
-				walkCounter = 0;
-			}
-			walkCounter++;
+
 		}
+
+		// Animation
+		if (player.isMovingHor() == true || player.isMovingVer() == true) {
+			if (walkCounter % 30 == 0) {
+				player.currentSprite = player.characterMove2;
+			} else if (walkCounter % 15 == 0) {
+				player.currentSprite = player.characterMove1;
+			}
+		} else if (player.isMovingVer() == false && player.isMovingHor() == false) {
+			// currentSprite = anim.getImage();
+			player.currentSprite = player.character1;
+		}
+
+		for (int j = 0; j < getEnemyarray().size(); j++) {
+			Enemy e = getEnemyarray().get(j);
+
+			if (e.alive == true) {
+				if (e.isMoving == true) {
+					if (walkCounter % 30 == 0) {
+						e.currentSprite = Assets.enemy2;
+					} else if (walkCounter % 15 == 0) {
+						e.currentSprite = Assets.enemy3;
+					}
+				} else if (e.isMoving == false) {
+					e.currentSprite = Assets.enemy1;
+				}
+				if (e.walkCounter > 1000) {
+					e.walkCounter = 0;
+				}
+			}
+		}
+
+		player.update();
+
+		callEnemiesAIs();
+		checkTileCollisions();
+		checkEnemiesCollision();
+		updateEnemies();
+
+		bg1.update();
+		bg2.update();
+		animate();
+		updateTiles();
+		// repaint(); // this calls paint
+		if (walkCounter > 1000) {
+			walkCounter = 0;
+		}
+		walkCounter++;
 	}
 
 	private void updateEnemies() {
@@ -221,19 +284,19 @@ public class GameScreen extends Screen {
 			e.update();
 		}
 	}
-	
+
 	private void callEnemiesAIs() {
 		for (Enemy e : getEnemyarray()) {
 			e.callAI();
 		}
 	}
-	
+
 	private void checkEnemiesCollision() {
 		for (Enemy e : getEnemyarray()) {
 			e.checkEnemyCollisions();
 		}
 	}
-	
+
 	private void checkTileCollisions() {
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = tilearray.get(i);
@@ -295,16 +358,19 @@ public class GameScreen extends Screen {
 	@Override
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
-		Assets.background= g.newImage("background.png", ImageFormat.RGB565);
-        Assets.character1 = g.newImage("character1.png", ImageFormat.RGB565);
-        Assets.character2 = g.newImage("character2.png", ImageFormat.RGB565);
-        Assets.characterMove1 = g.newImage("characterwalk1.png", ImageFormat.RGB565);
-        Assets.characterMove2 = g.newImage("characterwalk2.png", ImageFormat.RGB565);
-        Assets.currentSprite = currentSprite;
-        Assets.button = g.newImage("button.png", ImageFormat.RGB565);
+		Assets.background = g.newImage("background.png", ImageFormat.RGB565);
+		Assets.character1 = g.newImage("character1.png", ImageFormat.RGB565);
+		Assets.character2 = g.newImage("character2.png", ImageFormat.RGB565);
+		Assets.characterMove1 = g.newImage("characterwalk1.png", ImageFormat.RGB565);
+		Assets.characterMove2 = g.newImage("characterwalk2.png", ImageFormat.RGB565);
+		Assets.button = g.newImage("button.png", ImageFormat.RGB565);
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
 		paintTiles(g);
+		g.drawRect(50, 325, 50, 50, Color.WHITE);	//up
+		g.drawRect(50, 395, 50, 50, Color.BLUE);		//down
+		g.drawRect(0, 355, 50, 50, Color.YELLOW);	//left
+		g.drawRect(100, 355, 50, 50, Color.RED);		//right
 
 		ArrayList projectiles = player.getProjectiles();
 		for (int i = 0; i < projectiles.size(); i++) {
@@ -313,11 +379,15 @@ public class GameScreen extends Screen {
 		}
 		// First draw the game elements.
 
-		g.drawImage(Assets.currentSprite , player.getCenterX() - 61, player.getCenterY() - 63);
-		// g.drawImage(hanim.getImage(), hb.getCenterX() - 48,
-		// hb.getCenterY() - 48);
-		// g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
-		// hb2.getCenterY() - 48);
+		g.drawImage(Assets.character1, player.getCenterX() - 61, player.getCenterY() - 63);
+
+		for (int i = 0; i < getEnemyarray().size(); i++) {
+			Enemy e = getEnemyarray().get(i);
+			Assets.enemy1 = g.newImage("enemy1.png", ImageFormat.RGB565);
+			Assets.enemy2 = g.newImage("enemy2.png", ImageFormat.RGB565);
+			Assets.enemy3 = g.newImage("enemy3.png", ImageFormat.RGB565);
+			g.drawImage(e.currentSprite, e.getCenterX() - 61, e.getCenterY() - 63);
+		}
 
 		// Example:
 		// g.drawImage(Assets.background, 0, 0);
@@ -338,10 +408,14 @@ public class GameScreen extends Screen {
 	private void paintTiles(Graphics g) {
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = (Tile) tilearray.get(i);
+			tileGrass = g.newImage("grass.png", ImageFormat.RGB565);
+			tileTree = g.newImage("tree.png", ImageFormat.RGB565);
 			if (t.getType() != 0) {
-				Assets.tileTree=g.newImage("tree.png", ImageFormat.RGB565);
-				t.setTileImage(Assets.tileTree);
-				g.drawImage(Assets.tileTree, t.getCenterX(), t.getCenterY());
+				t.setTileImage(tileTree);
+				g.drawImage(tileTree, t.getCenterX() - 31, t.getCenterY() - 31);
+			} else {
+				t.setTileImage(tileGrass);
+				g.drawImage(tileGrass, t.getCenterX() - 31, t.getCenterY() - 31);
 			}
 		}
 	}

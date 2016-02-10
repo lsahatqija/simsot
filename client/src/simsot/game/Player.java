@@ -3,10 +3,11 @@ package simsot.game;
 import java.util.ArrayList;
 
 import android.graphics.Rect;
+import simsot.framework.Image;
 
 public class Player {
 
-	final int MOVESPEED = 4;
+	final int MOVESPEED = 10;
 
 	private int centerX = 400;
 	private int centerY = 100;
@@ -24,6 +25,8 @@ public class Player {
 	// 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
 	private int isShooting = 0;
 
+	public Image character1, character2, characterMove1, characterMove2, currentSprite;
+	
 	/*
 	private static Background bg1 = GameScreen.getBg1();
 	private static Background bg2 = GameScreen.getBg2();*/
@@ -62,11 +65,11 @@ public class Player {
 		}
 
 		// Prevents going beyond Y coordinate of 150 and 330
-		if (centerY + speedY <= 150) {
-			centerY = 149;
+		if (centerY + speedY <= 30) {
+			centerY = 31;
 			scrollingSpeed = 2*speedY;
-		} else if (centerY + speedY >= 280) {
-			centerY = 279;
+		} else if (centerY + speedY >= 450) {
+			centerY = 449;
 			scrollingSpeed = 2*speedY;
 		}
 

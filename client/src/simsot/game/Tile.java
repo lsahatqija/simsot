@@ -18,7 +18,7 @@ public class Tile {
 
 	private Rect r;
 	
-	private static String acceptedTileTypes = "t";
+	private static String acceptedTileTypes = "t0";
 
 	public static boolean isTileTypeSupported(char type) {
 		String test = "";
@@ -35,6 +35,8 @@ public class Tile {
 		
 		if (type == 't') {
 			tileImage = GameScreen.tileTree;
+		} else {
+			tileImage = GameScreen.tileGrass;
 		}
 	}
 
