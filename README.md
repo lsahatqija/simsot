@@ -8,28 +8,40 @@ Le but est de pouvoir y jouer soit seul avec les IA fantômes, soit en multijoue
 ## Architecture
 Client Android Java
 
-Serveur Nods.js
+Serveur NodeJS
 
 BDD Redis et MongoDB
 
-Socket.io pour la communicatio client-serveur
+Socket.io pour la communication client-serveur
  
 ## Utilisation
-### Option 1 (facile mais pas encore fait)
+### Option Play Store
 Télécharger l'application sur Play Store, qui a pour nom :
 
-### Option 2
-Compiler le code sur Android Studio, copier le .apk dans le téléphone par câble et lancer l'appli en utilisant ngrok pour se connecter au serveur
+### Option téléphone physique
+Récupérer le .apk, si besoin en compilant le code (sur Android Studio). Copier le .apk dans le téléphone par câble et lancer l'appli en utilisant ngrok pour se connecter au serveur.
 
-## Participer au projet
-### git clone
+### Option émulateur
+##### Lancer le serveur 
+Installer NodeJS et npm : https://nodejs.org/en/
 
-### Installer Node.js et npm : aller sur https://nodejs.org/en/
+Télécharger le code du serveur et le mettre dans un dossier
 
-### Installer le package express : écrire en ligne de commande
+Installer le package express dans ce même dossier : écrire en ligne de commande
 
-npm install express
+	npm install express
 
-### Installer Android Studio (de préférence) ou Eclipse, ou un éditeur de texte
+Lancer le serveur : dans ce même dossier, écrire en ligne de commande
 
-http://developer.android.com/sdk/index.html
+	node index.js
+
+##### Compiler le client
+Installer Android Studio (de préférence) ou Eclipse, ou un éditeur de texte : http://developer.android.com/sdk/index.html
+
+Récupérer le code, le mettre sur Android Studio, lancer l'app.
+
+## Utile
+### Récupérer le code
+git clone
+
+
