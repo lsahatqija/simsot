@@ -5,6 +5,7 @@ import java.util.List;
 import simsot.framework.Game;
 import simsot.framework.Graphics;
 import simsot.framework.Screen;
+import simsot.framework.Graphics.ImageFormat;
 import simsot.framework.Input.TouchEvent;
 
 public class MainMenuScreen extends Screen {
@@ -15,6 +16,7 @@ public class MainMenuScreen extends Screen {
 	@Override
 	public void update(float deltaTime) {
 		Graphics g = game.getGraphics();
+		Assets.menu= g.newImage("menu.jpg", ImageFormat.RGB565);
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
 		int len = touchEvents.size();

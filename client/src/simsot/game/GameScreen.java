@@ -12,6 +12,7 @@ import simsot.framework.Graphics;
 import simsot.framework.Image;
 import simsot.framework.Input.TouchEvent;
 import simsot.framework.Screen;
+import simsot.framework.Graphics.ImageFormat;
 
 public class GameScreen extends Screen {
 	enum GameState {
@@ -69,8 +70,9 @@ public class GameScreen extends Screen {
 			e.currentSprite = e.anim.getImage();
 		}
 
-		currentSprite = anim.getImage();
-
+		//Assets.currentSprite = anim.getImage();
+		currentSprite = character1;
+		
 		loadMap();
 
 		// Defining a paint object
@@ -192,6 +194,7 @@ public class GameScreen extends Screen {
 					}
 				}
 			}
+			
 			player.update();
 			
 			callEnemiesAIs();
@@ -292,7 +295,13 @@ public class GameScreen extends Screen {
 	@Override
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
-
+		Assets.background= g.newImage("background.png", ImageFormat.RGB565);
+        Assets.character1 = g.newImage("character1.png", ImageFormat.RGB565);
+        Assets.character2 = g.newImage("character2.png", ImageFormat.RGB565);
+        Assets.characterMove1 = g.newImage("characterwalk1.png", ImageFormat.RGB565);
+        Assets.characterMove2 = g.newImage("characterwalk2.png", ImageFormat.RGB565);
+        Assets.currentSprite = currentSprite;
+        Assets.button = g.newImage("button.png", ImageFormat.RGB565);
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
 		paintTiles(g);
@@ -304,7 +313,7 @@ public class GameScreen extends Screen {
 		}
 		// First draw the game elements.
 
-		g.drawImage(currentSprite, player.getCenterX() - 61, player.getCenterY() - 63);
+		g.drawImage(Assets.currentSprite , player.getCenterX() - 61, player.getCenterY() - 63);
 		// g.drawImage(hanim.getImage(), hb.getCenterX() - 48,
 		// hb.getCenterY() - 48);
 		// g.drawImage(hanim.getImage(), hb2.getCenterX() - 48,
@@ -330,7 +339,9 @@ public class GameScreen extends Screen {
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = (Tile) tilearray.get(i);
 			if (t.getType() != 0) {
-				g.drawImage(t.getTileImage(), t.getCenterX(), t.getCenterY());
+				Assets.tileTree=g.newImage("tree.png", ImageFormat.RGB565);
+				t.setTileImage(Assets.tileTree);
+				g.drawImage(Assets.tileTree, t.getCenterX(), t.getCenterY());
 			}
 		}
 	}

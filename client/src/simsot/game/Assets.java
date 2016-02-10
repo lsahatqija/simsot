@@ -3,6 +3,7 @@ package simsot.game;
 import simsot.framework.Image;
 import simsot.framework.Music;
 import simsot.framework.Sound;
+import simsot.framework.Graphics.ImageFormat;
 
 public class Assets {
     
