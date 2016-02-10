@@ -52,12 +52,14 @@ var listener = io.listen(server);
 listener.sockets.on('connection', function(socket){
     //receive data
     socket.on('client_data', function(data){
-        pub.publish('foo',data.letter);
+        //console.log(data);
+        pub.publish('foo',data.nom+":"+data.letter);
     });
 
     sub.on('message', function(channel, message){
-    if(channel=='foo'){
-        socket.emit('player_data',{'position': message});    
-    }
-});
+        if(channel=='foo'){
+            console.log(message);
+            socket.emit('player_data',message);    
+        }
+    });
 });
