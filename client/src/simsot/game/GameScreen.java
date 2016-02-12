@@ -175,7 +175,7 @@ public class GameScreen extends Screen {
 				if (inBounds(event, 50, 325, 50, 50)) {
 					player.moveUp();
 				}
-				else if (inBounds(event,50, 395, 50, 50)) {
+				else if (inBounds(event, 50, 395, 50, 50)) {
 					player.moveDown();
 				}
 				if (inBounds(event, 0, 355, 50, 50)) {
@@ -187,9 +187,9 @@ public class GameScreen extends Screen {
 			}
 
 			if (event.type == TouchEvent.TOUCH_UP) {
-				if (inBounds(event, 0, 285, 65, 65)) {
+				if (inBounds(event, 50, 325, 50, 50)) {
 					player.stopVer();
-				} else if (inBounds(event, 0, 415, 65, 65)){
+				} else if (inBounds(event, 50, 395, 50, 50)){
 					player.stopVer();
 				}			
 				if (inBounds(event, 0, 355, 50, 50)) {
@@ -355,21 +355,6 @@ public class GameScreen extends Screen {
 	@Override
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
-		Assets.background = g.newImage("background.png", ImageFormat.RGB565);
-		Assets.characterClosed = g.newImage("characterclosed.png", ImageFormat.RGB565);
-		Assets.characterLeft1 = g.newImage("characterleft1.png", ImageFormat.RGB565);
-		Assets.characterLeft2 = g.newImage("characterleft2.png", ImageFormat.RGB565);
-		Assets.characterRight1 = g.newImage("characterright1.png", ImageFormat.RGB565);
-		Assets.characterRight2 = g.newImage("characterright2.png", ImageFormat.RGB565);
-		Assets.enemyLeft1 = g.newImage("enemyLeft1.png", ImageFormat.RGB565);
-		Assets.enemyLeft2 = g.newImage("enemyLeft2.png", ImageFormat.RGB565);
-		Assets.enemyRight1 = g.newImage("enemyRight1.png", ImageFormat.RGB565);
-		Assets.enemyRight2 = g.newImage("enemyRight2.png", ImageFormat.RGB565);
-		Assets.buttonUp = g.newImage("buttonUp.png", ImageFormat.RGB565);
-		Assets.buttonDown = g.newImage("buttonDown.png", ImageFormat.RGB565);
-		Assets.buttonLeft = g.newImage("buttonLeft.png", ImageFormat.RGB565);
-		Assets.buttonRight = g.newImage("buttonRight.png", ImageFormat.RGB565);
-		Assets.buttonPause = g.newImage("buttonPause.png", ImageFormat.RGB565);
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
 		paintTiles(g);

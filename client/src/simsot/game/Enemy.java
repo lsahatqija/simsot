@@ -80,10 +80,10 @@ public class Enemy {
 			// Prevents going beyond X coordinate of 0 or 800
 			if (centerX + speedX <= 60) {
 				centerX = 61;
-				setSpeedX(2);
+				setSpeedX(10);
 			} else if (centerX + speedX >= 800) {
 				centerX = 799;
-				setSpeedX(-2);
+				setSpeedX(-10);
 			}
 			
 			if (getSpeedX() != 0 || getSpeedY() !=0){
@@ -108,9 +108,9 @@ public class Enemy {
 
 	public void callAI() {
 		if (alive == true){
-			if (walkCounter < 50){
+			if (walkCounter % 100 == 51){
 				setSpeedX(10);
-			} else {
+			} else if (walkCounter % 100 == 1) {
 				setSpeedX(-10);
 			}
 		}
