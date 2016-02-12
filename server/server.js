@@ -5,8 +5,8 @@ var io = require('socket.io');
 var Redis = require('ioredis');
 
 //Redis client
-var sub = new Redis(7777, '127.0.0.1');
-var pub = new Redis(7777, '127.0.0.1');
+var sub = new Redis(process.env.REDISCLOUD_URL);
+var pub = new Redis(process.env.REDISCLOUD_URL);
 
 
 var server = http.createServer(function(request, response){
@@ -40,7 +40,7 @@ var server = http.createServer(function(request, response){
     }
 });
 
-server.listen(8001);
+server.listen(process.env.PORT);
 sub.set('foo', '');
 sub.subscribe('foo', function(channels, count){
     //subscribed
