@@ -15,19 +15,50 @@
         android:text="Hello World!"
         android:id="@+id/textView" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/userPseudo"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="25dp"
+        android:hint="Pseudo" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/userPassword"
+        android:layout_below="@+id/userPseudo"
+        android:password="true"
+        android:hint="Password" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/userPassword2"
+        android:layout_below="@+id/userPassword"
+        android:hint="Retype password" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
+        android:text="Connect"
+        android:id="@+id/connectButton"
         android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="164dp" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/button"
-        android:layout_alignParentStart="true" />
+        android:text="Subscribe"
+        android:id="@+id/subscribeButton"
+        android:layout_alignBottom="@+id/connectButton"
+        android:layout_alignEnd="@+id/userPassword2" />
+
 </RelativeLayout>

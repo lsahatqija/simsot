@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +19,7 @@ import java.net.URISyntaxException;
 
 public class MainActivity extends ActionBarActivity {
 
-    private static final String SERVER_URL = "http://10.0.2.2:3000";
+    private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
     private int nbTest;
 
     Button testButton;
@@ -63,16 +64,57 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        testButton = (Button) findViewById(R.id.button);
-        testButton.setOnClickListener(new View.OnClickListener() {
+        Button connectButton = (Button) findViewById(R.id.connectButton);
+        connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSocket.emit("test", "test" + nbTest);
-                nbTest++;
-            }
+                EditText userPseudo = (EditText) findViewById(R.id.userPseudo);
+                EditText userPassword = (EditText) findViewById(R.id.userPassword);
+
+                Toast.makeText(getApplicationContext(), "Sending connect_user to server...", Toast.LENGTH_SHORT).show();
+                JSONObject data = new JSONObject();
+
+                try {
+                    data.put("pseudo", userPseudo.getText().toString());
+                    data.put("password", userPassword.getText().toString());
+                } catch (JSONException e) {
+                    return;
+                }
+
+                mSocket.emit("connect_user", data);
+            };
         });
 
-        responseTexteView = (TextView) findViewById(R.id.textView2);
+        Button subscribeButton = (Button) findViewById(R.id.subscribeButton);
+        subscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText userPseudo = (EditText) findViewById(R.id.userPseudo);
+                EditText userPassword = (EditText) findViewById(R.id.userPassword);
+                EditText userPassword2 = (EditText) findViewById(R.id.userPassword2);
+
+                if (!userPassword.getText().toString().equals(userPassword2.getText().toString()))
+                {
+                    Toast.makeText(getApplicationContext(), "Passwords don't match.", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Sending subscribe to server...", Toast.LENGTH_SHORT).show();
+                    JSONObject data = new JSONObject();
+
+                    try {
+                        data.put("pseudo", userPseudo.getText().toString());
+                        data.put("password", userPassword.getText().toString());
+                    } catch (JSONException e) {
+                        return;
+                    }
+
+                    mSocket.emit("subscribe", data);
+                }
+            };
+        });
+
+        //responseTexteView = (TextView) findViewById(R.id.textView2);
     }
 
     private void addMessage(String message, String data) {
