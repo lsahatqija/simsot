@@ -68,7 +68,11 @@ public class Enemy {
 				checkCollision(e);
 		}
 	}
-	
+
+	public boolean isAlive() {
+		return alive;
+	}
+
 	// Behavioral Methods
 	public void update() {
 		
@@ -78,12 +82,20 @@ public class Enemy {
 			centerY += speedY;
 			
 			// Prevents going beyond X coordinate of 0 or 800
-			if (centerX + speedX <= 60) {
-				centerX = 61;
+			if (centerX + speedX <= 40) {
+				centerX = 41;
 				setSpeedX(10);
-			} else if (centerX + speedX >= 800) {
-				centerX = 799;
+			} else if (centerX + speedX >= 480) {
+				centerX = 479;
 				setSpeedX(-10);
+			}
+
+			if (centerY + speedY <= 40) {
+				centerY = 41;
+				setSpeedY(10);
+			} else if (centerY + speedY >= 770) {
+				centerY = 769;
+				setSpeedY(-10);
 			}
 			
 			if (getSpeedX() != 0 || getSpeedY() !=0){
