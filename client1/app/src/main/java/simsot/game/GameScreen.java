@@ -176,30 +176,30 @@ public class GameScreen extends Screen {
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = (TouchEvent) touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_DOWN) {
-				if (inBounds(event, 50, 325, 50, 50)) {
+				if (inBounds(event, 215, 645, 50, 50)) {
 					player.moveUp();
 				}
-				else if (inBounds(event, 50, 395, 50, 50)) {
+				else if (inBounds(event, 215, 715, 50, 50)) {
 					player.moveDown();
 				}
-				if (inBounds(event, 0, 355, 50, 50)) {
+				if (inBounds(event, 165, 675, 50, 50)) {
 					player.moveLeft();
 				}
-				else if (inBounds(event, 100, 355, 50, 50)) {
+				else if (inBounds(event, 265, 675, 50, 50)) {
 					player.moveRight();
 				}
 			}
 
 			if (event.type == TouchEvent.TOUCH_UP) {
-				if (inBounds(event, 50, 325, 50, 50)) {
+				if (inBounds(event, 215, 645, 50, 50)) {
 					player.stopVer();
-				} else if (inBounds(event, 50, 395, 50, 50)){
+				} else if (inBounds(event, 215, 715, 50, 50)){
 					player.stopVer();
 				}			
-				if (inBounds(event, 0, 355, 50, 50)) {
+				if (inBounds(event, 165, 675, 50, 50)) {
 					player.stopHor();
 				}			
-				else if (inBounds(event, 100, 355, 50, 50)) {
+				else if (inBounds(event, 265, 675, 50, 50)) {
 					player.stopHor();
 				}
 				if (inBounds(event, 0, 0, 35, 35)) {
@@ -318,14 +318,14 @@ public class GameScreen extends Screen {
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = (TouchEvent) touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
-				if (inBounds(event, 0, 0, 800, 240)) {
+				if (inBounds(event, 0, 0, 480, 400)) {
 
 					if (!inBounds(event, 0, 0, 35, 35)) {
 						resume();
 					}
 				}
 
-				if (inBounds(event, 0, 240, 800, 240)) {
+				if (inBounds(event, 0, 400, 480, 800)) {
 					nullify();
 					goToMenu();
 				}
@@ -338,7 +338,7 @@ public class GameScreen extends Screen {
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = (TouchEvent) touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_DOWN) {
-				if (inBounds(event, 0, 0, 800, 480)) {
+				if (inBounds(event, 0, 0, 480, 800)) {
 					nullify();
 					game.setScreen(new MainMenuScreen(game));
 					return;
@@ -447,10 +447,10 @@ public class GameScreen extends Screen {
 
 	private void drawRunningUI() {
 		Graphics g = game.getGraphics();
-		g.drawImage(Assets.buttonUp, 50, 325);		//up
-		g.drawImage(Assets.buttonDown, 50, 395);	//down
-		g.drawImage(Assets.buttonLeft, 0, 355);		//left
-		g.drawImage(Assets.buttonRight, 100, 355);	//right
+		g.drawImage(Assets.buttonUp, 215, 645);		//up
+		g.drawImage(Assets.buttonDown, 215, 715);	//down
+		g.drawImage(Assets.buttonLeft, 165, 675);		//left
+		g.drawImage(Assets.buttonRight, 265, 675);	//right
 		g.drawImage(Assets.buttonPause, 0, 0);	//pause
 	}
 
@@ -458,16 +458,16 @@ public class GameScreen extends Screen {
 		Graphics g = game.getGraphics();
 		// Darken the entire screen so you can display the Paused screen.
 		g.drawARGB(155, 0, 0, 0);
-		g.drawString("Resume", 400, 165, paint2);
-		g.drawString("Menu", 400, 360, paint2);
+		g.drawString("Resume", 240, 365, paint2);
+		g.drawString("Menu", 240, 560, paint2);
 
 	}
 
 	private void drawGameOverUI() {
 		Graphics g = game.getGraphics();
 		g.drawRect(0, 0, 1281, 801, Color.BLACK);
-		g.drawString("GAME OVER.", 400, 240, paint2);
-		g.drawString("Tap to return.", 400, 290, paint);
+		g.drawString("GAME OVER.", 240, 400, paint2);
+		g.drawString("Tap to return.", 240, 450, paint);
 
 	}
 
