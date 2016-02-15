@@ -39,8 +39,12 @@ public class GameScreen extends Screen {
 	int livesLeft = 1;
 	Paint paint, paint2;
 
+	MySocket mySocket;
+
 	public GameScreen(Game game) {
 		super(game);
+
+		mySocket = ((SampleGame) game).getMySocket();
 
 		// Initialize game objects here
 
@@ -256,6 +260,7 @@ public class GameScreen extends Screen {
 		}
 
 		player.update();
+		mySocket.sendPositionUpdate("Player 1", player.getCenterX(), player.getCenterY());
 
 		callEnemiesAIs();
 		//checkTileCollisions();

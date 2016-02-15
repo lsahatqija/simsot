@@ -4,17 +4,39 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 
+import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
 import simsot.game.R;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 public class SampleGame extends AndroidGame {
+
+    private static final String SERVER_URL = "https://simsot-server.herokuapp.com/";
 	
 	public static String map;
     boolean firstTimeCreate = true;
+
+    private MySocket mySocket;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        try {
+            mySocket = new MySocket(SERVER_URL);
+            mySocket.connect();
+        } catch (URISyntaxException e) {
+            Toast.makeText(SampleGame.this,"URISyntaxException", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public Screen getInitScreen() {
@@ -72,4 +94,10 @@ public class SampleGame extends AndroidGame {
         Assets.theme.pause();
 
     }
+
+    public MySocket getMySocket() {
+        return mySocket;
+    }
+
+
 }
