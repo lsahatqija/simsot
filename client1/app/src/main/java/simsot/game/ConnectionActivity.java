@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +39,11 @@ public class ConnectionActivity extends Activity {
 
     public String userLogin = null;
 
-    Button directGameButton,connectionChoiceButton, registrationChoiceButton, connectButton, registerButton, continueButton1, disconnectButton1;
+    Button directGameButton,connectionChoiceButton, registrationChoiceButton, connectButton, registerButton, disconnectButton;
+    Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
     TextView welcomeText;
-    LinearLayout layoutRegistrationConnection, layoutConnection, layoutConnected, layoutRegistration;
+    LinearLayout layoutConnection, layoutRegistration;
+    RelativeLayout layoutRegistrationConnection, layoutMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +59,17 @@ public class ConnectionActivity extends Activity {
 
         registerButton = (Button) findViewById(R.id.registerButton);
 
-        continueButton1 = (Button) findViewById(R.id.continueButton1);
-        disconnectButton1 = (Button) findViewById(R.id.disconnectButton1);
+        disconnectButton = (Button) findViewById(R.id.disconnectButton);
 
-        layoutRegistrationConnection = (LinearLayout) findViewById(R.id.layoutRegistrationConnection);
+        layoutRegistrationConnection = (RelativeLayout) findViewById(R.id.layoutRegistrationConnection);
         layoutConnection = (LinearLayout) findViewById(R.id.layoutConnection);
         layoutRegistration = (LinearLayout) findViewById(R.id.layoutRegistration);
-        layoutConnected = (LinearLayout) findViewById(R.id.layoutConnected);
+        layoutMenu = (RelativeLayout) findViewById(R.id.layoutMenu);
+
+        buttonSolo = (Button) findViewById(R.id.buttonSolo);
+        buttonMulti = (Button) findViewById(R.id.buttonMulti);
+        buttonSettings = (Button) findViewById(R.id.buttonSettings);
+        buttonHow = (Button) findViewById(R.id.buttonHow);
 
         welcomeText = (TextView) findViewById(R.id.welcomeText);
 
@@ -90,15 +97,7 @@ public class ConnectionActivity extends Activity {
             }
         });
 
-
-        continueButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToMenu();
-            }
-        });
-
-        disconnectButton1.setOnClickListener(new View.OnClickListener() {
+        disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
@@ -117,7 +116,7 @@ public class ConnectionActivity extends Activity {
             displayRegistrationConnectionLayout();
         } else {
             userLogin = login;
-            displayConnectedLayout();
+            displayMenuLayout();
         }
 
         try {
@@ -137,7 +136,7 @@ public class ConnectionActivity extends Activity {
 
                             showToast(getString(R.string.connection_succeeded));
 
-                            displayConnectedLayout();
+                            displayMenuLayout();
                         } else {
                             showToast(getString(R.string.connection_failed));
                         }
@@ -216,6 +215,36 @@ public class ConnectionActivity extends Activity {
             }
         });
 
+        buttonSolo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
+                intent.putExtra("userLogin", userLogin);
+                startActivity(intent);
+            }
+        });
+
+        buttonMulti.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonHow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     protected void displayRegistrationConnectionLayout(){
@@ -223,7 +252,7 @@ public class ConnectionActivity extends Activity {
             public void run() {
                 layoutRegistrationConnection.setVisibility(View.VISIBLE);
                 layoutConnection.setVisibility(View.INVISIBLE);
-                layoutConnected.setVisibility(View.INVISIBLE);
+                layoutMenu.setVisibility(View.INVISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
             }
         });
@@ -234,18 +263,18 @@ public class ConnectionActivity extends Activity {
             public void run() {
                 layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.VISIBLE);
-                layoutConnected.setVisibility(View.INVISIBLE);
+                layoutMenu.setVisibility(View.INVISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
             }
         });
     }
 
-    protected void displayConnectedLayout(){
+    protected void displayMenuLayout(){
         ConnectionActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.INVISIBLE);
-                layoutConnected.setVisibility(View.VISIBLE);
+                layoutMenu.setVisibility(View.VISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
                 welcomeText.setText("Welcome " + userLogin);
             }
@@ -257,16 +286,10 @@ public class ConnectionActivity extends Activity {
             public void run() {
                 layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.INVISIBLE);
-                layoutConnected.setVisibility(View.INVISIBLE);
+                layoutMenu.setVisibility(View.INVISIBLE);
                 layoutRegistration.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    protected void goToMenu() {
-        Intent intent = new Intent(ConnectionActivity.this, MenuActivity.class);
-        intent.putExtra("userLogin", userLogin);
-        startActivity(intent);
     }
 
     protected void showToast(final String message) {

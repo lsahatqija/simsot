@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="simsot.game.ConnectionActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layoutRegistrationConnection"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,15 +18,16 @@
             android:id="@+id/connectionChoiceButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userPassword2"
-            android:text="Connect" />
+            android:text="Connect"
+            android:layout_centerHorizontal="true" />
         <Button
             android:id="@+id/registrationChoiceButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userPassword2"
-            android:text="Register" />
-    </LinearLayout>
+            android:layout_below="@id/connectionChoiceButton"
+            android:text="Register"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layoutRegistration"
@@ -107,10 +108,10 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layoutConnected"
+    <RelativeLayout
+        android:id="@+id/layoutMenu"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
         android:visibility="invisible" >
 
@@ -121,17 +122,53 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Button
-            android:id="@+id/disconnectButton1"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Déconnexion" />
+            android:text="Single player"
+            android:id="@+id/buttonSolo"
+            android:layout_marginTop="35dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_centerHorizontal="true" />
 
         <Button
-            android:id="@+id/continueButton1"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="Continue" />
-    </LinearLayout>
+            android:text="Multi player"
+            android:id="@+id/buttonMulti"
+            android:nestedScrollingEnabled="false"
+            android:layout_above="@+id/buttonSettings"
+            android:layout_marginBottom="50dp"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:id="@+id/buttonSettings"
+            android:nestedScrollingEnabled="false"
+            android:layout_centerInParent="true" />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="How To Play"
+            android:id="@+id/buttonHow"
+            android:nestedScrollingEnabled="false"
+            android:layout_below="@+id/buttonSettings"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/disconnectButton"
+            android:text="Disconnection"
+            android:nestedScrollingEnabled="false"
+            android:layout_below="@+id/buttonHow"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/directGameButton"
