@@ -23,17 +23,24 @@ import java.net.URISyntaxException;
 public class ConnectionActivity extends Activity {
 
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
-    private static final String CONNECTED = "Connecté";
+    private static final String CONNECTED = "Connected";
+    private static final String REGISTERED = "Registered";
+    private static final String CONNECTION_REQUEST = "connect_user";
+    private static final String REGISTER_REQUEST = "subscribe";
     private static final String CONNECTION_RESPONSE = "response_connect";
     private static final String REGISTRATION_RESPONSE = "response_subscribe";
+    private static final String USERNAME = "pseudo";
+    private static final String PASSWORD = "password";
+
+    private static final String LOGIN_IN_PREFERENCES = "login";
 
     private Socket mSocket;
 
     public String userLogin = null;
 
-    Button directGameButton, connectButton, registerButton, continueButton1, disconnectButton1;
+    Button directGameButton,connectionChoiceButton, registrationChoiceButton, connectButton, registerButton, continueButton1, disconnectButton1;
     TextView welcomeText;
-    LinearLayout layoutConnection, layoutConnected;
+    LinearLayout layoutRegistrationConnection, layoutConnection, layoutConnected, layoutRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +48,20 @@ public class ConnectionActivity extends Activity {
         setContentView(R.layout.activity_connection);
 
         directGameButton = (Button) findViewById(R.id.directGameButton);
+
+        connectionChoiceButton = (Button) findViewById(R.id.connectionChoiceButton);
+        registrationChoiceButton = (Button) findViewById(R.id.registrationChoiceButton);
+
         connectButton = (Button) findViewById(R.id.connectButton);
+
         registerButton = (Button) findViewById(R.id.registerButton);
+
         continueButton1 = (Button) findViewById(R.id.continueButton1);
         disconnectButton1 = (Button) findViewById(R.id.disconnectButton1);
 
+        layoutRegistrationConnection = (LinearLayout) findViewById(R.id.layoutRegistrationConnection);
         layoutConnection = (LinearLayout) findViewById(R.id.layoutConnection);
+        layoutRegistration = (LinearLayout) findViewById(R.id.layoutRegistration);
         layoutConnected = (LinearLayout) findViewById(R.id.layoutConnected);
 
         welcomeText = (TextView) findViewById(R.id.welcomeText);
@@ -60,6 +75,22 @@ public class ConnectionActivity extends Activity {
             }
         });
 
+        connectionChoiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayConnectionLayout();
+            }
+        });
+
+
+        registrationChoiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayRegistrationLayout();
+            }
+        });
+
+
         continueButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,19 +103,18 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
                 SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
-                editor.remove("login");
+                editor.remove(LOGIN_IN_PREFERENCES);
                 editor.commit();
                 userLogin = null;
 
-                displayConnectionLayout();
+                displayRegistrationConnectionLayout();
             }
         });
 
         SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
-        String login = settings.getString("login", null);
+        String login = settings.getString(LOGIN_IN_PREFERENCES, null);
         if (login == null) {
-            displayConnectionLayout();
-
+            displayRegistrationConnectionLayout();
         } else {
             userLogin = login;
             displayConnectedLayout();
@@ -102,15 +132,17 @@ public class ConnectionActivity extends Activity {
                         if (CONNECTED.equals(connectionResponse)) {
                             SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
-                            editor.putString("login", userLogin);
+                            editor.putString(LOGIN_IN_PREFERENCES, userLogin);
                             editor.commit();
+
+                            showToast(getString(R.string.connection_succeeded));
 
                             displayConnectedLayout();
                         } else {
-                            showToast(args[0].toString());
+                            showToast(getString(R.string.connection_failed));
                         }
                     } else {
-                        showToast("Connection error");
+                        showToast(getString(R.string.connection_error));
                     }
                 }
             });
@@ -121,10 +153,15 @@ public class ConnectionActivity extends Activity {
                 public void call(final Object... args) {
                     if (args[0] instanceof String) {
                         String registrationResponse = (String) args[0];
-                        showToast(registrationResponse);
+                        if (REGISTERED.equals(registrationResponse)) {
+                            showToast(getString(R.string.registration_succeeded));
+
+                            displayConnectionLayout();
+                        } else {
+                            showToast(getString(R.string.registration_failed));
+                        }
                     } else {
-                        //TODO Remove before prod
-                        showToast("error : args[0] isn't a String");
+                        showToast(getString(R.string.registration_error));
                     }
                 }
             });
@@ -137,18 +174,18 @@ public class ConnectionActivity extends Activity {
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userPseudo = ((EditText) findViewById(R.id.userPseudo)).getText().toString();
-                String userPassword = ((EditText) findViewById(R.id.userPassword)).getText().toString();
+                String userPseudo = ((EditText) findViewById(R.id.userPseudoConnection)).getText().toString();
+                String userPassword = ((EditText) findViewById(R.id.userPasswordConnection)).getText().toString();
 
                 JSONObject data = new JSONObject();
 
                 try {
-                    data.put("pseudo", userPseudo);
-                    data.put("password", userPassword);
+                    data.put(USERNAME, userPseudo);
+                    data.put(PASSWORD, userPassword);
                 } catch (JSONException e) {
                     return;
                 }
-                mSocket.emit("connect_user", data);
+                mSocket.emit(CONNECTION_REQUEST, data);
 
                 // On note le pseudo pour le passer à la 2e activité
                 userLogin = userPseudo;
@@ -158,24 +195,36 @@ public class ConnectionActivity extends Activity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userPseudo = ((EditText) findViewById(R.id.userPseudo)).getText().toString();
-                String userPassword = ((EditText) findViewById(R.id.userPassword)).getText().toString();
-                String userPassword2 = ((EditText) findViewById(R.id.userPassword2)).getText().toString();
+                String userPseudo = ((EditText) findViewById(R.id.userPseudoRegistration)).getText().toString();
+                String userPassword = ((EditText) findViewById(R.id.userPasswordRegistration)).getText().toString();
+                String userPassword2 = ((EditText) findViewById(R.id.userPassword2Registration)).getText().toString();
 
                 if (!userPassword.equals(userPassword2)) {
-                    Toast.makeText(getApplicationContext(), "Passwords don't match.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.password_not_match, Toast.LENGTH_SHORT).show();
                 } else {
                     JSONObject data = new JSONObject();
 
                     try {
-                        data.put("pseudo", userPseudo);
-                        data.put("password", userPassword);
+                        data.put(USERNAME, userPseudo);
+                        data.put(PASSWORD, userPassword);
                     } catch (JSONException e) {
                         return;
                     }
 
-                    mSocket.emit("subscribe", data);
+                    mSocket.emit(REGISTER_REQUEST, data);
                 }
+            }
+        });
+
+    }
+
+    protected void displayRegistrationConnectionLayout(){
+        ConnectionActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                layoutRegistrationConnection.setVisibility(View.VISIBLE);
+                layoutConnection.setVisibility(View.INVISIBLE);
+                layoutConnected.setVisibility(View.INVISIBLE);
+                layoutRegistration.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -183,8 +232,10 @@ public class ConnectionActivity extends Activity {
     protected void displayConnectionLayout(){
         ConnectionActivity.this.runOnUiThread(new Runnable() {
             public void run() {
+                layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.VISIBLE);
                 layoutConnected.setVisibility(View.INVISIBLE);
+                layoutRegistration.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -192,9 +243,22 @@ public class ConnectionActivity extends Activity {
     protected void displayConnectedLayout(){
         ConnectionActivity.this.runOnUiThread(new Runnable() {
             public void run() {
+                layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.INVISIBLE);
                 layoutConnected.setVisibility(View.VISIBLE);
+                layoutRegistration.setVisibility(View.INVISIBLE);
                 welcomeText.setText("Welcome " + userLogin);
+            }
+        });
+    }
+
+    protected void displayRegistrationLayout(){
+        ConnectionActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                layoutRegistrationConnection.setVisibility(View.INVISIBLE);
+                layoutConnection.setVisibility(View.INVISIBLE);
+                layoutConnected.setVisibility(View.INVISIBLE);
+                layoutRegistration.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -10,14 +10,33 @@
     tools:context="simsot.game.ConnectionActivity">
 
     <LinearLayout
-        android:id="@+id/layoutConnection"
+        android:id="@+id/layoutRegistrationConnection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/connectionChoiceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword2"
+            android:text="Connect" />
+        <Button
+            android:id="@+id/registrationChoiceButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword2"
+            android:text="Register" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutRegistration"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="invisible">
 
         <EditText
-            android:id="@+id/userPseudo"
+            android:id="@+id/userPseudoRegistration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -25,7 +44,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/userPassword"
+            android:id="@+id/userPasswordRegistration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userPseudo"
@@ -35,20 +54,13 @@
             android:password="true" />
 
         <EditText
-            android:id="@+id/userPassword2"
+            android:id="@+id/userPassword2Registration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userPassword"
             android:ems="10"
             android:hint="Retype password"
             android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/connectButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userPassword2"
-            android:text="Connect" />
 
         <Button
             android:id="@+id/registerButton"
@@ -62,10 +74,45 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutConnection"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <EditText
+            android:id="@+id/userPseudoConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Login"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/userPasswordConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPseudo"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:password="true" />
+
+        <Button
+            android:id="@+id/connectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword2"
+            android:text="Connect" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layoutConnected"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible" >
 
         <TextView
             android:id="@+id/welcomeText"
