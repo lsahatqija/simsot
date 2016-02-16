@@ -380,6 +380,10 @@ public class GameScreen extends Screen {
 			g.drawImage(Assets.enemyLeft1, e.getCenterX() - 61, e.getCenterY() - 63);
 		}
 
+		if(player.touched == true){
+			g.drawString("Hit!", player.getCenterX(), player.getCenterY(), paint);
+		}
+
 		// Example:
 		// g.drawImage(Assets.background, 0, 0);
 		// g.drawImage(Assets.character, characterX, characterY);

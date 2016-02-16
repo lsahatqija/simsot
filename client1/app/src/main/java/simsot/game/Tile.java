@@ -34,7 +34,7 @@ public class Tile {
 		centerY = (y * 50) + 25;
 		type = typeInt;
 
-		r = new Rect(getCenterX(),getCenterY(),getCenterX()+50,getCenterY()+50);
+		r = new Rect(getCenterX(),getCenterY(),getCenterX()+62,getCenterY()+63);
 		
 		if (type == 't') {
 			tileImage = GameScreen.tileTree;
@@ -73,10 +73,10 @@ public class Tile {
 		if (/*enemy.isAlive() == true && */Rect.intersects(enemy.rectX, r)) {
 			if (enemy.getCenterX() <= this.getCenterX()) {
 				enemy.setCenterX(enemy.getCenterX() - 2);
-				enemy.setSpeedX(enemy.getSpeedX()*(-1));
+				enemy.setSpeedX(enemy.getSpeedX() * (-1));
 			} else if (enemy.getCenterX() >= this.getCenterX()) {
 				enemy.setCenterX(enemy.getCenterX() + 2);
-				enemy.setSpeedX(enemy.getSpeedX()*(-1));
+				enemy.setSpeedX(enemy.getSpeedX() * (-1));
 			}
 		}
 	}
@@ -85,11 +85,25 @@ public class Tile {
 		if (/*enemy.isAlive() == true && */Rect.intersects(enemy.rectY, r)) {
 			if (enemy.getCenterY() <= this.getCenterY()) {
 				enemy.setCenterY(enemy.getCenterY() - 2);
-				enemy.setSpeedY(enemy.getSpeedY()*(-1));
+				enemy.setSpeedY(enemy.getSpeedY() * (-1));
 			} else if (enemy.getCenterY() >= this.getCenterY()) {
 				enemy.setCenterY(enemy.getCenterY() + 2);
-				enemy.setSpeedY(enemy.getSpeedY()*(-1));
+				enemy.setSpeedY(enemy.getSpeedY() * (-1));
 			}
+		}
+	}
+
+	public void checkPlayerEnemyCollision(Player player, Enemy enemy){
+		if(Rect.intersects(player.rectX, enemy.rectX)){
+			player.touched = true;
+		} else if(Rect.intersects(player.rectX, enemy.rectY)){
+			player.touched = true;
+		} else if(Rect.intersects(player.rectY, enemy.rectX)){
+			player.touched = true;
+		} else if(Rect.intersects(player.rectY, enemy.rectY)){
+			player.touched = true;
+		} else {
+			player.touched = false;
 		}
 	}
 	
@@ -100,6 +114,7 @@ public class Tile {
 			Enemy e = enemyarray.get(i);
 			checkHorizontalCollision(e);
 			checkVerticalCollision(e);
+            checkPlayerEnemyCollision(player, e);
 		}
 	}
 
