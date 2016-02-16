@@ -67,6 +67,14 @@ public class GameScreen extends Screen {
         player.characterUp1 = Assets.characterUp1;
         player.characterUp2 = Assets.characterUp2;
 		player.characterClosed = Assets.characterClosed;
+        for(int i = 0; i < enemyarray.size(); i++){
+            Enemy e = enemyarray.get(i);
+            e.characterLeft1 = Assets.enemyLeft1;
+            e.characterLeft2 = Assets.enemyLeft2;
+            e.characterRight1 = Assets.enemyRight1;
+            e.characterRight2 = Assets.enemyRight2;
+            e.currentSprite = e.characterLeft1;
+        }
 		background = Assets.background;
 		tileTree = Assets.tileTree;
 		tileGrass = Assets.tileGrass;
@@ -398,7 +406,7 @@ public class GameScreen extends Screen {
 
 		for (int i = 0; i < getEnemyarray().size(); i++) {
 			Enemy e = getEnemyarray().get(i);
-			g.drawImage(e.characterLeft1, e.getCenterX() - 61, e.getCenterY() - 63);
+			g.drawImage(e.currentSprite, e.getCenterX() - 61, e.getCenterY() - 63);
 		}
 
 		if(player.touched == true){
