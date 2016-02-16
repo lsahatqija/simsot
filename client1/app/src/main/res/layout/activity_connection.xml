@@ -9,57 +9,88 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="simsot.game.ConnectionActivity">
 
-
-
-    <EditText
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutConnection"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/userPseudo"
-        android:hint="Pseudo" />
+        android:orientation="vertical"
+        android:visibility="invisible">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/userPassword"
-        android:layout_below="@+id/userPseudo"
-        android:password="true"
-        android:hint="Password" />
+        <EditText
+            android:id="@+id/userPseudo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Pseudo"
+            android:inputType="textPersonName" />
 
-    <EditText
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/userPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPseudo"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:password="true" />
+
+        <EditText
+            android:id="@+id/userPassword2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword"
+            android:ems="10"
+            android:hint="Retype password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/connectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword2"
+            android:text="Connect" />
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/userPassword2"
+            android:layout_alignRight="@+id/userPassword2"
+            android:layout_alignTop="@+id/connectButton"
+            android:text="Register" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutConnected"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/userPassword2"
-        android:layout_below="@+id/userPassword"
-        android:hint="Retype password" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <Button
+            android:id="@+id/disconnectButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Déconnexion" />
+
+        <Button
+            android:id="@+id/continueButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue" />
+    </LinearLayout>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Connect"
-        android:id="@+id/connectButton"
-        android:layout_below="@+id/userPassword2" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:id="@+id/registerButton"
-        android:layout_alignTop="@+id/connectButton"
-        android:layout_alignRight="@+id/userPassword2"
-        android:layout_alignEnd="@+id/userPassword2" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Direct Game Link"
         android:id="@+id/directGameButton"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="Direct Game Link" />
 </RelativeLayout>

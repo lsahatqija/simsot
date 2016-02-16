@@ -1,11 +1,14 @@
 package simsot.game;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -26,9 +29,11 @@ public class ConnectionActivity extends Activity {
 
     private Socket mSocket;
 
-    public static String pseudo = "error";
+    public String userLogin = null;
 
-    Button directGameButton;
+    Button directGameButton, connectButton, registerButton, continueButton1, disconnectButton1;
+    TextView welcomeText;
+    LinearLayout layoutConnection, layoutConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,16 @@ public class ConnectionActivity extends Activity {
         setContentView(R.layout.activity_connection);
 
         directGameButton = (Button) findViewById(R.id.directGameButton);
+        connectButton = (Button) findViewById(R.id.connectButton);
+        registerButton = (Button) findViewById(R.id.registerButton);
+        continueButton1 = (Button) findViewById(R.id.continueButton1);
+        disconnectButton1 = (Button) findViewById(R.id.disconnectButton1);
+
+        layoutConnection = (LinearLayout) findViewById(R.id.layoutConnection);
+        layoutConnected = (LinearLayout) findViewById(R.id.layoutConnected);
+
+        welcomeText = (TextView) findViewById(R.id.welcomeText);
+
         directGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +59,36 @@ public class ConnectionActivity extends Activity {
             }
         });
 
+        continueButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMenu();
+            }
+        });
+
+        disconnectButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.remove("login");
+                editor.commit();
+                userLogin = null;
+
+                displayConnectionLayout();
+            }
+        });
+
+        SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+        String login = settings.getString("login", null);
+        if (login == null) {
+            displayConnectionLayout();
+
+        } else {
+            userLogin = login;
+            displayConnectedLayout();
+        }
+
         try {
             mSocket = IO.socket(SERVER_URL);
 
@@ -51,17 +96,19 @@ public class ConnectionActivity extends Activity {
             mSocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if(args[0] instanceof String){
+                    if (args[0] instanceof String) {
                         String connectionResponse = (String) args[0];
-                        // On lance MenuActivity si on se connecte, sinon on affiche le message serveur
                         if (CONNECTED.equals(connectionResponse)) {
-                            Intent MenuActivity = new Intent(ConnectionActivity.this, MenuActivity.class);
-                            MenuActivity.putExtra("pseudo", pseudo);
-                            startActivity(MenuActivity);
+                            SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("login", userLogin);
+                            editor.commit();
+
+                            displayConnectedLayout();
                         } else {
                             showToast(args[0].toString());
                         }
-                    } else{
+                    } else {
                         showToast("Connection error");
                     }
                 }
@@ -86,7 +133,6 @@ public class ConnectionActivity extends Activity {
             e.printStackTrace();
         }
 
-        Button connectButton = (Button) findViewById(R.id.connectButton);
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,13 +150,10 @@ public class ConnectionActivity extends Activity {
                 mSocket.emit("connect_user", data);
 
                 // On note le pseudo pour le passer à la 2e activité
-                pseudo = userPseudo;
+                userLogin = userPseudo;
             }
-
-            ;
         });
 
-        Button registerButton = (Button) findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,9 +176,34 @@ public class ConnectionActivity extends Activity {
                     mSocket.emit("subscribe", data);
                 }
             }
-
-            ;
         });
+
+
+    }
+
+    protected void displayConnectionLayout(){
+        ConnectionActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                layoutConnection.setVisibility(View.VISIBLE);
+                layoutConnected.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    protected void displayConnectedLayout(){
+        ConnectionActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                layoutConnection.setVisibility(View.INVISIBLE);
+                layoutConnected.setVisibility(View.VISIBLE);
+                welcomeText.setText("Welcome " + userLogin);
+            }
+        });
+    }
+
+    protected void goToMenu() {
+        Intent MenuActivity = new Intent(ConnectionActivity.this, MenuActivity.class);
+        MenuActivity.putExtra("pseudo", userLogin);
+        startActivity(MenuActivity);
     }
 
     protected void showToast(final String message) {

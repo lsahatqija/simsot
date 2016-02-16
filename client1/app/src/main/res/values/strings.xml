@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="app_name">simsot</string>
-    <string name="title_activity_connection">ConnectionActivity</string>
+    <string name="app_name">Pac Man Online</string>
 
 </resources>

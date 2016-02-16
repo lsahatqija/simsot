@@ -13,7 +13,6 @@ public class MenuActivity extends Activity {
     Button buttonMulti;
     Button buttonSettings;
     Button buttonHow;
-    Button buttonDisconnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +23,6 @@ public class MenuActivity extends Activity {
         buttonMulti = (Button) findViewById(R.id.buttonMulti);
         buttonSettings = (Button) findViewById(R.id.buttonSettings);
         buttonHow = (Button) findViewById(R.id.buttonHow);
-        buttonDisconnect = (Button) findViewById(R.id.buttonDisconnect);
 
         buttonSolo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,13 +48,6 @@ public class MenuActivity extends Activity {
         });
 
         buttonHow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MenuActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        buttonDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MenuActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
