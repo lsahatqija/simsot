@@ -62,6 +62,10 @@ public class GameScreen extends Screen {
 		player.characterLeft2 = Assets.characterLeft2;
 		player.characterRight1 = Assets.characterRight1;
 		player.characterRight2 = Assets.characterRight2;
+        player.characterDown1 = Assets.characterDown1;
+        player.characterDown2 = Assets.characterDown2;
+        player.characterUp1 = Assets.characterUp1;
+        player.characterUp2 = Assets.characterUp2;
 		player.characterClosed = Assets.characterClosed;
 		background = Assets.background;
 		tileTree = Assets.tileTree;
@@ -211,45 +215,62 @@ public class GameScreen extends Screen {
 		}
 
 		// Animation
-		if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() <= 0 ){
-			if (walkCounter % 40 == 0) {
+		if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() < 0 && player.getSpeedY() == 0){
+			if (walkCounter % 8 == 0) {
+				player.currentSprite = player.characterLeft2;
+			} else if (walkCounter % 8 == 2) {
 				player.currentSprite = player.characterLeft1;
-			} else if (walkCounter % 40 == 10) {
+			} else if (walkCounter % 8 == 4) {
 				player.currentSprite = player.characterLeft2;
-			} else if (walkCounter % 40 == 20) {
+			} else if (walkCounter % 8 == 6) {
 				player.currentSprite = player.characterClosed;
-			} else if (walkCounter % 40 == 30) {
-				player.currentSprite = player.characterLeft2;
 			}
-		} else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() > 0 ){
-			if (walkCounter % 30 == 0) {
+		} else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() > 0  && player.getSpeedY() == 0){
+			if (walkCounter % 8 == 0) {
 				player.currentSprite = player.characterRight2;
-			} else if (walkCounter % 30 == 10) {
+			} else if (walkCounter % 8 == 2) {
 				player.currentSprite = player.characterRight1;
-			} else if (walkCounter % 30 == 20) {
-				player.currentSprite = player.characterClosed;
-			} else if (walkCounter % 40 == 30) {
+			} else if (walkCounter % 8 == 4) {
 				player.currentSprite = player.characterRight2;
+			} else if (walkCounter % 8 == 6) {
+				player.currentSprite = player.characterClosed;
 			}
-		} /*else if (player.isMovingVer() == false && player.isMovingHor() == false) {
-			// currentSprite = anim.getImage();
-			player.currentSprite = player.character1;
-		}*/
+		} else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedY() > 0  && player.getSpeedX() == 0){
+            if (walkCounter % 8 == 0) {
+                player.currentSprite = player.characterDown2;
+            } else if (walkCounter % 8 == 2) {
+                player.currentSprite = player.characterDown1;
+            } else if (walkCounter % 8 == 4) {
+                player.currentSprite = player.characterDown2;
+            } else if (walkCounter % 8 == 6) {
+                player.currentSprite = player.characterClosed;
+            }
+        } else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedY() < 0  && player.getSpeedX() == 0){
+            if (walkCounter % 8 == 0) {
+                player.currentSprite = player.characterUp2;
+            } else if (walkCounter % 8 == 2) {
+                player.currentSprite = player.characterUp1;
+            } else if (walkCounter % 8 == 4) {
+                player.currentSprite = player.characterUp2;
+            } else if (walkCounter % 8 == 6) {
+                player.currentSprite = player.characterClosed;
+            }
+        }
 
-		for (int j = 0; j < getEnemyarray().size(); j++) {
+        for (int j = 0; j < getEnemyarray().size(); j++) {
 			Enemy e = getEnemyarray().get(j);
 
 			if (e.alive == true) {
 				if (e.isMoving == true && e.getSpeedX() <= 0) {
-					if (walkCounter % 20 == 0) {
+					if (walkCounter % 10 == 0) {
 						e.currentSprite = Assets.enemyLeft1;
-					} else if (walkCounter % 20 == 10) {
+					} else if (walkCounter % 10 == 5) {
 						e.currentSprite = Assets.enemyLeft2;
 					}
 				} else if (e.isMoving == true && e.getSpeedX() > 0) {
-					if (walkCounter % 20 == 0) {
+					if (walkCounter % 10 == 0) {
 						e.currentSprite = Assets.enemyRight1;
-					} else if (walkCounter % 20 == 10) {
+					} else if (walkCounter % 10 == 5) {
 						e.currentSprite = Assets.enemyRight2;
 					}
 				} else if (e.isMoving == false) {
@@ -373,11 +394,11 @@ public class GameScreen extends Screen {
 		}
 		// First draw the game elements.
 
-		g.drawImage(Assets.characterLeft1, player.getCenterX() - 61, player.getCenterY() - 63);
+		g.drawImage(player.currentSprite, player.getCenterX() - 61, player.getCenterY() - 63);
 
 		for (int i = 0; i < getEnemyarray().size(); i++) {
 			Enemy e = getEnemyarray().get(i);
-			g.drawImage(Assets.enemyLeft1, e.getCenterX() - 61, e.getCenterY() - 63);
+			g.drawImage(e.characterLeft1, e.getCenterX() - 61, e.getCenterY() - 63);
 		}
 
 		if(player.touched == true){
@@ -447,7 +468,7 @@ public class GameScreen extends Screen {
 		Graphics g = game.getGraphics();
 
 		g.drawARGB(155, 0, 0, 0);
-		g.drawString("Tap to Start.", 400, 240, paint);
+		g.drawString("Tap to Start.", 240, 400, paint);
 
 	}
 

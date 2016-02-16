@@ -23,6 +23,10 @@ public class LoadingScreen extends Screen {
 		Assets.characterLeft2 = g.newImage("characterleft2.png", ImageFormat.RGB565);
 		Assets.characterRight1 = g.newImage("characterright1.png", ImageFormat.RGB565);
 		Assets.characterRight2 = g.newImage("characterright2.png", ImageFormat.RGB565);
+        Assets.characterUp1 = g.newImage("characterup1.png", ImageFormat.RGB565);
+        Assets.characterUp2 = g.newImage("characterup2.png", ImageFormat.RGB565);
+        Assets.characterDown1 = g.newImage("characterdown1.png", ImageFormat.RGB565);
+        Assets.characterDown2 = g.newImage("characterdown2.png", ImageFormat.RGB565);
 		Assets.enemyLeft1 = g.newImage("enemyLeft1.png", ImageFormat.RGB565);
 		Assets.enemyLeft2 = g.newImage("enemyLeft2.png", ImageFormat.RGB565);
 		Assets.enemyRight1 = g.newImage("enemyRight1.png", ImageFormat.RGB565);

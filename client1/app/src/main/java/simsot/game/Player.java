@@ -26,7 +26,7 @@ public class Player {
 	// 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
 	private int isShooting = 0;
 
-	public Image characterLeft1, characterLeft2, characterRight1, characterRight2, characterClosed, currentSprite;
+	public Image characterLeft1, characterLeft2, characterRight1, characterRight2, characterUp1, characterUp2, characterDown1, characterDown2, characterClosed, currentSprite;
 	
 	/*
 	private static Background bg1 = GameScreen.getBg1();
