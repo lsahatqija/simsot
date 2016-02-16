@@ -14,10 +14,15 @@ public class MenuActivity extends Activity {
     Button buttonSettings;
     Button buttonHow;
 
+    private String userLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        // TODO manage when userLogin is null
+        final String userLogin = savedInstanceState.getString("userLogin");
 
         buttonSolo = (Button) findViewById(R.id.buttonSolo);
         buttonMulti = (Button) findViewById(R.id.buttonMulti);
@@ -28,7 +33,7 @@ public class MenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MenuActivity.this, SampleGame.class);
-
+                intent.putExtra("userLogin", userLogin);
                 startActivity(intent);
             }
         });

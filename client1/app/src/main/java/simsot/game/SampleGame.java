@@ -24,14 +24,19 @@ public class SampleGame extends AndroidGame {
 	public static String map;
     boolean firstTimeCreate = true;
 
+    private String playerName;
+
     private MySocket mySocket;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // TODO manage when userLogin is null
+        playerName = savedInstanceState.getString("userLogin");
+
         try {
-            mySocket = new MySocket(SERVER_URL);
+            mySocket = new MySocket(SERVER_URL, playerName);
             mySocket.connect();
         } catch (URISyntaxException e) {
             Toast.makeText(SampleGame.this,"URISyntaxException", Toast.LENGTH_SHORT).show();

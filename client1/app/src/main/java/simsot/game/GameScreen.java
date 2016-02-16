@@ -291,7 +291,7 @@ public class GameScreen extends Screen {
 		}
 
 		player.update();
-		mySocket.sendPositionUpdate("Player 1", player.getCenterX(), player.getCenterY());
+		mySocket.sendPositionUpdate(player.getCenterX(), player.getCenterY());
 
 		callEnemiesAIs();
 		checkTileCollisions();

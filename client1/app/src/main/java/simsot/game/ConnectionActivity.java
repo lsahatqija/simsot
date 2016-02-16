@@ -55,6 +55,7 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
+                intent.putExtra("userLogin", "player_test");
                 startActivity(intent);
             }
         });
@@ -177,8 +178,6 @@ public class ConnectionActivity extends Activity {
                 }
             }
         });
-
-
     }
 
     protected void displayConnectionLayout(){
@@ -201,9 +200,9 @@ public class ConnectionActivity extends Activity {
     }
 
     protected void goToMenu() {
-        Intent MenuActivity = new Intent(ConnectionActivity.this, MenuActivity.class);
-        MenuActivity.putExtra("pseudo", userLogin);
-        startActivity(MenuActivity);
+        Intent intent = new Intent(ConnectionActivity.this, MenuActivity.class);
+        intent.putExtra("userLogin", userLogin);
+        startActivity(intent);
     }
 
     protected void showToast(final String message) {
