@@ -46,7 +46,8 @@ public class Enemy {
 
 
 	public void checkCollision(Enemy e) {
-		/*if (Rect.intersects(rectX, e.R)) {
+		/*
+		if (Rect.intersects(rectX, e.R)) {
 			if (e.getCenterX() - getCenterX() >= 0 && getSpeedX() > 0) {
 				setSpeedX(0);
 			}
