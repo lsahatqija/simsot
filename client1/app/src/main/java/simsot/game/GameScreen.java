@@ -27,7 +27,7 @@ public class GameScreen extends Screen {
 	private static Background bg1, bg2;
 	private static Player player;
 	// public static Heliboy hb, hb2;
-	public Enemy e;
+	public Enemy e1, e2;
 
 	private Image image, characterLeft1, characterLeft2, characterRight1, characterRight2, characterClosed, currentSprite, background;
 	public static Image tileTree, tileGrass;
@@ -51,8 +51,10 @@ public class GameScreen extends Screen {
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
 		player = new Player();
-		e = new Enemy(340, 360);
-		enemyarray.add(e);
+		e1 = new Enemy(300, 360);
+		e2 = new Enemy(380, 360);
+		enemyarray.add(e1);
+		enemyarray.add(e2);
 		// hb2 = new Heliboy(700, 360);
 
 		// Image Setups

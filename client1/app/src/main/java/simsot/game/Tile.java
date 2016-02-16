@@ -2,6 +2,8 @@ package simsot.game;
 
 import android.graphics.Rect;
 
+import java.util.ArrayList;
+
 import simsot.framework.Image;
 
 public class Tile {
@@ -15,6 +17,7 @@ public class Tile {
 
 	//private Background bg = StartingClass.getBg1();
 	private Player player = GameScreen.getPlayer();
+	private ArrayList<Enemy> enemyarray = GameScreen.getEnemyarray();
 
 	private Rect r;
 	
@@ -31,7 +34,7 @@ public class Tile {
 		centerY = (y * 50) + 25;
 		type = typeInt;
 
-		r = new Rect(getCenterX()-25,getCenterY()-25,50,50);
+		r = new Rect(getCenterX(),getCenterY(),getCenterX()+50,getCenterY()+50);
 		
 		if (type == 't') {
 			tileImage = GameScreen.tileTree;
@@ -43,10 +46,10 @@ public class Tile {
 	public void checkHorizontalCollision(Player player) {
 		if (Rect.intersects(player.rectX, r)) {
 			if (player.getCenterX() <= this.getCenterX()) {
-				player.setCenterX(player.getCenterX() - 5);
+				player.setCenterX(player.getCenterX() - 2);
 				player.setSpeedX(0);
 			} else if (player.getCenterX() > this.getCenterX()) {
-				player.setCenterX(player.getCenterX() + 5);
+				player.setCenterX(player.getCenterX() + 2);
 				player.setSpeedX(0);
 			}
 		}
@@ -55,13 +58,13 @@ public class Tile {
 	public void checkVerticalCollision(Player player) {
 		if (Rect.intersects(player.rectY, r)) {
 			if (player.getCenterY() <= this.getCenterY()) {
-				player.setCenterY(player.getCenterY() - 5);
+				player.setCenterY(player.getCenterY() - 2);
 				player.setSpeedY(0);
-				player.isColliding = true;
+				//player.isColliding = true;
 			} else if (player.getCenterY() > this.getCenterY()) {
-				player.setCenterY(player.getCenterY() + 5);
+				player.setCenterY(player.getCenterY() + 2);
 				player.setSpeedY(0);
-				player.isColliding = true;
+				//player.isColliding = true;
 			}
 		}
 	}
@@ -70,10 +73,10 @@ public class Tile {
 		if (/*enemy.isAlive() == true && */Rect.intersects(enemy.rectX, r)) {
 			if (enemy.getCenterX() <= this.getCenterX()) {
 				enemy.setCenterX(enemy.getCenterX() - 2);
-				enemy.setSpeedX(0);
+				enemy.setSpeedX(enemy.getSpeedX()*(-1));
 			} else if (enemy.getCenterX() >= this.getCenterX()) {
 				enemy.setCenterX(enemy.getCenterX() + 2);
-				enemy.setSpeedX(0);
+				enemy.setSpeedX(enemy.getSpeedX()*(-1));
 			}
 		}
 	}
@@ -82,10 +85,10 @@ public class Tile {
 		if (/*enemy.isAlive() == true && */Rect.intersects(enemy.rectY, r)) {
 			if (enemy.getCenterY() <= this.getCenterY()) {
 				enemy.setCenterY(enemy.getCenterY() - 2);
-				enemy.setSpeedY(0);
+				enemy.setSpeedY(enemy.getSpeedY()*(-1));
 			} else if (enemy.getCenterY() >= this.getCenterY()) {
 				enemy.setCenterY(enemy.getCenterY() + 2);
-				enemy.setSpeedY(0);
+				enemy.setSpeedY(enemy.getSpeedY()*(-1));
 			}
 		}
 	}
@@ -93,18 +96,15 @@ public class Tile {
 	public void checkCollisions() {
 		checkHorizontalCollision(player);
 		checkVerticalCollision(player);
-
-		/*
-		for (int i = 0; i < GameScreen.getEnemyarray().size(); i++) {
-			Enemy e = GameScreen.getEnemyarray().get(i);
+		for (int i = 0; i < enemyarray.size(); i++) {
+			Enemy e = enemyarray.get(i);
 			checkHorizontalCollision(e);
 			checkVerticalCollision(e);
 		}
-*/
 	}
 
 	public void update() {
-		r.set(getCenterX()-25, getCenterY()-25, 50, 50);
+		r.set(getCenterX(), getCenterY(), getCenterX()+50, getCenterY()+50);
 	}
 
 	public int getSpeedX() {

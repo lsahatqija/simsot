@@ -10,7 +10,7 @@ public class Player {
 	final int MOVESPEED = 10;
 
 	private int centerX = 240;
-	private int centerY = 150;
+	private int centerY = 400;
 	private int speedX = 0;
 	private int speedY = 0;
 	private int scrollingSpeed = 0;
@@ -77,8 +77,8 @@ public class Player {
 		}
 
 		// Collision
-		rectX.set(centerX - 25, centerY - 20, 50, 40);
-		rectY.set(centerX - 20, centerY - 25, 40, 50);
+		rectX.set(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
+		rectY.set(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
 		/*
 		if (isShooting > 0) {
 			if (weapon.isReady2Fire()) {

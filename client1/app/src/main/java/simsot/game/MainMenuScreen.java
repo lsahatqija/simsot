@@ -1,5 +1,7 @@
 package simsot.game;
 
+import android.graphics.Color;
+
 import java.util.List;
 
 import simsot.framework.Game;
@@ -24,7 +26,7 @@ public class MainMenuScreen extends Screen {
 			TouchEvent event = touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
 
-				if (inBounds(event, 50, 350, 250, 450)) {
+				if (inBounds(event, 180, 390, 120, 60)) {
 					game.setScreen(new GameScreen(game));
 				}
 
@@ -43,6 +45,7 @@ public class MainMenuScreen extends Screen {
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.menu, 0, 0);
+		//g.drawRect(180, 390, 120, 60, Color.WHITE);
 	}
 
 	@Override

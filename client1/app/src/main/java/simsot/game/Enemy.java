@@ -17,8 +17,8 @@ public class Enemy {
 	protected int walkCounter = 1;
 
 	private Background bg = GameScreen.getBg1();
-	public Rect rectX;
-	public Rect rectY;
+	public Rect rectX = new Rect(0, 0, 0, 0);
+	public Rect rectY = new Rect(0, 0, 0, 0);
 	public Rect R;
 	protected int movementTime = ((int) Math.random() * 100) + 50;
 
@@ -39,11 +39,14 @@ public class Enemy {
 		this.health = 1;
 		this.centerX = centerX;
 		this.centerY = centerY;
+		//this.rectX.set(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
+		//this.rectY.set(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
 		
 	}
 
+
 	public void checkCollision(Enemy e) {
-		if (Rect.intersects(rectX, e.R)) {
+		/*if (Rect.intersects(rectX, e.R)) {
 			if (e.getCenterX() - getCenterX() >= 0 && getSpeedX() > 0) {
 				setSpeedX(0);
 			}
@@ -58,7 +61,7 @@ public class Enemy {
 			if (e.getCenterY() - getCenterY() <= 0 && getSpeedY() < 0) {
 				setSpeedY(0);
 			}
-		}
+		}*/
 	}
 
 	
@@ -111,8 +114,8 @@ public class Enemy {
 			}
 
 			// Collision
-			// rectX.setRect(getCenterX() - 55, getCenterY() - 55, 50, 40);
-			// rectY.setRect(getCenterX() - 50, getCenterY() - 60, 40, 50);
+			rectX.set(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
+			rectY.set(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
 
 			// AI
 		}
