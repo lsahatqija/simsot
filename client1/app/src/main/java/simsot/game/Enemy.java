@@ -5,6 +5,8 @@ import simsot.framework.Image;
 
 public class Enemy {
 
+    final int MOVESPEED = 4;
+
 	private int speedX = 0;
 	private int speedY = 0;
 	private int centerX;
@@ -17,8 +19,8 @@ public class Enemy {
 	protected int walkCounter = 1;
 
 	private Background bg = GameScreen.getBg1();
-	public Rect rectX = new Rect(0, 0, 0, 0);
-	public Rect rectY = new Rect(0, 0, 0, 0);
+	public Rect rectX;
+	public Rect rectY;
 	public Rect R;
 	protected int movementTime = ((int) Math.random() * 100) + 50;
 
@@ -39,9 +41,8 @@ public class Enemy {
 		this.health = 1;
 		this.centerX = centerX;
 		this.centerY = centerY;
-		//this.rectX.set(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
-		//this.rectY.set(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
-		
+		rectX = new Rect(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
+        rectY = new Rect(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
 	}
 
 
@@ -88,18 +89,18 @@ public class Enemy {
 			// Prevents going beyond X coordinate of 0 or 800
 			if (centerX + speedX <= 40) {
 				centerX = 41;
-				setSpeedX(10);
+				setSpeedX(MOVESPEED);
 			} else if (centerX + speedX >= 480) {
 				centerX = 479;
-				setSpeedX(-10);
+				setSpeedX(-MOVESPEED);
 			}
 
 			if (centerY + speedY <= 40) {
 				centerY = 41;
-				setSpeedY(10);
+				setSpeedY(MOVESPEED);
 			} else if (centerY + speedY >= 770) {
 				centerY = 769;
-				setSpeedY(-10);
+				setSpeedY(-MOVESPEED);
 			}
 			
 			if (getSpeedX() != 0 || getSpeedY() !=0){
@@ -125,9 +126,9 @@ public class Enemy {
 	public void callAI() {
 		if (alive == true){
 			if (walkCounter % 100 == 51){
-				setSpeedX(10);
+				setSpeedX(MOVESPEED);
 			} else if (walkCounter % 100 == 1) {
-				setSpeedX(-10);
+				setSpeedX(-MOVESPEED);
 			}
 		}
 	}

@@ -26,12 +26,10 @@ public class GameScreen extends Screen {
 	private int walkCounter = 1;
 	private static Background bg1, bg2;
 	private static Player player;
-	// public static Heliboy hb, hb2;
 	public Enemy e1, e2;
 
-	private Image image, characterLeft1, characterLeft2, characterRight1, characterRight2, characterClosed, currentSprite, background;
-	public static Image tileTree, tileGrass;
-	private Animation anim, hanim;
+	public static Image tileTree, tileGrass, background;
+	private Animation anim;
 
 	private ArrayList<Tile> tilearray = new ArrayList<Tile>();
 	public static ArrayList<Enemy> enemyarray = new ArrayList<Enemy>();
@@ -40,6 +38,8 @@ public class GameScreen extends Screen {
 	Paint paint, paint2;
 
 	MySocket mySocket;
+
+    private long clock = System.currentTimeMillis();
 
 	public GameScreen(Game game) {
 		super(game);
@@ -51,11 +51,10 @@ public class GameScreen extends Screen {
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
 		player = new Player();
-		e1 = new Enemy(300, 360);
-		e2 = new Enemy(380, 360);
+		e1 = new Enemy(400, 100);
+		e2 = new Enemy(100, 700);
 		enemyarray.add(e1);
 		enemyarray.add(e2);
-		// hb2 = new Heliboy(700, 360);
 
 		// Image Setups
 		player.characterLeft1 = Assets.characterLeft1;
@@ -67,6 +66,9 @@ public class GameScreen extends Screen {
         player.characterUp1 = Assets.characterUp1;
         player.characterUp2 = Assets.characterUp2;
 		player.characterClosed = Assets.characterClosed;
+
+        player.currentSprite = player.characterLeft1;
+
         for(int i = 0; i < enemyarray.size(); i++){
             Enemy e = enemyarray.get(i);
             e.characterLeft1 = Assets.enemyLeft1;
@@ -78,22 +80,6 @@ public class GameScreen extends Screen {
 		background = Assets.background;
 		tileTree = Assets.tileTree;
 		tileGrass = Assets.tileGrass;
-
-		//anim = new Animation();
-		//anim.addFrame(player.character1, 1250);
-		//anim.addFrame(player.character2, 50);
-		for (int i = 0; i < getEnemyarray().size(); i++) {
-			Enemy e = getEnemyarray().get(i);
-			e.characterLeft1 = Assets.enemyLeft1;
-			e.characterLeft2 = Assets.enemyLeft2;
-			e.characterRight1 = Assets.enemyRight1;
-			e.characterRight2 = Assets.enemyRight2;
-			//e.anim.addFrame(e.characterStay, 100);
-			//e.currentSprite = e.anim.getImage();
-		}
-
-		// currentSprite = anim.getImage();
-		player.currentSprite = player.characterLeft1;
 
 		loadMap();
 
@@ -109,6 +95,11 @@ public class GameScreen extends Screen {
 		paint2.setTextAlign(Paint.Align.CENTER);
 		paint2.setAntiAlias(true);
 		paint2.setColor(Color.WHITE);
+
+        Graphics g = game.getGraphics();
+        g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
+        g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
+        paintTiles(g);
 
 	}
 
@@ -134,7 +125,7 @@ public class GameScreen extends Screen {
 		}
 		height = lines.size();
 
-		for (int j = 0; j < 12; j++) {
+		for (int j = 0; j < height; j++) {
 			String line = (String) lines.get(j);
 			for (int i = 0; i < width; i++) {
 
@@ -183,7 +174,13 @@ public class GameScreen extends Screen {
 
 	private void updateRunning(List touchEvents, float deltaTime) {
 
-		// This is identical to the update() method from our Unit 2/3 game.
+		// Sleep
+        try {
+            Thread.sleep(Math.abs(17 - System.currentTimeMillis() + clock));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        clock = System.currentTimeMillis();
 
 		// 1. All touch input is handled here:
 		int len = touchEvents.size();
@@ -224,43 +221,43 @@ public class GameScreen extends Screen {
 
 		// Animation
 		if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() < 0 && player.getSpeedY() == 0){
-			if (walkCounter % 8 == 0) {
+			if (walkCounter % 16 == 0) {
 				player.currentSprite = player.characterLeft2;
-			} else if (walkCounter % 8 == 2) {
+			} else if (walkCounter % 16 == 4) {
 				player.currentSprite = player.characterLeft1;
-			} else if (walkCounter % 8 == 4) {
+			} else if (walkCounter % 16 == 8) {
 				player.currentSprite = player.characterLeft2;
-			} else if (walkCounter % 8 == 6) {
+			} else if (walkCounter % 16 == 12) {
 				player.currentSprite = player.characterClosed;
 			}
 		} else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() > 0  && player.getSpeedY() == 0){
-			if (walkCounter % 8 == 0) {
+			if (walkCounter % 16 == 0) {
 				player.currentSprite = player.characterRight2;
-			} else if (walkCounter % 8 == 2) {
+			} else if (walkCounter % 16 == 4) {
 				player.currentSprite = player.characterRight1;
-			} else if (walkCounter % 8 == 4) {
+			} else if (walkCounter % 16 == 8) {
 				player.currentSprite = player.characterRight2;
-			} else if (walkCounter % 8 == 6) {
+			} else if (walkCounter % 16 == 12) {
 				player.currentSprite = player.characterClosed;
 			}
 		} else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedY() > 0  && player.getSpeedX() == 0){
-            if (walkCounter % 8 == 0) {
+            if (walkCounter % 16 == 0) {
                 player.currentSprite = player.characterDown2;
-            } else if (walkCounter % 8 == 2) {
+            } else if (walkCounter % 16 == 4) {
                 player.currentSprite = player.characterDown1;
-            } else if (walkCounter % 8 == 4) {
+            } else if (walkCounter % 16 == 8) {
                 player.currentSprite = player.characterDown2;
-            } else if (walkCounter % 8 == 6) {
+            } else if (walkCounter % 16 == 12) {
                 player.currentSprite = player.characterClosed;
             }
         } else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedY() < 0  && player.getSpeedX() == 0){
-            if (walkCounter % 8 == 0) {
+            if (walkCounter % 16 == 0) {
                 player.currentSprite = player.characterUp2;
-            } else if (walkCounter % 8 == 2) {
+            } else if (walkCounter % 16 == 4) {
                 player.currentSprite = player.characterUp1;
-            } else if (walkCounter % 8 == 4) {
+            } else if (walkCounter % 16 == 8) {
                 player.currentSprite = player.characterUp2;
-            } else if (walkCounter % 8 == 6) {
+            } else if (walkCounter % 16 == 12) {
                 player.currentSprite = player.characterClosed;
             }
         }
@@ -270,15 +267,15 @@ public class GameScreen extends Screen {
 
 			if (e.alive == true) {
 				if (e.isMoving == true && e.getSpeedX() <= 0) {
-					if (walkCounter % 10 == 0) {
+					if (walkCounter % 16 == 0) {
 						e.currentSprite = Assets.enemyLeft1;
-					} else if (walkCounter % 10 == 5) {
+					} else if (walkCounter % 16 == 8) {
 						e.currentSprite = Assets.enemyLeft2;
 					}
 				} else if (e.isMoving == true && e.getSpeedX() > 0) {
-					if (walkCounter % 10 == 0) {
+					if (walkCounter % 16 == 0) {
 						e.currentSprite = Assets.enemyRight1;
-					} else if (walkCounter % 10 == 5) {
+					} else if (walkCounter % 16 == 8) {
 						e.currentSprite = Assets.enemyRight2;
 					}
 				} else if (e.isMoving == false) {
@@ -411,6 +408,7 @@ public class GameScreen extends Screen {
 
 		if(player.touched == true){
 			g.drawString("Hit!", player.getCenterX(), player.getCenterY(), paint);
+            player.touched = false;
 		}
 
 		// Example:
@@ -432,14 +430,11 @@ public class GameScreen extends Screen {
 	private void paintTiles(Graphics g) {
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = (Tile) tilearray.get(i);
-			tileGrass = g.newImage("grass.png", ImageFormat.RGB565);
-			tileTree = g.newImage("tree.png", ImageFormat.RGB565);
+			//tileGrass = g.newImage("grass.png", ImageFormat.RGB565);
+			//tileTree = g.newImage("tree.png", ImageFormat.RGB565);
 			if (t.getType() != 0) {
 				t.setTileImage(tileTree);
 				g.drawImage(tileTree, t.getCenterX() - 31, t.getCenterY() - 31);
-			} else {
-				t.setTileImage(tileGrass);
-				g.drawImage(tileGrass, t.getCenterX() - 31, t.getCenterY() - 31);
 			}
 		}
 	}
@@ -457,8 +452,11 @@ public class GameScreen extends Screen {
 		bg1 = null;
 		bg2 = null;
 		player = null;
-		// hb = null;
-		// hb2 = null;
+        for(int i = 0; i < enemyarray.size(); i++){
+            Enemy e = enemyarray.get(i);
+            e = null;
+        }
+        /*
 		currentSprite = null;
 		characterLeft1 = null;
 		characterLeft2 = null;
@@ -466,6 +464,7 @@ public class GameScreen extends Screen {
 		characterRight2 = null;
 		characterClosed = null;
 		anim = null;
+		*/
 
 		// Call garbage collector to clean up memory.
 		System.gc();

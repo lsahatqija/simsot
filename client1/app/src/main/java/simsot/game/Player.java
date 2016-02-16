@@ -7,10 +7,10 @@ import simsot.framework.Image;
 
 public class Player {
 
-	final int MOVESPEED = 10;
+	final int MOVESPEED = 4;
 
-	private int centerX = 240;
-	private int centerY = 400;
+	private int centerX = 100;
+	private int centerY = 100;
 	private int speedX = 0;
 	private int speedY = 0;
 	private int scrollingSpeed = 0;

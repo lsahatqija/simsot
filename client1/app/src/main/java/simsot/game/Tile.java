@@ -30,8 +30,8 @@ public class Tile {
 	}
 	
 	public Tile(int x, int y, char typeInt) {
-		centerX = (x * 50) + 25;
-		centerY = (y * 50) + 25;
+		centerX = (x * 50) + 10;
+		centerY = (y * 50) + 10;
 		type = typeInt;
 
 		r = new Rect(getCenterX(),getCenterY(),getCenterX()+62,getCenterY()+63);
@@ -102,8 +102,6 @@ public class Tile {
 			player.touched = true;
 		} else if(Rect.intersects(player.rectY, enemy.rectY)){
 			player.touched = true;
-		} else {
-			player.touched = false;
 		}
 	}
 	
