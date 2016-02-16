@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 public class MenuActivity extends Activity {
 
+    private static final String USER_LOGIN = "userLogin";
+
     Button buttonSolo;
     Button buttonMulti;
     Button buttonSettings;
@@ -22,7 +24,7 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.activity_menu);
 
         // TODO manage when userLogin is null
-        final String userLogin = savedInstanceState.getString("userLogin");
+        final String userLogin =  getIntent().getStringExtra(USER_LOGIN);
 
         buttonSolo = (Button) findViewById(R.id.buttonSolo);
         buttonMulti = (Button) findViewById(R.id.buttonMulti);

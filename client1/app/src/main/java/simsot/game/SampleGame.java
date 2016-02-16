@@ -20,6 +20,7 @@ import com.github.nkzawa.socketio.client.Socket;
 public class SampleGame extends AndroidGame {
 
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com/";
+    private static final String USER_LOGIN = "userLogin";
 	
 	public static String map;
     boolean firstTimeCreate = true;
@@ -33,7 +34,7 @@ public class SampleGame extends AndroidGame {
         super.onCreate(savedInstanceState);
 
         // TODO manage when userLogin is null
-        playerName = savedInstanceState.getString("userLogin");
+        playerName = getIntent().getStringExtra(USER_LOGIN);
 
         try {
             mySocket = new MySocket(SERVER_URL, playerName);

@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 
 public class MySocket {
-    private static final String NAME = "nom";
+    private static final String NAME = "name";
     private static final String X = "x";
     private static final String Y = "y";
     private Socket mSocket;
