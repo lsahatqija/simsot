@@ -9,5 +9,6 @@
     <string name="registration_error">Registration error</string>
     <string name="password_not_match">Passwords don\'t match.</string>
     <string name="notRegisteredAdvice">Not registered, so click here :</string>
+    <string name="title_activity_multi_mode">MultiModeActivity</string>
 
 </resources>

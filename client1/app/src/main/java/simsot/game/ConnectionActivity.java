@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,13 +38,18 @@ public class ConnectionActivity extends Activity {
 
     private Socket mSocket;
 
-    public String userLogin = null;
+    private String userLogin = null;
+
+    private int logoCounter = 0;
 
     Button directGameButton, registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
     Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
     TextView welcomeText;
     LinearLayout layoutConnection, layoutRegistration;
     RelativeLayout layoutMenu;
+    ImageView menuLogo;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +78,8 @@ public class ConnectionActivity extends Activity {
         buttonHow = (Button) findViewById(R.id.buttonHow);
 
         welcomeText = (TextView) findViewById(R.id.welcomeText);
+
+        menuLogo = (ImageView) findViewById(R.id.menuLogo);
 
         directGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,7 +234,9 @@ public class ConnectionActivity extends Activity {
         buttonMulti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ConnectionActivity.this, MultiModeActivity.class);
+                intent.putExtra("userLogin", userLogin);
+                startActivity(intent);
             }
         });
 
@@ -241,6 +251,17 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        menuLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logoCounter++;
+                if(logoCounter==42){
+                    Toast.makeText(ConnectionActivity.this, "Nice, you find the answer", Toast.LENGTH_LONG).show();
+                    logoCounter=0;
+                }
             }
         });
 

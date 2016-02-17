@@ -31,7 +31,10 @@
             android:name=".SampleGame"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:label="SampleGame"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MultiModeActivity"
+            android:label="@string/title_activity_multi_mode"></activity>
     </application>
 
 </manifest>
