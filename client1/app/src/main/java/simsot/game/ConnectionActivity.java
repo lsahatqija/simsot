@@ -39,11 +39,11 @@ public class ConnectionActivity extends Activity {
 
     public String userLogin = null;
 
-    Button directGameButton,connectionChoiceButton, registrationChoiceButton, connectButton, registerButton, disconnectButton;
+    Button directGameButton, registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
     Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
     TextView welcomeText;
     LinearLayout layoutConnection, layoutRegistration;
-    RelativeLayout layoutRegistrationConnection, layoutMenu;
+    RelativeLayout layoutMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +52,16 @@ public class ConnectionActivity extends Activity {
 
         directGameButton = (Button) findViewById(R.id.directGameButton);
 
-        connectionChoiceButton = (Button) findViewById(R.id.connectionChoiceButton);
         registrationChoiceButton = (Button) findViewById(R.id.registrationChoiceButton);
 
         connectButton = (Button) findViewById(R.id.connectButton);
 
         registerButton = (Button) findViewById(R.id.registerButton);
 
+        backToConnectionButton = (Button) findViewById(R.id.backToConnectionButton);
+
         disconnectButton = (Button) findViewById(R.id.disconnectButton);
 
-        layoutRegistrationConnection = (RelativeLayout) findViewById(R.id.layoutRegistrationConnection);
         layoutConnection = (LinearLayout) findViewById(R.id.layoutConnection);
         layoutRegistration = (LinearLayout) findViewById(R.id.layoutRegistration);
         layoutMenu = (RelativeLayout) findViewById(R.id.layoutMenu);
@@ -82,14 +82,6 @@ public class ConnectionActivity extends Activity {
             }
         });
 
-        connectionChoiceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayConnectionLayout();
-            }
-        });
-
-
         registrationChoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,14 +98,14 @@ public class ConnectionActivity extends Activity {
                 editor.commit();
                 userLogin = null;
 
-                displayRegistrationConnectionLayout();
+                displayConnectionLayout();
             }
         });
 
         SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
         String login = settings.getString(LOGIN_IN_PREFERENCES, null);
         if (login == null) {
-            displayRegistrationConnectionLayout();
+            displayConnectionLayout();
         } else {
             userLogin = login;
             displayMenuLayout();
@@ -215,6 +207,13 @@ public class ConnectionActivity extends Activity {
             }
         });
 
+        backToConnectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayConnectionLayout();
+            }
+        });
+
         buttonSolo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,21 +246,9 @@ public class ConnectionActivity extends Activity {
 
     }
 
-    protected void displayRegistrationConnectionLayout(){
+    protected void displayConnectionLayout() {
         ConnectionActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                layoutRegistrationConnection.setVisibility(View.VISIBLE);
-                layoutConnection.setVisibility(View.INVISIBLE);
-                layoutMenu.setVisibility(View.INVISIBLE);
-                layoutRegistration.setVisibility(View.INVISIBLE);
-            }
-        });
-    }
-
-    protected void displayConnectionLayout(){
-        ConnectionActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.VISIBLE);
                 layoutMenu.setVisibility(View.INVISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
@@ -269,10 +256,9 @@ public class ConnectionActivity extends Activity {
         });
     }
 
-    protected void displayMenuLayout(){
+    protected void displayMenuLayout() {
         ConnectionActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.INVISIBLE);
                 layoutMenu.setVisibility(View.VISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
@@ -281,10 +267,9 @@ public class ConnectionActivity extends Activity {
         });
     }
 
-    protected void displayRegistrationLayout(){
+    protected void displayRegistrationLayout() {
         ConnectionActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                layoutRegistrationConnection.setVisibility(View.INVISIBLE);
                 layoutConnection.setVisibility(View.INVISIBLE);
                 layoutMenu.setVisibility(View.INVISIBLE);
                 layoutRegistration.setVisibility(View.VISIBLE);

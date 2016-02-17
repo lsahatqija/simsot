@@ -8,5 +8,6 @@
     <string name="registration_failed">Registration failed</string>
     <string name="registration_error">Registration error</string>
     <string name="password_not_match">Passwords don\'t match.</string>
+    <string name="notRegisteredAdvice">Not registered, so click here :</string>
 
 </resources>

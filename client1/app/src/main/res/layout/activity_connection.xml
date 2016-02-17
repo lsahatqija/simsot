@@ -9,36 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="simsot.game.ConnectionActivity">
 
-    <RelativeLayout
-        android:id="@+id/layoutRegistrationConnection"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/connectionChoiceButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect"
-            android:layout_centerHorizontal="true" />
-        <Button
-            android:id="@+id/registrationChoiceButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/connectionChoiceButton"
-            android:text="Register"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/layoutRegistration"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="invisible">
+        >
 
         <EditText
             android:id="@+id/userPseudoRegistration"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Login"
@@ -46,7 +26,7 @@
 
         <EditText
             android:id="@+id/userPasswordRegistration"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userPseudo"
             android:ems="10"
@@ -56,7 +36,7 @@
 
         <EditText
             android:id="@+id/userPassword2Registration"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userPassword"
             android:ems="10"
@@ -65,12 +45,16 @@
 
         <Button
             android:id="@+id/registerButton"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/userPassword2"
-            android:layout_alignRight="@+id/userPassword2"
-            android:layout_alignTop="@+id/connectButton"
+            android:layout_below="@id/userPassword2Registration"
             android:text="Register" />
+        <Button
+            android:id="@+id/backToConnectionButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/registerButton"
+            android:text="Cancel" />
 
     </LinearLayout>
 
@@ -83,7 +67,7 @@
 
         <EditText
             android:id="@+id/userPseudoConnection"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Login"
@@ -91,7 +75,7 @@
 
         <EditText
             android:id="@+id/userPasswordConnection"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userPseudo"
             android:ems="10"
@@ -101,10 +85,24 @@
 
         <Button
             android:id="@+id/connectButton"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/userPassword2"
             android:text="Connect" />
+
+        <TextView
+            android:id="@+id/notRegisteredAdvice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/connectButton"
+            android:text="@string/notRegisteredAdvice"
+            android:layout_marginTop="20dp"/>
+        <Button
+            android:id="@+id/registrationChoiceButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notRegisteredAdvice"
+            android:text="Register" />
 
     </LinearLayout>
 
