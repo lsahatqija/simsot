@@ -1,4 +1,4 @@
-package simsot.game;
+package simsot.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +21,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+
+import simsot.game.R;
+import simsot.game.SampleGame;
 
 public class ConnectionActivity extends Activity {
 

@@ -1,4 +1,4 @@
-package simsot.game;
+package simsot.view;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+
+import simsot.game.R;
 
 public class MultiModeActivity extends Activity {
 

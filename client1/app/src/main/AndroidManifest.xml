@@ -19,7 +19,7 @@
         android:icon="@drawable/logo"
         android:label="@string/app_name">
         <activity
-            android:name=".ConnectionActivity"
+            android:name="simsot.view.ConnectionActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +33,7 @@
             android:label="SampleGame"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MultiModeActivity"
+            android:name="simsot.view.MultiModeActivity"
             android:label="@string/title_activity_multi_mode"></activity>
     </application>
 

@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="simsot.game.ConnectionActivity">
+    tools:context="simsot.view.ConnectionActivity">
 
     <LinearLayout
         android:id="@+id/layoutRegistration"
