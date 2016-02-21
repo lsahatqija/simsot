@@ -12,7 +12,7 @@ import simsot.framework.Graphics;
 import simsot.framework.Image;
 import simsot.framework.Input.TouchEvent;
 import simsot.framework.Screen;
-import simsot.framework.Graphics.ImageFormat;
+import simsot.socket.MySocket;
 
 public class GameScreen extends Screen {
 	enum GameState {

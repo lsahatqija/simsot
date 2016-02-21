@@ -24,22 +24,21 @@ import java.net.URISyntaxException;
 
 import simsot.game.R;
 import simsot.game.SampleGame;
+import simsot.model.User;
+import simsot.socket.MySocket;
 
 public class ConnectionActivity extends Activity {
 
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
     private static final String CONNECTED = "Connected";
     private static final String REGISTERED = "Registered";
-    private static final String CONNECTION_REQUEST = "connect_user";
-    private static final String REGISTER_REQUEST = "subscribe";
+
     private static final String CONNECTION_RESPONSE = "response_connect";
     private static final String REGISTRATION_RESPONSE = "response_subscribe";
-    private static final String USERNAME = "pseudo";
-    private static final String PASSWORD = "password";
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
-    private Socket mSocket;
+    private MySocket mSocket;
 
     private String userLogin = null;
 
@@ -123,7 +122,7 @@ public class ConnectionActivity extends Activity {
         }
 
         try {
-            mSocket = IO.socket(SERVER_URL);
+            mSocket = new MySocket(SERVER_URL, null);
 
             // Messages de connexion
             mSocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {
@@ -179,18 +178,17 @@ public class ConnectionActivity extends Activity {
                 String userPseudo = ((EditText) findViewById(R.id.userPseudoConnection)).getText().toString();
                 String userPassword = ((EditText) findViewById(R.id.userPasswordConnection)).getText().toString();
 
-                JSONObject data = new JSONObject();
+                User user = new User(userPseudo, userPassword);
 
                 try {
-                    data.put(USERNAME, userPseudo);
-                    data.put(PASSWORD, userPassword);
+                    mSocket.sendConnectionRequest(user.ToJSONObject());
                 } catch (JSONException e) {
-                    return;
+                    // TODO manage exception
+                    e.printStackTrace();
                 }
-                mSocket.emit(CONNECTION_REQUEST, data);
 
                 // On note le pseudo pour le passer à la 2e activité
-                userLogin = userPseudo;
+                userLogin = user.getUserLogin();
             }
         });
 
@@ -201,19 +199,17 @@ public class ConnectionActivity extends Activity {
                 String userPassword = ((EditText) findViewById(R.id.userPasswordRegistration)).getText().toString();
                 String userPassword2 = ((EditText) findViewById(R.id.userPassword2Registration)).getText().toString();
 
-                if (!userPassword.equals(userPassword2)) {
-                    Toast.makeText(getApplicationContext(), R.string.password_not_match, Toast.LENGTH_SHORT).show();
-                } else {
-                    JSONObject data = new JSONObject();
+                if (userPassword.equals(userPassword2)) {
+                    User user = new User(userPseudo, userPassword);
 
                     try {
-                        data.put(USERNAME, userPseudo);
-                        data.put(PASSWORD, userPassword);
+                        mSocket.sendRegistrationRequest(user.ToJSONObject());
                     } catch (JSONException e) {
-                        return;
+                        // TODO manage exception
+                        e.printStackTrace();
                     }
-
-                    mSocket.emit(REGISTER_REQUEST, data);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.password_not_match, Toast.LENGTH_SHORT).show();
                 }
             }
         });

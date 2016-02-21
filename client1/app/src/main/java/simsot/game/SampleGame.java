@@ -12,10 +12,7 @@ import android.widget.Toast;
 
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
-import simsot.game.R;
-
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
+import simsot.socket.MySocket;
 
 public class SampleGame extends AndroidGame {
 
