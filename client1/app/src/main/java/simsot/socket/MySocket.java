@@ -16,6 +16,7 @@ public class MySocket {
 
     private static final String CONNECTION_REQUEST = "connect_user";
     private static final String REGISTER_REQUEST = "subscribe";
+    private static final String NEW_ROOM_REQUEST = "new_room";
 
     private static final String NAME = "name";
     private static final String X = "x";
@@ -36,6 +37,10 @@ public class MySocket {
 
     public void sendRegistrationRequest(JSONObject data){
         mSocket.emit(REGISTER_REQUEST, data);
+    }
+
+    public void sendNewRoomRequest(JSONObject data){
+        mSocket.emit(NEW_ROOM_REQUEST, data);
     }
 
     public void sendPositionUpdate(String playerName, int x, int y) {

@@ -148,6 +148,7 @@
                 android:layout_row="5"
                 android:editable="true"
                 android:text="4"
+                android:inputType="number"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
@@ -167,6 +168,7 @@
                 android:layout_row="6"
                 android:editable="true"
                 android:text="3"
+                android:inputType="number"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <Space
@@ -193,6 +195,7 @@
                 android:editable="true"
                 android:enabled="true"
                 android:text="50"
+                android:inputType="number"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText

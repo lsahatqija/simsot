@@ -8,20 +8,31 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 
 import simsot.game.R;
+import simsot.model.Room;
+import simsot.socket.MySocket;
 
 public class MultiModeActivity extends Activity {
+
+    private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
 
     RelativeLayout joinCreateRoomChoiceLayout, joinRoomLayout;
     LinearLayout createRoomLayout;
     Button buttonJoinChoice, buttonCreateChoice, createRoomButton;
 
-    RadioButton passwordOffRadio,passwordOnRadio;
-    EditText roomNameLabel,passwordLabel,nPlayersLabel,nEnnemiesLabel,distanceLabel;
+    RadioButton passwordOffRadio, passwordOnRadio;
+    EditText roomNameLabel, passwordLabel, nPlayersLabel, nEnnemiesLabel, distanceLabel;
 
     String userLogin;
 
+    private MySocket mySocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +41,16 @@ public class MultiModeActivity extends Activity {
 
         userLogin = getIntent().getStringExtra("userLogin");
 
-        joinCreateRoomChoiceLayout = (RelativeLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
-        joinRoomLayout  = (RelativeLayout) findViewById(R.id.joinRoomLayout);
-        createRoomLayout  = (LinearLayout) findViewById(R.id.createRoomLayout);
+        try {
+            mySocket = new MySocket(SERVER_URL);
+            mySocket.connect();
+        } catch (URISyntaxException e) {
+            Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
+        }
 
+        joinCreateRoomChoiceLayout = (RelativeLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
+        joinRoomLayout = (RelativeLayout) findViewById(R.id.joinRoomLayout);
+        createRoomLayout = (LinearLayout) findViewById(R.id.createRoomLayout);
         buttonJoinChoice = (Button) findViewById(R.id.buttonJoinChoice);
         buttonCreateChoice = (Button) findViewById(R.id.buttonCreateChoice);
 
@@ -63,8 +80,21 @@ public class MultiModeActivity extends Activity {
         createRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // check parameters
-                //send on socket
+                try {
+                    Room room = null;
+                    if (passwordOffRadio.isChecked()) {
+                        room = new Room(roomNameLabel.getText().toString(), null, null, null,
+                                Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
+                                null, Integer.valueOf(distanceLabel.getText().toString()));
+                    } else {
+                        room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), null, null, null,
+                                Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
+                                null, Integer.valueOf(distanceLabel.getText().toString()));
+                    }
+                    mySocket.sendNewRoomRequest(room.ToJSONObject());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -85,25 +115,23 @@ public class MultiModeActivity extends Activity {
     }
 
 
-    protected void displayJoinCreateRoomChoiceLayout(){
+    protected void displayJoinCreateRoomChoiceLayout() {
         joinCreateRoomChoiceLayout.setVisibility(View.VISIBLE);
         joinRoomLayout.setVisibility(View.INVISIBLE);
         createRoomLayout.setVisibility(View.INVISIBLE);
     }
 
-    protected void displayJoinRoomLayout(){
+    protected void displayJoinRoomLayout() {
         joinCreateRoomChoiceLayout.setVisibility(View.INVISIBLE);
         joinRoomLayout.setVisibility(View.VISIBLE);
         createRoomLayout.setVisibility(View.INVISIBLE);
     }
 
-    protected void displayCreateRoomLayout(){
+    protected void displayCreateRoomLayout() {
         joinCreateRoomChoiceLayout.setVisibility(View.INVISIBLE);
         joinRoomLayout.setVisibility(View.INVISIBLE);
         createRoomLayout.setVisibility(View.VISIBLE);
     }
-
-
 
 
 }
