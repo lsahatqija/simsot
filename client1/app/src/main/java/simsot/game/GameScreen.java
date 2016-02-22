@@ -38,6 +38,7 @@ public class GameScreen extends Screen {
 	Paint paint, paint2;
 
 	MySocket mySocket;
+	String playerName;
 
     private long clock = System.currentTimeMillis();
 
@@ -45,6 +46,7 @@ public class GameScreen extends Screen {
 		super(game);
 
 		mySocket = ((SampleGame) game).getMySocket();
+		playerName = ((SampleGame) game).getPlayerName();
 
 		// Initialize game objects here
 
@@ -288,7 +290,7 @@ public class GameScreen extends Screen {
 		}
 
 		player.update();
-		mySocket.sendPositionUpdate(player.getCenterX(), player.getCenterY());
+		mySocket.sendPositionUpdate(playerName, player.getCenterX(), player.getCenterY());
 
 		callEnemiesAIs();
 		checkTileCollisions();

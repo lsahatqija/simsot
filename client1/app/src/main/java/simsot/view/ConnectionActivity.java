@@ -122,7 +122,7 @@ public class ConnectionActivity extends Activity {
         }
 
         try {
-            mSocket = new MySocket(SERVER_URL, null);
+            mSocket = new MySocket(SERVER_URL);
 
             // Messages de connexion
             mSocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {

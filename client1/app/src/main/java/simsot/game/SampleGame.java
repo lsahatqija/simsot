@@ -34,7 +34,7 @@ public class SampleGame extends AndroidGame {
         playerName = getIntent().getStringExtra(USER_LOGIN);
 
         try {
-            mySocket = new MySocket(SERVER_URL, playerName);
+            mySocket = new MySocket(SERVER_URL);
             mySocket.connect();
         } catch (URISyntaxException e) {
             Toast.makeText(SampleGame.this,"URISyntaxException", Toast.LENGTH_SHORT).show();
@@ -102,5 +102,7 @@ public class SampleGame extends AndroidGame {
         return mySocket;
     }
 
-
+    public String getPlayerName() {
+        return playerName;
+    }
 }

@@ -21,11 +21,9 @@ public class MySocket {
     private static final String X = "x";
     private static final String Y = "y";
     private Socket mSocket;
-    private String userLogin;
 
-    public MySocket(String urlServer, String userLogin) throws URISyntaxException {
+    public MySocket(String urlServer) throws URISyntaxException {
         this.mSocket = IO.socket(urlServer);
-        this.userLogin = userLogin;
     }
 
     public Emitter on(String event, Emitter.Listener fn) {
@@ -40,11 +38,11 @@ public class MySocket {
         mSocket.emit(REGISTER_REQUEST, data);
     }
 
-    public void sendPositionUpdate(int x, int y) {
+    public void sendPositionUpdate(String playerName, int x, int y) {
         try {
             JSONObject json = new JSONObject();
 
-            json.put(NAME, userLogin);
+            json.put(NAME, playerName);
             json.put(X, x);
             json.put(Y, y);
             mSocket.emit("client_data", json);
