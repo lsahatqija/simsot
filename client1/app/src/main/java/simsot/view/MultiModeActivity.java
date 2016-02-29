@@ -191,7 +191,7 @@ public class MultiModeActivity extends Activity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mySocket.sendNewRoomRequest(json);
+                mySocket.sendGetListRoomRequest(json);
             }
         });
 
