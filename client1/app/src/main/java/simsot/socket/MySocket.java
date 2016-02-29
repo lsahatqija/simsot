@@ -54,7 +54,6 @@ public class MySocket {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     public void connect(){

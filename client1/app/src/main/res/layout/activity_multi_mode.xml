@@ -12,7 +12,8 @@
     <RelativeLayout
         android:id="@+id/joinCreateRoomChoiceLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <Button
             android:id="@+id/buttonJoinChoice"
@@ -162,7 +163,7 @@
 
             <EditText
                 android:id="@+id/nEnnemiesLabel"
-                android:layout_width="32dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
                 android:layout_row="6"
