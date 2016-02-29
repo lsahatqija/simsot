@@ -14,7 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
+
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class MultiModeActivity extends Activity {
 
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
     private static final String ACTUAL_LAYOUT = "actualLayout";
+    private static final String LIST_ROOM = "list_room";
 
     RelativeLayout joinCreateRoomChoiceLayout;
     LinearLayout createRoomLayout, joinRoomLayout;
@@ -181,7 +185,13 @@ public class MultiModeActivity extends Activity {
         searchRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("null", null);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mySocket.sendNewRoomRequest(json);
             }
         });
 
@@ -237,6 +247,21 @@ public class MultiModeActivity extends Activity {
     protected void initSocket() {
         try {
             mySocket = new MySocket(SERVER_URL);
+
+            mySocket.on(LIST_ROOM, new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    if (args[0] instanceof String) {
+                        String connectionResponse = (String) args[0];
+
+                        showToast(getString(R.string.connection_succeeded));
+
+                    } else {
+                        showToast("fail");
+                    }
+                }
+            });
+
             mySocket.connect();
         } catch (URISyntaxException e) {
             Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();

@@ -17,6 +17,7 @@ public class MySocket {
     private static final String CONNECTION_REQUEST = "connect_user";
     private static final String REGISTER_REQUEST = "subscribe";
     private static final String NEW_ROOM_REQUEST = "new_room";
+    private static final String GET_LIST_ROOM = "get_list_room";
 
     private static final String NAME = "name";
     private static final String X = "x";
@@ -54,6 +55,10 @@ public class MySocket {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendGetListRoomRequest(JSONObject data){
+        mSocket.emit(GET_LIST_ROOM, data);
     }
 
     public void connect(){
