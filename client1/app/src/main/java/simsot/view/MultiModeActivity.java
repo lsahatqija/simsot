@@ -22,6 +22,7 @@ import simsot.socket.MySocket;
 public class MultiModeActivity extends Activity {
 
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
+    private static final String ACTUAL_LAYOUT = "actualLayout";
 
     RelativeLayout joinCreateRoomChoiceLayout, joinRoomLayout;
     LinearLayout createRoomLayout;
@@ -34,6 +35,14 @@ public class MultiModeActivity extends Activity {
 
     private MySocket mySocket;
 
+    private enum MultiModeActivityActualLayout {
+        JOINCREATEROOMCHOICE,
+        JOINROOM,
+        CREATEROOM;
+    };
+
+    MultiModeActivityActualLayout actualLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,19 +50,67 @@ public class MultiModeActivity extends Activity {
 
         userLogin = getIntent().getStringExtra("userLogin");
 
-        try {
-            mySocket = new MySocket(SERVER_URL);
-            mySocket.connect();
-        } catch (URISyntaxException e) {
-            Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
+        initComponents();
+        initComponentsEvents();
+        initSocket();
+
+        if(savedInstanceState != null){
+            actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
         }
 
+        if (actualLayout == null) {
+            displayJoinCreateRoomChoiceLayout();
+        } else{
+            switch(actualLayout){
+                case JOINCREATEROOMCHOICE:
+                    displayJoinCreateRoomChoiceLayout();
+                    break;
+                case JOINROOM :
+                    displayJoinRoomLayout();
+                    break;
+                case CREATEROOM:
+                    displayCreateRoomLayout();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
+    }
+
+    protected void initComponents() {
         joinCreateRoomChoiceLayout = (RelativeLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
         joinRoomLayout = (RelativeLayout) findViewById(R.id.joinRoomLayout);
         createRoomLayout = (LinearLayout) findViewById(R.id.createRoomLayout);
+
+        initJoinCreateRoomChoiceLayoutComponents();
+        initJoinRoomLayoutComponents();
+        initCreateRoomLayoutComponents();
+    }
+
+    protected void initJoinCreateRoomChoiceLayoutComponents() {
         buttonJoinChoice = (Button) findViewById(R.id.buttonJoinChoice);
         buttonCreateChoice = (Button) findViewById(R.id.buttonCreateChoice);
+    }
 
+    protected void initJoinRoomLayoutComponents() {
+        // TODO to implement
+    }
+
+    protected void initCreateRoomLayoutComponents() {
         createRoomButton = (Button) findViewById(R.id.createRoomButton);
         passwordOffRadio = (RadioButton) findViewById(R.id.passwordOffRadio);
         passwordOnRadio = (RadioButton) findViewById(R.id.passwordOnRadio);
@@ -62,7 +119,15 @@ public class MultiModeActivity extends Activity {
         nPlayersLabel = (EditText) findViewById(R.id.nPlayersLabel);
         nEnnemiesLabel = (EditText) findViewById(R.id.nEnnemiesLabel);
         distanceLabel = (EditText) findViewById(R.id.distanceLabel);
+    }
 
+    protected void initComponentsEvents() {
+        initComponentsJoinCreateRoomChoiceLayoutEvents();
+        initJoinRoomLayoutComponentsEvents();
+        initCreateRoomLayoutComponentsEvents();
+    }
+
+    protected void initComponentsJoinCreateRoomChoiceLayoutEvents() {
         buttonJoinChoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +141,13 @@ public class MultiModeActivity extends Activity {
                 displayCreateRoomLayout();
             }
         });
+    }
 
+    protected void initJoinRoomLayoutComponentsEvents() {
+        // TODO to implement
+    }
+
+    protected void initCreateRoomLayoutComponentsEvents() {
         createRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,26 +182,48 @@ public class MultiModeActivity extends Activity {
                 passwordOffRadio.setChecked(false);
             }
         });
-
     }
 
+    protected void initSocket() {
+        try {
+            mySocket = new MySocket(SERVER_URL);
+            mySocket.connect();
+        } catch (URISyntaxException e) {
+            Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     protected void displayJoinCreateRoomChoiceLayout() {
-        joinCreateRoomChoiceLayout.setVisibility(View.VISIBLE);
-        joinRoomLayout.setVisibility(View.INVISIBLE);
-        createRoomLayout.setVisibility(View.INVISIBLE);
+        MultiModeActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                joinCreateRoomChoiceLayout.setVisibility(View.VISIBLE);
+                joinRoomLayout.setVisibility(View.INVISIBLE);
+                createRoomLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        actualLayout = MultiModeActivityActualLayout.JOINCREATEROOMCHOICE;
     }
 
     protected void displayJoinRoomLayout() {
-        joinCreateRoomChoiceLayout.setVisibility(View.INVISIBLE);
-        joinRoomLayout.setVisibility(View.VISIBLE);
-        createRoomLayout.setVisibility(View.INVISIBLE);
+        MultiModeActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                joinCreateRoomChoiceLayout.setVisibility(View.INVISIBLE);
+                joinRoomLayout.setVisibility(View.VISIBLE);
+                createRoomLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        actualLayout = MultiModeActivityActualLayout.JOINROOM;
     }
 
     protected void displayCreateRoomLayout() {
-        joinCreateRoomChoiceLayout.setVisibility(View.INVISIBLE);
-        joinRoomLayout.setVisibility(View.INVISIBLE);
-        createRoomLayout.setVisibility(View.VISIBLE);
+        MultiModeActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                joinCreateRoomChoiceLayout.setVisibility(View.INVISIBLE);
+                joinRoomLayout.setVisibility(View.INVISIBLE);
+                createRoomLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        actualLayout = MultiModeActivityActualLayout.CREATEROOM;
     }
 
 
