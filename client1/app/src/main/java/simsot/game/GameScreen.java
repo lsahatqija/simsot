@@ -454,6 +454,7 @@ public class GameScreen extends Screen {
 		bg1 = null;
 		bg2 = null;
 		player = null;
+        /*
         player.characterLeft1 = null;
         player.characterLeft2 = null;
         player.characterRight1 = null;
@@ -464,15 +465,19 @@ public class GameScreen extends Screen {
         player.characterDown2 = null;
         player.characterClosed = null;
         player.currentSprite = null;
+        */
 
-        for(int i = 0; i < enemyarray.size(); i++){
+        /*
+        for(int i = enemyarray.size()+1; i <= 0; i--){
             Enemy e = enemyarray.get(i);
-            e.characterLeft1 = null;
-            e.characterLeft2 = null;
-            e.characterRight1 = null;
-            e.characterRight2 = null;
-            e.currentSprite = null;
             e = null;
+            enemyarray.remove(i);
+
+        }*/
+
+        while(enemyarray.size() > 0){
+            int i = enemyarray.size()-1;
+            enemyarray.remove(i);
         }
 
 		// Call garbage collector to clean up memory.
