@@ -13,7 +13,7 @@
         android:id="@+id/joinCreateRoomChoiceLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/buttonJoinChoice"
@@ -219,11 +219,34 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/joinRoomLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:weightSum="1">
 
-    </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Host   N player"
+            android:id="@+id/indicationLabel" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.05"
+            android:clickable="true"
+            android:nestedScrollingEnabled="true"
+            android:smoothScrollbar="true"
+            android:fastScrollEnabled="true"
+            android:fastScrollAlwaysVisible="true" />
+    </LinearLayout>
+
 </RelativeLayout>
