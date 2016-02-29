@@ -24,8 +24,8 @@ public class MultiModeActivity extends Activity {
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
     private static final String ACTUAL_LAYOUT = "actualLayout";
 
-    RelativeLayout joinCreateRoomChoiceLayout, joinRoomLayout;
-    LinearLayout createRoomLayout;
+    RelativeLayout joinCreateRoomChoiceLayout;
+    LinearLayout createRoomLayout, joinRoomLayout;
     Button buttonJoinChoice, buttonCreateChoice, createRoomButton;
 
     RadioButton passwordOffRadio, passwordOnRadio;
@@ -93,7 +93,7 @@ public class MultiModeActivity extends Activity {
 
     protected void initComponents() {
         joinCreateRoomChoiceLayout = (RelativeLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
-        joinRoomLayout = (RelativeLayout) findViewById(R.id.joinRoomLayout);
+        joinRoomLayout = (LinearLayout) findViewById(R.id.joinRoomLayout);
         createRoomLayout = (LinearLayout) findViewById(R.id.createRoomLayout);
 
         initJoinCreateRoomChoiceLayoutComponents();
