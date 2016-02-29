@@ -363,7 +363,7 @@ public class ConnectionActivity extends Activity {
                 layoutConnection.setVisibility(View.INVISIBLE);
                 layoutMenu.setVisibility(View.VISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
-                welcomeText.setText("Welcome " + userLogin);
+                welcomeText.setText(getResources().getString(R.string.welcome_user, userLogin));
             }
         });
         actualLayout = ConnectionActivityActualLayout.LAYOUTMENU;

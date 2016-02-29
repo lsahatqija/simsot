@@ -10,5 +10,19 @@
     <string name="password_not_match">Passwords don\'t match.</string>
     <string name="notRegisteredAdvice">Not registered, so click here :</string>
     <string name="title_activity_multi_mode">MultiModeActivity</string>
+    <string name="welcome_user">Welcome %1$s</string>
+    <string name="register_button">Register</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="single_player_button">Single player</string>
+    <string name="multi_player_button">Multi player</string>
+    <string name="settings_button">Settings</string>
+    <string name="how_to_play_button">How To Play</string>
+    <string name="disconnect_button">Disconnect</string>
+    <string name="hint_login">Login</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_retype_password">Retype password</string>
+    <string name="connect_button">Connect</string>
+    <string name="register_choice_button">Register</string>
+    <string name="logo_content_description">logo</string>
 
 </resources>

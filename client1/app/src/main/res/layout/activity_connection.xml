@@ -14,47 +14,43 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="invisible" >
+        android:visibility="invisible">
 
         <EditText
             android:id="@+id/userPseudoRegistration"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Login"
+            android:hint="@string/hint_login"
             android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/userPasswordRegistration"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userPseudo"
             android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:password="true" />
+            android:hint="@string/hint_password"
+            android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/userPassword2Registration"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userPassword"
             android:ems="10"
-            android:hint="Retype password"
+            android:hint="@string/hint_retype_password"
             android:inputType="textPassword" />
 
         <Button
             android:id="@+id/registerButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/userPassword2Registration"
-            android:text="Register" />
+            android:text="@string/register_button" />
+
         <Button
             android:id="@+id/backToConnectionButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/registerButton"
-            android:text="Cancel" />
+            android:text="@string/cancel_button" />
 
     </LinearLayout>
 
@@ -63,46 +59,42 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="invisible" >
 
         <EditText
             android:id="@+id/userPseudoConnection"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Login"
+            android:hint="@string/hint_login"
             android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/userPasswordConnection"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userPseudo"
             android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:password="true" />
+            android:hint="@string/hint_password"
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/connectButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userPassword2"
-            android:text="Connect" />
+            android:text="@string/connect_button" />
 
         <TextView
             android:id="@+id/notRegisteredAdvice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/connectButton"
-            android:text="@string/notRegisteredAdvice"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:text="@string/notRegisteredAdvice" />
+
         <Button
             android:id="@+id/registrationChoiceButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/notRegisteredAdvice"
-            android:text="Register" />
+            android:text="@string/register_choice_button" />
 
     </LinearLayout>
 
@@ -110,8 +102,7 @@
         android:id="@+id/layoutMenu"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
-         >
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/welcomeText"
@@ -123,55 +114,51 @@
             android:id="@+id/menuLogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/logo_content_description"
+            android:src="@drawable/logo" />
 
         <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="Single player"
             android:id="@+id/buttonSolo"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="35dp"
-            android:nestedScrollingEnabled="false"
-            android:layout_centerHorizontal="true" />
+            android:text="@string/single_player_button" />
 
         <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="Multi player"
             android:id="@+id/buttonMulti"
-            android:nestedScrollingEnabled="false"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/buttonSettings"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
-            android:layout_centerHorizontal="true" />
+            android:text="@string/multi_player_button" />
 
         <Button
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="Settings"
             android:id="@+id/buttonSettings"
-            android:nestedScrollingEnabled="false"
-            android:layout_centerInParent="true" />
-
-        <Button
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="How To Play"
+            android:layout_centerInParent="true"
+            android:text="@string/settings_button" />
+
+        <Button
             android:id="@+id/buttonHow"
-            android:nestedScrollingEnabled="false"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/buttonSettings"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:text="@string/how_to_play_button" />
 
         <Button
+            android:id="@+id/disconnectButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:id="@+id/disconnectButton"
-            android:text="Disconnection"
-            android:nestedScrollingEnabled="false"
             android:layout_below="@+id/buttonHow"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:text="@string/disconnect_button" />
 
     </RelativeLayout>
 
@@ -179,7 +166,7 @@
         android:id="@+id/directGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:text="Direct Game Link" />
 </RelativeLayout>
