@@ -38,7 +38,10 @@ public class ConnectionActivity extends Activity {
 
     private MySocket mSocket;
 
+    // TODO manage to remove it
     private String userLogin = null;
+
+    private String userLoginWaitingConfirmation = null;
 
     private int logoCounter = 0;
 
@@ -74,8 +77,8 @@ public class ConnectionActivity extends Activity {
         }
 
         if (actualLayout == null) {
-            SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
-            String login = settings.getString(LOGIN_IN_PREFERENCES, null);
+            // TODO remove the duplicate code #55
+            String login = getSharedPreferencesUserLogin();
             if (login == null) {
                 displayConnectionLayout();
             } else {
@@ -91,7 +94,14 @@ public class ConnectionActivity extends Activity {
                     displayRegistrationLayout();
                     break;
                 case LAYOUTMENU:
-                    displayMenuLayout();
+                    // TODO remove the duplicate code #55
+                    String login = getSharedPreferencesUserLogin();
+                    if (login == null) {
+                        displayConnectionLayout();
+                    } else {
+                        userLogin = login;
+                        displayMenuLayout();
+                    }
                     break;
                 default:
                     break;
@@ -188,7 +198,7 @@ public class ConnectionActivity extends Activity {
                 }
 
                 // On note le pseudo pour le passer à la 2e activité
-                userLogin = user.getUserLogin();
+                userLoginWaitingConfirmation = user.getUserLogin();
             }
         });
     }
@@ -295,8 +305,10 @@ public class ConnectionActivity extends Activity {
                         if (CONNECTED.equals(connectionResponse)) {
                             SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
                             SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(LOGIN_IN_PREFERENCES, userLogin);
+                            editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
                             editor.commit();
+
+                            userLogin = userLoginWaitingConfirmation;
 
                             showToast(getString(R.string.connection_succeeded));
 
@@ -375,6 +387,11 @@ public class ConnectionActivity extends Activity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    protected String getSharedPreferencesUserLogin(){
+        SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+        return settings.getString(LOGIN_IN_PREFERENCES, null);
     }
 
 }
