@@ -401,11 +401,11 @@ public class GameScreen extends Screen {
 		}
 		// First draw the game elements.
 
-		g.drawImage(player.currentSprite, player.getCenterX() - 61, player.getCenterY() - 63);
+		g.drawImage(player.currentSprite, player.getCenterX() - 30, player.getCenterY() - 30);
 
 		for (int i = 0; i < getEnemyarray().size(); i++) {
 			Enemy e = getEnemyarray().get(i);
-			g.drawImage(e.currentSprite, e.getCenterX() - 61, e.getCenterY() - 63);
+			g.drawImage(e.currentSprite, e.getCenterX() - 30, e.getCenterY() - 30);
 		}
 
 		if(player.touched == true){
@@ -434,9 +434,10 @@ public class GameScreen extends Screen {
 			Tile t = (Tile) tilearray.get(i);
 			//tileGrass = g.newImage("grass.png", ImageFormat.RGB565);
 			//tileTree = g.newImage("tree.png", ImageFormat.RGB565);
-			if (t.getType() != 0) {
+			if (t.getType() != '0') {
 				t.setTileImage(tileTree);
-				g.drawImage(tileTree, t.getCenterX() - 31, t.getCenterY() - 31);
+				//g.drawImage(tileTree, t.getCenterX() - 27, t.getCenterY() - 27);
+                g.drawRect(t.getCenterX()-30, t.getCenterY()-30, 30, 30, Color.BLUE);
 			}
 		}
 	}
