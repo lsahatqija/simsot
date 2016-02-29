@@ -41,8 +41,8 @@ public class Enemy {
 		this.health = 1;
 		this.centerX = centerX;
 		this.centerY = centerY;
-		rectX = new Rect(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
-        rectY = new Rect(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
+		rectX = new Rect(centerX - 15, centerY - 10, centerX + 15, centerY + 10);
+        rectY = new Rect(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
 	}
 
 
@@ -87,19 +87,19 @@ public class Enemy {
 			centerY += speedY;
 			
 			// Prevents going beyond X coordinate of 0 or 800
-			if (centerX + speedX <= 40) {
-				centerX = 41;
+			if (centerX + speedX <= 30) {
+				centerX = 31;
 				setSpeedX(MOVESPEED);
 			} else if (centerX + speedX >= 480) {
 				centerX = 479;
 				setSpeedX(-MOVESPEED);
 			}
 
-			if (centerY + speedY <= 40) {
-				centerY = 41;
+			if (centerY + speedY <= 30) {
+				centerY = 31;
 				setSpeedY(MOVESPEED);
-			} else if (centerY + speedY >= 770) {
-				centerY = 769;
+			} else if (centerY + speedY >= 800) {
+				centerY = 799;
 				setSpeedY(-MOVESPEED);
 			}
 			
@@ -116,8 +116,8 @@ public class Enemy {
 			}
 
 			// Collision
-			rectX.set(centerX - 25, centerY - 20, centerX + 25, centerY + 20);
-			rectY.set(centerX - 20, centerY - 25, centerX + 20, centerY + 25);
+			rectX.set(centerX - 15, centerY - 10, centerX + 15, centerY + 10);
+			rectY.set(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
 
 			// AI
 		}

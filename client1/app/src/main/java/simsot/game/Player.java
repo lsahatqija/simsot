@@ -62,24 +62,25 @@ public class Player {
 		}*/
 
 		// Prevents going beyond X coordinate of 0 or 800
-		if (centerX + speedX <= 50) {
-			centerX = 51;
-		} else if (centerX + speedX >= 479) {
-			centerX = 478;
+
+		if (centerX + speedX <= 35) {
+			centerX = 36;
+		} else if (centerX + speedX >= 495) {
+			centerX = 494;
 		}
 
 		// Prevents going beyond Y coordinate of 150 and 330
-		if (centerY + speedY <= 30) {
-			centerY = 31;
+		if (centerY + speedY <= 35) {
+			centerY = 36;
 			//scrollingSpeed = 2*speedY;
-		} else if (centerY + speedY >= 770) {
-			centerY = 769;
+		} else if (centerY + speedY >= 735) {
+			centerY = 734;
 			//scrollingSpeed = 2*speedY;
 		}
 
 		// Collision
-		rectX.set(centerX - 35, centerY - 30, centerX + 35, centerY + 30);
-		rectY.set(centerX - 30, centerY - 40, centerX + 30, centerY + 35);
+		rectX.set(centerX - 15, centerY - 10, centerX + 15, centerY + 10);
+		rectY.set(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
 		/*
 		if (isShooting > 0) {
 			if (weapon.isReady2Fire()) {

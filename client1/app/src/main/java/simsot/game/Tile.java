@@ -30,11 +30,11 @@ public class Tile {
 	}
 	
 	public Tile(int x, int y, char typeInt) {
-		centerX = (x * 50) + 10;
-		centerY = (y * 50) + 10;
+		centerX = (x * 30) + 15;
+		centerY = (y * 30) + 15;
 		type = typeInt;
 
-		r = new Rect(getCenterX(),getCenterY(),getCenterX()+62,getCenterY()+63);
+		r = new Rect(getCenterX(),getCenterY(),getCenterX()+20,getCenterY()+20);
 		
 		if (type == 't') {
 			tileImage = GameScreen.tileTree;
@@ -117,7 +117,7 @@ public class Tile {
 	}
 
 	public void update() {
-		r.set(getCenterX(), getCenterY(), getCenterX()+50, getCenterY()+50);
+		r.set(getCenterX()-13, getCenterY()-13, getCenterX()+13, getCenterY()+13);
 	}
 
 	public int getSpeedX() {
