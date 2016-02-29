@@ -454,19 +454,26 @@ public class GameScreen extends Screen {
 		bg1 = null;
 		bg2 = null;
 		player = null;
+        player.characterLeft1 = null;
+        player.characterLeft2 = null;
+        player.characterRight1 = null;
+        player.characterRight2 = null;
+        player.characterUp1 = null;
+        player.characterUp2 = null;
+        player.characterDown1 = null;
+        player.characterDown2 = null;
+        player.characterClosed = null;
+        player.currentSprite = null;
+
         for(int i = 0; i < enemyarray.size(); i++){
             Enemy e = enemyarray.get(i);
+            e.characterLeft1 = null;
+            e.characterLeft2 = null;
+            e.characterRight1 = null;
+            e.characterRight2 = null;
+            e.currentSprite = null;
             e = null;
         }
-        /*
-		currentSprite = null;
-		characterLeft1 = null;
-		characterLeft2 = null;
-		characterRight1 = null;
-		characterRight2 = null;
-		characterClosed = null;
-		anim = null;
-		*/
 
 		// Call garbage collector to clean up memory.
 		System.gc();
