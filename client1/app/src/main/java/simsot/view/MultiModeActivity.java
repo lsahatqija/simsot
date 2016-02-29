@@ -3,17 +3,23 @@ package simsot.view;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import simsot.game.R;
 import simsot.model.Room;
@@ -26,7 +32,7 @@ public class MultiModeActivity extends Activity {
 
     RelativeLayout joinCreateRoomChoiceLayout;
     LinearLayout createRoomLayout, joinRoomLayout;
-    Button buttonJoinChoice, buttonCreateChoice, createRoomButton;
+    Button buttonJoinChoice, buttonCreateChoice, createRoomButton, searchRoomButton;
 
     RadioButton passwordOffRadio, passwordOnRadio;
     EditText roomNameLabel, passwordLabel, nPlayersLabel, nEnnemiesLabel, distanceLabel;
@@ -34,6 +40,10 @@ public class MultiModeActivity extends Activity {
     String userLogin;
 
     private MySocket mySocket;
+
+    ListView roomList;
+
+    List<Room> foundRooms;
 
     private enum MultiModeActivityActualLayout {
         JOINCREATEROOMCHOICE,
@@ -107,7 +117,30 @@ public class MultiModeActivity extends Activity {
     }
 
     protected void initJoinRoomLayoutComponents() {
-        // TODO to implement
+        roomList = (ListView) findViewById(R.id.roomList);
+
+        searchRoomButton = (Button) findViewById(R.id.searchRoomButton);
+
+        foundRooms = new ArrayList<Room>();
+        foundRooms.add(new Room("room1"));
+        foundRooms.add(new Room("room2"));
+        foundRooms.add(new Room("room3"));
+
+        List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> element;
+        for(Room room : foundRooms) {
+            element = new HashMap<String, String>();
+            element.put("roomName", room.getRoomName());
+            element.put("nbPlayersMax", String.valueOf(room.getNbPlayersMax()));
+            liste.add(element);
+        }
+
+        ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
+                liste,
+                android.R.layout.simple_list_item_2,
+                new String[] {"roomName", "nbPlayersMax"},
+                new int[] {android.R.id.text1, android.R.id.text2 });
+        roomList.setAdapter(adapter);
     }
 
     protected void initCreateRoomLayoutComponents() {
@@ -144,7 +177,24 @@ public class MultiModeActivity extends Activity {
     }
 
     protected void initJoinRoomLayoutComponentsEvents() {
-        // TODO to implement
+
+        searchRoomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        roomList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Room selectedRoom = foundRooms.get(position);
+                String roomName = selectedRoom.getRoomName();
+                showToast(roomName);
+            }
+        });
+
     }
 
     protected void initCreateRoomLayoutComponentsEvents() {
@@ -226,5 +276,12 @@ public class MultiModeActivity extends Activity {
         actualLayout = MultiModeActivityActualLayout.CREATEROOM;
     }
 
+    protected void showToast(final String message) {
+        MultiModeActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

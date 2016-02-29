@@ -18,6 +18,14 @@ public class Room {
     String GPS;
     int distanceMin;
 
+    public Room(String roomName){
+        this(roomName, null, null, null, null, 4, 3, null, 100);
+    }
+
+    public Room(String roomName, String host, List<String> playersList, List<String> ennemiesList, int nbPlayersMax, int nbEnnemiesMax, String GPS, int distanceMin) {
+        this(roomName, null, host, playersList, ennemiesList, nbPlayersMax, nbEnnemiesMax, GPS, distanceMin);
+    }
+
     public Room(String roomName, String roomPassword, String host, List<String> playersList, List<String> ennemiesList, int nbPlayersMax, int nbEnnemiesMax, String GPS, int distanceMin) {
         this.roomName = roomName;
         this.roomPassword = roomPassword;
@@ -28,10 +36,6 @@ public class Room {
         this.nbEnnemiesMax = nbEnnemiesMax;
         this.GPS = GPS;
         this.distanceMin = distanceMin;
-    }
-
-    public Room(String roomName, String host, List<String> playersList, List<String> ennemiesList, int nbPlayersMax, int nbEnnemiesMax, String GPS, int distanceMin) {
-        this(roomName, null, host, playersList, ennemiesList, nbPlayersMax, nbEnnemiesMax, GPS, distanceMin);
     }
 
     public JSONObject ToJSONObject() throws JSONException {
@@ -53,5 +57,13 @@ public class Room {
         json.put("distance_min", distanceMin);
 
         return json;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public int getNbPlayersMax() {
+        return nbPlayersMax;
     }
 }

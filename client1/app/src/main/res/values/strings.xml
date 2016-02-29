@@ -24,5 +24,6 @@
     <string name="connect_button">Connect</string>
     <string name="register_choice_button">Register</string>
     <string name="logo_content_description">logo</string>
+    <string name="search_room">Search Room</string>
 
 </resources>
