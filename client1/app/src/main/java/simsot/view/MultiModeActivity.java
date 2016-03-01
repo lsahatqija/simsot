@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +54,9 @@ public class MultiModeActivity extends Activity {
         JOINCREATEROOMCHOICE,
         JOINROOM,
         CREATEROOM;
-    };
+    }
+
+    ;
 
     MultiModeActivityActualLayout actualLayout;
 
@@ -68,18 +71,18 @@ public class MultiModeActivity extends Activity {
         initComponentsEvents();
         initSocket();
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
         }
 
         if (actualLayout == null) {
             displayJoinCreateRoomChoiceLayout();
-        } else{
-            switch(actualLayout){
+        } else {
+            switch (actualLayout) {
                 case JOINCREATEROOMCHOICE:
                     displayJoinCreateRoomChoiceLayout();
                     break;
-                case JOINROOM :
+                case JOINROOM:
                     displayJoinRoomLayout();
                     break;
                 case CREATEROOM:
@@ -126,25 +129,7 @@ public class MultiModeActivity extends Activity {
         searchRoomButton = (Button) findViewById(R.id.searchRoomButton);
 
         foundRooms = new ArrayList<Room>();
-        foundRooms.add(new Room("room1"));
-        foundRooms.add(new Room("room2"));
-        foundRooms.add(new Room("room3"));
 
-        List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
-        HashMap<String, String> element;
-        for(Room room : foundRooms) {
-            element = new HashMap<String, String>();
-            element.put("roomName", room.getRoomName());
-            element.put("nbPlayersMax", String.valueOf(room.getNbPlayersMax()));
-            liste.add(element);
-        }
-
-        ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
-                liste,
-                android.R.layout.simple_list_item_2,
-                new String[] {"roomName", "nbPlayersMax"},
-                new int[] {android.R.id.text1, android.R.id.text2 });
-        roomList.setAdapter(adapter);
     }
 
     protected void initCreateRoomLayoutComponents() {
@@ -251,13 +236,21 @@ public class MultiModeActivity extends Activity {
             mySocket.on(LIST_ROOM, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if (args[0] instanceof String) {
-                        String connectionResponse = (String) args[0];
+                    foundRooms.clear();
+                    JSONArray jsonArray = (JSONArray) args[0];
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
-                        showToast(getString(R.string.connection_succeeded));
+                            String roomName = jsonObject.getString("room_name");
+                            String host = jsonObject.getString("host");
 
-                    } else {
-                        showToast("fail");
+                            foundRooms.add(new Room(roomName, host));
+
+                            updateRoomsList();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
@@ -266,6 +259,29 @@ public class MultiModeActivity extends Activity {
         } catch (URISyntaxException e) {
             Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    protected void updateRoomsList() {
+        MultiModeActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
+                HashMap<String, String> element;
+                for (Room room : foundRooms) {
+                    element = new HashMap<String, String>();
+                    element.put("roomName", room.getRoomName());
+                    element.put("host", room.getHost());
+                    liste.add(element);
+                }
+
+                ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
+                        liste,
+                        android.R.layout.simple_list_item_2,
+                        new String[]{"roomName", "host"},
+                        new int[]{android.R.id.text1, android.R.id.text2});
+                roomList.setAdapter(adapter);
+            }
+        });
     }
 
     protected void displayJoinCreateRoomChoiceLayout() {
@@ -308,5 +324,4 @@ public class MultiModeActivity extends Activity {
             }
         });
     }
-
 }
