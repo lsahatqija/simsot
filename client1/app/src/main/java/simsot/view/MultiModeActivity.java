@@ -220,11 +220,11 @@ public class MultiModeActivity extends Activity {
                 try {
                     Room room = null;
                     if (passwordOffRadio.isChecked()) {
-                        room = new Room(roomNameLabel.getText().toString(), null, null, null,
+                        room = new Room(roomNameLabel.getText().toString(), userLogin, null, null,
                                 Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     } else {
-                        room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), null, null, null,
+                        room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), userLogin, null, null,
                                 Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     }
