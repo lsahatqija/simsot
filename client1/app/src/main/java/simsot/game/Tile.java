@@ -73,10 +73,10 @@ public class Tile {
 		if (/*enemy.isAlive() == true && */Rect.intersects(enemy.rectX, r)) {
 			if (enemy.getCenterX() <= this.getCenterX()) {
 				enemy.setCenterX(enemy.getCenterX() - 2);
-				enemy.setSpeedX(enemy.getSpeedX() * (-1));
+				enemy.setSpeedX(0);
 			} else if (enemy.getCenterX() >= this.getCenterX()) {
 				enemy.setCenterX(enemy.getCenterX() + 2);
-				enemy.setSpeedX(enemy.getSpeedX() * (-1));
+				enemy.setSpeedX(0);
 			}
 		}
 	}
@@ -85,10 +85,10 @@ public class Tile {
 		if (/*enemy.isAlive() == true && */Rect.intersects(enemy.rectY, r)) {
 			if (enemy.getCenterY() <= this.getCenterY()) {
 				enemy.setCenterY(enemy.getCenterY() - 2);
-				enemy.setSpeedY(enemy.getSpeedY() * (-1));
+				enemy.setSpeedY(0);
 			} else if (enemy.getCenterY() >= this.getCenterY()) {
 				enemy.setCenterY(enemy.getCenterY() + 2);
-				enemy.setSpeedY(enemy.getSpeedY() * (-1));
+				enemy.setSpeedY(0);
 			}
 		}
 	}

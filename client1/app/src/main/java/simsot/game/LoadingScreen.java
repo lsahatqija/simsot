@@ -27,16 +27,36 @@ public class LoadingScreen extends Screen {
         Assets.characterUp2 = g.newImage("characterup2.png", ImageFormat.RGB565);
         Assets.characterDown1 = g.newImage("characterdown1.png", ImageFormat.RGB565);
         Assets.characterDown2 = g.newImage("characterdown2.png", ImageFormat.RGB565);
+
 		Assets.enemyLeft1 = g.newImage("enemyLeft1.png", ImageFormat.RGB565);
 		Assets.enemyLeft2 = g.newImage("enemyLeft2.png", ImageFormat.RGB565);
 		Assets.enemyRight1 = g.newImage("enemyRight1.png", ImageFormat.RGB565);
 		Assets.enemyRight2 = g.newImage("enemyRight2.png", ImageFormat.RGB565);
+        Assets.inkyLeft1 = g.newImage("inkyLeft1.png", ImageFormat.RGB565);
+        Assets.inkyLeft2 = g.newImage("inkyLeft2.png", ImageFormat.RGB565);
+        Assets.inkyRight1 = g.newImage("inkyRight1.png", ImageFormat.RGB565);
+        Assets.inkyRight2 = g.newImage("inkyRight2.png", ImageFormat.RGB565);
+        Assets.pinkyLeft1 = g.newImage("pinkyLeft1.png", ImageFormat.RGB565);
+        Assets.pinkyLeft2 = g.newImage("pinkyLeft2.png", ImageFormat.RGB565);
+        Assets.pinkyRight1 = g.newImage("pinkyRight1.png", ImageFormat.RGB565);
+        Assets.pinkyRight2 = g.newImage("pinkyRight2.png", ImageFormat.RGB565);
+        Assets.blinkyLeft1 = g.newImage("blinkyLeft1.png", ImageFormat.RGB565);
+        Assets.blinkyLeft2 = g.newImage("blinkyLeft2.png", ImageFormat.RGB565);
+        Assets.blinkyRight1 = g.newImage("blinkyRight1.png", ImageFormat.RGB565);
+        Assets.blinkyRight2 = g.newImage("blinkyRight2.png", ImageFormat.RGB565);
+        Assets.clydeLeft1 = g.newImage("clydeLeft1.png", ImageFormat.RGB565);
+        Assets.clydeLeft2 = g.newImage("clydeLeft2.png", ImageFormat.RGB565);
+        Assets.clydeRight1 = g.newImage("clydeRight1.png", ImageFormat.RGB565);
+        Assets.clydeRight2 = g.newImage("clydeRight2.png", ImageFormat.RGB565);
+
 		Assets.buttonUp = g.newImage("buttonUp.png", ImageFormat.RGB565);
 		Assets.buttonDown = g.newImage("buttonDown.png", ImageFormat.RGB565);
 		Assets.buttonLeft = g.newImage("buttonLeft.png", ImageFormat.RGB565);
 		Assets.buttonRight = g.newImage("buttonRight.png", ImageFormat.RGB565);
 		Assets.buttonPause = g.newImage("buttonPause.png", ImageFormat.RGB565);
+
         Assets.tileTree = g.newImage("tree.png", ImageFormat.RGB565);
+        Assets.pelletSprite = g.newImage("pellet.png", ImageFormat.RGB565);
 
         //This is how you would load a sound if you had one.
         //Assets.click = game.getAudio().createSound("explode.ogg");

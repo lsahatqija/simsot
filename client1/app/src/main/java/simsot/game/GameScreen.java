@@ -26,13 +26,14 @@ public class GameScreen extends Screen {
 	private int walkCounter = 1;
 	private static Background bg1, bg2;
 	private static Player player;
-	public Enemy e1, e2;
+	public Enemy pinky, inky, blinky, clyde;
 
 	public static Image tileTree, tileGrass, background;
 	private Animation anim;
 
 	private ArrayList<Tile> tilearray = new ArrayList<Tile>();
 	public static ArrayList<Enemy> enemyarray = new ArrayList<Enemy>();
+    public static ArrayList<Pellet> pelletarray = new ArrayList<Pellet>();
 
 	int livesLeft = 1;
 	Paint paint, paint2;
@@ -53,10 +54,14 @@ public class GameScreen extends Screen {
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
 		player = new Player();
-		e1 = new Enemy(400, 100);
-		e2 = new Enemy(100, 700);
-		enemyarray.add(e1);
-		enemyarray.add(e2);
+		pinky = new Pinky(300, 100);
+		inky = new Inky(100, 500);
+        blinky = new Blinky(300, 500);
+        clyde = new Clyde(100, 100);
+		enemyarray.add(pinky);
+		enemyarray.add(inky);
+        enemyarray.add(blinky);
+        enemyarray.add(clyde);
 
 		// Image Setups
 		player.characterLeft1 = Assets.characterLeft1;
@@ -71,6 +76,31 @@ public class GameScreen extends Screen {
 
         player.currentSprite = player.characterLeft1;
 
+        inky.characterLeft1 = Assets.inkyLeft1;
+        inky.characterLeft2 = Assets.inkyLeft2;
+        inky.characterRight1 = Assets.inkyRight1;
+        inky.characterRight2 = Assets.inkyRight2;
+        inky.currentSprite = inky.characterLeft1;
+
+        pinky.characterLeft1 = Assets.pinkyLeft1;
+        pinky.characterLeft2 = Assets.pinkyLeft2;
+        pinky.characterRight1 = Assets.pinkyRight1;
+        pinky.characterRight2 = Assets.pinkyRight2;
+        pinky.currentSprite = pinky.characterLeft1;
+
+        blinky.characterLeft1 = Assets.blinkyLeft1;
+        blinky.characterLeft2 = Assets.blinkyLeft2;
+        blinky.characterRight1 = Assets.blinkyRight1;
+        blinky.characterRight2 = Assets.blinkyRight2;
+        blinky.currentSprite = blinky.characterLeft1;
+
+        clyde.characterLeft1 = Assets.clydeLeft1;
+        clyde.characterLeft2 = Assets.clydeLeft2;
+        clyde.characterRight1 = Assets.clydeRight1;
+        clyde.characterRight2 = Assets.clydeRight2;
+        clyde.currentSprite = clyde.characterLeft1;
+
+/*
         for(int i = 0; i < enemyarray.size(); i++){
             Enemy e = enemyarray.get(i);
             e.characterLeft1 = Assets.enemyLeft1;
@@ -78,7 +108,7 @@ public class GameScreen extends Screen {
             e.characterRight1 = Assets.enemyRight1;
             e.characterRight2 = Assets.enemyRight2;
             e.currentSprite = e.characterLeft1;
-        }
+        }*/
 		background = Assets.background;
 		tileTree = Assets.tileTree;
 		tileGrass = Assets.tileGrass;
@@ -136,7 +166,11 @@ public class GameScreen extends Screen {
 					if (ch == 't') {
 						Tile t = new Tile(i, j, ch);
 						tilearray.add(t);
-					}
+					} else if (ch == 'p'){
+                        Pellet p = new Pellet(i, j);
+                        p.sprite = Assets.pelletSprite;
+                        pelletarray.add(p);
+                    }
 				}
 
 			}
@@ -270,18 +304,18 @@ public class GameScreen extends Screen {
 			if (e.alive == true) {
 				if (e.isMoving == true && e.getSpeedX() <= 0) {
 					if (walkCounter % 16 == 0) {
-						e.currentSprite = Assets.enemyLeft1;
+						e.currentSprite = e.characterLeft1;
 					} else if (walkCounter % 16 == 8) {
-						e.currentSprite = Assets.enemyLeft2;
+						e.currentSprite = e.characterLeft2;
 					}
 				} else if (e.isMoving == true && e.getSpeedX() > 0) {
 					if (walkCounter % 16 == 0) {
-						e.currentSprite = Assets.enemyRight1;
+						e.currentSprite = e.characterRight1;
 					} else if (walkCounter % 16 == 8) {
-						e.currentSprite = Assets.enemyRight2;
+						e.currentSprite = e.characterRight2;
 					}
 				} else if (e.isMoving == false) {
-					e.currentSprite = Assets.enemyLeft1;
+					e.currentSprite = e.characterLeft1;
 				}
 				if (e.walkCounter > 1000) {
 					e.walkCounter = 0;
@@ -301,6 +335,7 @@ public class GameScreen extends Screen {
 		bg2.update();
 		//animate();
 		updateTiles();
+        updateItems();
 		// repaint(); // this calls paint
 		if (walkCounter > 1000) {
 			walkCounter = 0;
@@ -387,12 +422,25 @@ public class GameScreen extends Screen {
 
 	}
 
+    private void updateItems() {
+
+        for (int i = 0; i < pelletarray.size(); i++) {
+            Item p = (Item) pelletarray.get(i);
+            p.update();
+            if(p.touched){
+                pelletarray.remove(i);
+            }
+        }
+
+    }
+
 	@Override
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
 		paintTiles(g);
+        paintItems(g);
 
 		ArrayList projectiles = player.getProjectiles();
 		for (int i = 0; i < projectiles.size(); i++) {
@@ -432,8 +480,6 @@ public class GameScreen extends Screen {
 	private void paintTiles(Graphics g) {
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = (Tile) tilearray.get(i);
-			//tileGrass = g.newImage("grass.png", ImageFormat.RGB565);
-			//tileTree = g.newImage("tree.png", ImageFormat.RGB565);
 			if (t.getType() != '0') {
 				t.setTileImage(tileTree);
 				//g.drawImage(tileTree, t.getCenterX() - 27, t.getCenterY() - 27);
@@ -441,6 +487,13 @@ public class GameScreen extends Screen {
 			}
 		}
 	}
+
+    private void paintItems(Graphics g) {
+        for (int i = 0; i < pelletarray.size(); i++) {
+            Item t = (Item) pelletarray.get(i);
+            g.drawImage(t.sprite, t.getCenterX() - 27, t.getCenterY() - 27);
+        }
+    }
 
 	public void animate() {
 		anim.update(10);
