@@ -75,6 +75,10 @@ public class MySocket {
         mSocket.connect();
     }
 
+    public void sendJoinRoomRequest(JSONObject data){
+        mSocket.emit(SocketConstants.JOIN_ROOM, data);
+    }
+
     public boolean isConnectionRequestSendingFlag() {
         return connectionRequestSendingFlag;
     }

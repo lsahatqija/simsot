@@ -7,6 +7,7 @@ public final class SocketConstants {
     public static final String REGISTER_REQUEST = "subscribe";
     public static final String NEW_ROOM_REQUEST = "new_room";
     public static final String GET_LIST_ROOM = "get_list_room";
+    public static final String JOIN_ROOM = "join";
 
     public enum SocketRequestType {
         CONNECTION_REQUEST,

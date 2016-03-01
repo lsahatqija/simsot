@@ -62,8 +62,6 @@ public class ConnectionActivity extends Activity {
         LAYOUTMENU;
     }
 
-    ;
-
     ConnectionActivityActualLayout actualLayout;
 
     @Override

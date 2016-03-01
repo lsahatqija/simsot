@@ -1,6 +1,7 @@
 package simsot.view;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -192,7 +193,21 @@ public class MultiModeActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Room selectedRoom = foundRooms.get(position);
                 String roomName = selectedRoom.getRoomName();
-                showToast(roomName);
+
+                showToast("connexion à " + roomName);
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("room_name", roomName);
+                    json.put("player_name", userLogin);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mySocket.sendJoinRoomRequest(json);
+
+                Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                intent.putExtra("roomName", roomName);
+                intent.putExtra("host", selectedRoom.getHost());
+                startActivity(intent);
             }
         });
 

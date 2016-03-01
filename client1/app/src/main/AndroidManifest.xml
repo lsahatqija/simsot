@@ -34,7 +34,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="simsot.view.MultiModeActivity"
-            android:label="@string/title_activity_multi_mode"></activity>
+            android:label="@string/title_activity_multi_mode" />
+        <activity
+            android:name="simsot.view.RoomActivity"
+            android:label="@string/title_activity_room" />
     </application>
 
 </manifest>

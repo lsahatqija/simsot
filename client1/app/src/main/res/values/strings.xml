@@ -25,5 +25,7 @@
     <string name="register_choice_button">Register</string>
     <string name="logo_content_description">logo</string>
     <string name="search_room">Search Room</string>
+    <string name="title_activity_room">RoomActivity</string>
+    <string name="roomNameText">Room %1$s by %2$s</string>
 
 </resources>
