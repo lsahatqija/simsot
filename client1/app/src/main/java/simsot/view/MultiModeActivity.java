@@ -1,5 +1,7 @@
 package simsot.view;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
@@ -28,6 +30,7 @@ import java.util.List;
 import simsot.game.R;
 import simsot.model.Room;
 import simsot.socket.MySocket;
+import simsot.socket.SocketConstants;
 
 public class MultiModeActivity extends Activity {
 
@@ -56,9 +59,9 @@ public class MultiModeActivity extends Activity {
         CREATEROOM;
     }
 
-    ;
-
     MultiModeActivityActualLayout actualLayout;
+
+    private JSONArray jsonArrayReceived = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +180,9 @@ public class MultiModeActivity extends Activity {
                     e.printStackTrace();
                 }
                 mySocket.sendGetListRoomRequest(json);
+
+                ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
+                progressTask.execute();
             }
         });
 
@@ -236,21 +242,11 @@ public class MultiModeActivity extends Activity {
             mySocket.on(LIST_ROOM, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    foundRooms.clear();
-                    JSONArray jsonArray = (JSONArray) args[0];
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        try {
-                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    if (mySocket.isGetRoomListRequestSendingFlag()) {
+                        mySocket.setGetRoomListRequestSendingFlag(false);
 
-                            String roomName = jsonObject.getString("room_name");
-                            String host = jsonObject.getString("host");
-
-                            foundRooms.add(new Room(roomName, host));
-
-                            updateRoomsList();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        jsonArrayReceived = (JSONArray) args[0];
+                        mySocket.setGetRoomListRequestResponseFlag(true);
                     }
                 }
             });
@@ -262,26 +258,21 @@ public class MultiModeActivity extends Activity {
     }
 
     protected void updateRoomsList() {
-        MultiModeActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
-                HashMap<String, String> element;
-                for (Room room : foundRooms) {
-                    element = new HashMap<String, String>();
-                    element.put("roomName", room.getRoomName());
-                    element.put("host", room.getHost());
-                    liste.add(element);
-                }
+        List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> element;
+        for (Room room : foundRooms) {
+            element = new HashMap<String, String>();
+            element.put("roomName", room.getRoomName());
+            element.put("host", room.getHost());
+            liste.add(element);
+        }
 
-                ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
-                        liste,
-                        android.R.layout.simple_list_item_2,
-                        new String[]{"roomName", "host"},
-                        new int[]{android.R.id.text1, android.R.id.text2});
-                roomList.setAdapter(adapter);
-            }
-        });
+        ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
+                liste,
+                android.R.layout.simple_list_item_2,
+                new String[]{"roomName", "host"},
+                new int[]{android.R.id.text1, android.R.id.text2});
+        roomList.setAdapter(adapter);
     }
 
     protected void displayJoinCreateRoomChoiceLayout() {
@@ -323,5 +314,80 @@ public class MultiModeActivity extends Activity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    protected class ProgressTask extends AsyncTask<Void, Void, Void> {
+
+        private ProgressDialog progressDialog;
+
+        private SocketConstants.SocketRequestType socketRequestType;
+
+        public ProgressTask(SocketConstants.SocketRequestType socketRequestType) {
+            this.socketRequestType = socketRequestType;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MultiModeActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            switch (socketRequestType) {
+                case GET_LIST_ROOM:
+                    while (!mySocket.isGetRoomListRequestResponseFlag()) {
+                        // TODO add timeout counter
+                    }
+                    break;
+                case NEW_ROOM_REQUEST:
+                    // TODO to implement
+                    break;
+                default:
+                    break;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+
+            switch (socketRequestType) {
+                case GET_LIST_ROOM:
+                    mySocket.setGetRoomListRequestResponseFlag(false);
+                    foundRooms.clear();
+                    for (int i = 0; i < jsonArrayReceived.length(); i++) {
+                        try {
+                            JSONObject jsonObject = (JSONObject) jsonArrayReceived.get(i);
+
+                            String roomName = jsonObject.getString("room_name");
+                            String host = jsonObject.getString("host");
+
+                            foundRooms.add(new Room(roomName, host));
+
+                            updateRoomsList();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    jsonArrayReceived = null;
+                    break;
+                case NEW_ROOM_REQUEST:
+                    // TODO to implement
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 }

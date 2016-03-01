@@ -39,7 +39,7 @@ public class ConnectionActivity extends Activity {
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
-    private MySocket mSocket;
+    private MySocket mySocket;
 
     // TODO manage to remove it
     private String userLogin = null;
@@ -194,7 +194,7 @@ public class ConnectionActivity extends Activity {
                 userLoginWaitingConfirmation = user.getUserLogin();
 
                 try {
-                    mSocket.sendConnectionRequest(user.ToJSONObject());
+                    mySocket.sendConnectionRequest(user.ToJSONObject());
 
                     ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CONNECTION_REQUEST);
                     progressTask.execute();
@@ -219,7 +219,7 @@ public class ConnectionActivity extends Activity {
                     User user = new User(userPseudo, userPassword);
 
                     try {
-                        mSocket.sendRegistrationRequest(user.ToJSONObject());
+                        mySocket.sendRegistrationRequest(user.ToJSONObject());
 
                         ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.REGISTER_REQUEST);
                         progressTask.execute();
@@ -301,15 +301,15 @@ public class ConnectionActivity extends Activity {
 
     protected void initSocket() {
         try {
-            mSocket = new MySocket(SERVER_URL);
+            mySocket = new MySocket(SERVER_URL);
 
             // Messages de connexion
-            mSocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {
+            mySocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if (mSocket.isConnectionRequestSendingFlag()) {
-                        mSocket.setConnectionRequestSendingFlag(false);
-                        mSocket.setConnectionRequestResponseFlag(true);
+                    if (mySocket.isConnectionRequestSendingFlag()) {
+                        mySocket.setConnectionRequestSendingFlag(false);
+                        mySocket.setConnectionRequestResponseFlag(true);
                         if (args[0] instanceof String) {
                             String connectionResponse = (String) args[0];
                             if (CONNECTED.equals(connectionResponse)) {
@@ -334,12 +334,12 @@ public class ConnectionActivity extends Activity {
             });
 
             // Messages d'inscription
-            mSocket.on(REGISTRATION_RESPONSE, new Emitter.Listener() {
+            mySocket.on(REGISTRATION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if(mSocket.isRegisterRequestSendingFlag()){
-                        mSocket.setRegisterRequestSendingFlag(false);
-                        mSocket.setRegisterRequestResponseFlag(true);
+                    if (mySocket.isRegisterRequestSendingFlag()) {
+                        mySocket.setRegisterRequestSendingFlag(false);
+                        mySocket.setRegisterRequestResponseFlag(true);
                         if (args[0] instanceof String) {
                             String registrationResponse = (String) args[0];
                             if (REGISTERED.equals(registrationResponse)) {
@@ -355,7 +355,7 @@ public class ConnectionActivity extends Activity {
                     }
                 }
             });
-            mSocket.connect();
+            mySocket.connect();
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -433,12 +433,12 @@ public class ConnectionActivity extends Activity {
 
             switch (socketRequestType) {
                 case CONNECTION_REQUEST:
-                    while (!mSocket.isConnectionRequestResponseFlag()) {
+                    while (!mySocket.isConnectionRequestResponseFlag()) {
                         // TODO add timeout counter
                     }
                     break;
                 case REGISTER_REQUEST:
-                    while (!mSocket.isRegisterRequestResponseFlag()) {
+                    while (!mySocket.isRegisterRequestResponseFlag()) {
                         // TODO add timeout counter
                     }
                     break;
@@ -457,10 +457,10 @@ public class ConnectionActivity extends Activity {
 
             switch (socketRequestType) {
                 case CONNECTION_REQUEST:
-                    mSocket.setConnectionRequestResponseFlag(false);
+                    mySocket.setConnectionRequestResponseFlag(false);
                     break;
                 case REGISTER_REQUEST:
-                    mSocket.setRegisterRequestResponseFlag(false);
+                    mySocket.setRegisterRequestResponseFlag(false);
                     break;
                 default:
                     break;
