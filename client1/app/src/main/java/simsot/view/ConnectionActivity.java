@@ -1,8 +1,10 @@
 package simsot.view;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,7 @@ import simsot.game.R;
 import simsot.game.SampleGame;
 import simsot.model.User;
 import simsot.socket.MySocket;
+import simsot.socket.SocketConstants;
 
 public class ConnectionActivity extends Activity {
 
@@ -72,7 +75,7 @@ public class ConnectionActivity extends Activity {
         initComponentsEvents();
         initSocket();
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             actualLayout = (ConnectionActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
         }
 
@@ -120,7 +123,6 @@ public class ConnectionActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
         actualLayout = (ConnectionActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
     }
-
 
     protected void initComponents() {
         directGameButton = (Button) findViewById(R.id.directGameButton);
@@ -189,16 +191,18 @@ public class ConnectionActivity extends Activity {
                 String userPassword = userPasswordConnection.getText().toString();
 
                 User user = new User(userPseudo, userPassword);
+                userLoginWaitingConfirmation = user.getUserLogin();
 
                 try {
                     mSocket.sendConnectionRequest(user.ToJSONObject());
+
+                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CONNECTION_REQUEST);
+                    progressTask.execute();
+
                 } catch (JSONException e) {
                     // TODO manage exception
                     e.printStackTrace();
                 }
-
-                // On note le pseudo pour le passer à la 2e activité
-                userLoginWaitingConfirmation = user.getUserLogin();
             }
         });
     }
@@ -216,6 +220,9 @@ public class ConnectionActivity extends Activity {
 
                     try {
                         mSocket.sendRegistrationRequest(user.ToJSONObject());
+
+                        ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.REGISTER_REQUEST);
+                        progressTask.execute();
                     } catch (JSONException e) {
                         // TODO manage exception
                         e.printStackTrace();
@@ -300,24 +307,28 @@ public class ConnectionActivity extends Activity {
             mSocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if (args[0] instanceof String) {
-                        String connectionResponse = (String) args[0];
-                        if (CONNECTED.equals(connectionResponse)) {
-                            SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
-                            editor.commit();
+                    if (mSocket.isConnectionRequestSendingFlag()) {
+                        mSocket.setConnectionRequestSendingFlag(false);
+                        mSocket.setConnectionRequestResponseFlag(true);
+                        if (args[0] instanceof String) {
+                            String connectionResponse = (String) args[0];
+                            if (CONNECTED.equals(connectionResponse)) {
+                                SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
+                                editor.commit();
 
-                            userLogin = userLoginWaitingConfirmation;
+                                userLogin = userLoginWaitingConfirmation;
 
-                            showToast(getString(R.string.connection_succeeded));
+                                showToast(getString(R.string.connection_succeeded));
 
-                            displayMenuLayout();
+                                displayMenuLayout();
+                            } else {
+                                showToast(getString(R.string.connection_failed));
+                            }
                         } else {
-                            showToast(getString(R.string.connection_failed));
+                            showToast(getString(R.string.connection_error));
                         }
-                    } else {
-                        showToast(getString(R.string.connection_error));
                     }
                 }
             });
@@ -326,17 +337,21 @@ public class ConnectionActivity extends Activity {
             mSocket.on(REGISTRATION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if (args[0] instanceof String) {
-                        String registrationResponse = (String) args[0];
-                        if (REGISTERED.equals(registrationResponse)) {
-                            showToast(getString(R.string.registration_succeeded));
+                    if(mSocket.isRegisterRequestSendingFlag()){
+                        mSocket.setRegisterRequestSendingFlag(false);
+                        mSocket.setRegisterRequestResponseFlag(true);
+                        if (args[0] instanceof String) {
+                            String registrationResponse = (String) args[0];
+                            if (REGISTERED.equals(registrationResponse)) {
+                                showToast(getString(R.string.registration_succeeded));
 
-                            displayConnectionLayout();
+                                displayConnectionLayout();
+                            } else {
+                                showToast(getString(R.string.registration_failed));
+                            }
                         } else {
-                            showToast(getString(R.string.registration_failed));
+                            showToast(getString(R.string.registration_error));
                         }
-                    } else {
-                        showToast(getString(R.string.registration_error));
                     }
                 }
             });
@@ -389,9 +404,69 @@ public class ConnectionActivity extends Activity {
         });
     }
 
-    protected String getSharedPreferencesUserLogin(){
+    protected String getSharedPreferencesUserLogin() {
         SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
         return settings.getString(LOGIN_IN_PREFERENCES, null);
+    }
+
+    protected class ProgressTask extends AsyncTask<Void, Void, Void> {
+
+        private ProgressDialog progressDialog;
+
+        private SocketConstants.SocketRequestType socketRequestType;
+
+        public ProgressTask(SocketConstants.SocketRequestType socketRequestType){
+            this.socketRequestType = socketRequestType;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(ConnectionActivity.this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            switch (socketRequestType) {
+                case CONNECTION_REQUEST:
+                    while (!mSocket.isConnectionRequestResponseFlag()) {
+                        // TODO add timeout counter
+                    }
+                    break;
+                case REGISTER_REQUEST:
+                    while (!mSocket.isRegisterRequestResponseFlag()) {
+                        // TODO add timeout counter
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+
+            switch (socketRequestType) {
+                case CONNECTION_REQUEST:
+                    mSocket.setConnectionRequestResponseFlag(false);
+                    break;
+                case REGISTER_REQUEST:
+                    mSocket.setRegisterRequestResponseFlag(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+
     }
 
 }

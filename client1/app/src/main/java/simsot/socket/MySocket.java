@@ -1,8 +1,6 @@
 package simsot.socket;
 
 
-import android.widget.Toast;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -14,18 +12,25 @@ import java.net.URISyntaxException;
 
 public class MySocket {
 
-    private static final String CONNECTION_REQUEST = "connect_user";
-    private static final String REGISTER_REQUEST = "subscribe";
-    private static final String NEW_ROOM_REQUEST = "new_room";
-    private static final String GET_LIST_ROOM = "get_list_room";
-
     private static final String NAME = "name";
     private static final String X = "x";
     private static final String Y = "y";
     private Socket mSocket;
 
+    private boolean connectionRequestSendingFlag;
+    private boolean registerRequestSendingFlag;
+
+
+    private boolean connectionRequestResponseFlag;
+    private boolean registerRequestResponseFlag;
+
     public MySocket(String urlServer) throws URISyntaxException {
         this.mSocket = IO.socket(urlServer);
+        this.connectionRequestSendingFlag = false;
+        this.connectionRequestResponseFlag = false;
+
+        this.registerRequestSendingFlag = false;
+        this.registerRequestResponseFlag = false;
     }
 
     public Emitter on(String event, Emitter.Listener fn) {
@@ -33,15 +38,17 @@ public class MySocket {
     }
 
     public void sendConnectionRequest(JSONObject data){
-        mSocket.emit(CONNECTION_REQUEST, data);
+        mSocket.emit(SocketConstants.CONNECTION_REQUEST, data);
+        connectionRequestSendingFlag = true;
     }
 
     public void sendRegistrationRequest(JSONObject data){
-        mSocket.emit(REGISTER_REQUEST, data);
+        mSocket.emit(SocketConstants.REGISTER_REQUEST, data);
+        registerRequestSendingFlag = true;
     }
 
     public void sendNewRoomRequest(JSONObject data){
-        mSocket.emit(NEW_ROOM_REQUEST, data);
+        mSocket.emit(SocketConstants.NEW_ROOM_REQUEST, data);
     }
 
     public void sendPositionUpdate(String playerName, int x, int y) {
@@ -58,10 +65,42 @@ public class MySocket {
     }
 
     public void sendGetListRoomRequest(JSONObject data){
-        mSocket.emit(GET_LIST_ROOM, data);
+        mSocket.emit(SocketConstants.GET_LIST_ROOM, data);
     }
 
     public void connect(){
         mSocket.connect();
+    }
+
+    public boolean isConnectionRequestSendingFlag() {
+        return connectionRequestSendingFlag;
+    }
+
+    public void setConnectionRequestSendingFlag(boolean connectionRequestSendingFlag) {
+        this.connectionRequestSendingFlag = connectionRequestSendingFlag;
+    }
+
+    public boolean isRegisterRequestSendingFlag() {
+        return registerRequestSendingFlag;
+    }
+
+    public void setRegisterRequestSendingFlag(boolean registerRequestSendingFlag) {
+        this.registerRequestSendingFlag = registerRequestSendingFlag;
+    }
+
+    public boolean isConnectionRequestResponseFlag() {
+        return connectionRequestResponseFlag;
+    }
+
+    public void setConnectionRequestResponseFlag(boolean connectionRequestResponseFlag) {
+        this.connectionRequestResponseFlag = connectionRequestResponseFlag;
+    }
+
+    public boolean isRegisterRequestResponseFlag() {
+        return registerRequestResponseFlag;
+    }
+
+    public void setRegisterRequestResponseFlag(boolean registerRequestResponseFlag) {
+        this.registerRequestResponseFlag = registerRequestResponseFlag;
     }
 }
