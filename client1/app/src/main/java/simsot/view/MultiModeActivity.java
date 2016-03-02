@@ -46,8 +46,8 @@ public class MultiModeActivity extends Activity {
     private LinearLayout createRoomLayout, joinRoomLayout;
     private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, searchRoomButton;
 
-    private RadioButton passwordOffRadio, passwordOnRadio;
-    private EditText roomNameLabel, passwordLabel, nPlayersLabel, distanceLabel;
+    private RadioButton roomPasswordOffRadio, roomPasswordOnRadio;
+    private EditText roomNameCreation, roomPasswordCreation, roomNbPlayersCreation, roomDistanceMaxCreation;
 
     private MySocket mySocket;
 
@@ -139,12 +139,12 @@ public class MultiModeActivity extends Activity {
 
     protected void initCreateRoomLayoutComponents() {
         createRoomButton = (Button) findViewById(R.id.createRoomButton);
-        passwordOffRadio = (RadioButton) findViewById(R.id.passwordOffRadio);
-        passwordOnRadio = (RadioButton) findViewById(R.id.passwordOnRadio);
-        roomNameLabel = (EditText) findViewById(R.id.roomNameLabel);
-        passwordLabel = (EditText) findViewById(R.id.passwordLabel);
-        nPlayersLabel = (EditText) findViewById(R.id.nPlayersLabel);
-        distanceLabel = (EditText) findViewById(R.id.distanceLabel);
+        roomPasswordOffRadio = (RadioButton) findViewById(R.id.roomPasswordOffRadio);
+        roomPasswordOnRadio = (RadioButton) findViewById(R.id.roomPasswordOnRadio);
+        roomNameCreation = (EditText) findViewById(R.id.roomNameCreation);
+        roomPasswordCreation = (EditText) findViewById(R.id.roomPasswordCreation);
+        roomNbPlayersCreation = (EditText) findViewById(R.id.roomNbPlayersCreation);
+        roomDistanceMaxCreation = (EditText) findViewById(R.id.roomDistanceMaxCreation);
     }
 
     protected void initComponentsEvents() {
@@ -220,14 +220,14 @@ public class MultiModeActivity extends Activity {
             public void onClick(View v) {
                 try {
                     Room room = null;
-                    if (passwordOffRadio.isChecked()) {
-                        room = new Room(roomNameLabel.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                                Integer.valueOf(nPlayersLabel.getText().toString()),
-                                null, Integer.valueOf(distanceLabel.getText().toString()));
+                    if (roomPasswordOffRadio.isChecked()) {
+                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                                Integer.valueOf(roomNbPlayersCreation.getText().toString()),
+                                null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     } else {
-                        room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                                Integer.valueOf(nPlayersLabel.getText().toString()),
-                                null, Integer.valueOf(distanceLabel.getText().toString()));
+                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                                Integer.valueOf(roomNbPlayersCreation.getText().toString()),
+                                null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     }
                     mySocket.sendNewRoomRequest(room.ToJSONObject());
                     roomWaitingConfirmation = room;
@@ -240,17 +240,17 @@ public class MultiModeActivity extends Activity {
             }
         });
 
-        passwordOffRadio.setOnClickListener(new View.OnClickListener() {
+        roomPasswordOffRadio.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                passwordLabel.setVisibility(v.INVISIBLE);
-                passwordOnRadio.setChecked(false);
+                roomPasswordCreation.setVisibility(v.INVISIBLE);
+                roomPasswordOnRadio.setChecked(false);
             }
         });
 
-        passwordOnRadio.setOnClickListener(new View.OnClickListener() {
+        roomPasswordOnRadio.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                passwordLabel.setVisibility(v.VISIBLE);
-                passwordOffRadio.setChecked(false);
+                roomPasswordCreation.setVisibility(v.VISIBLE);
+                roomPasswordOffRadio.setChecked(false);
             }
         });
     }

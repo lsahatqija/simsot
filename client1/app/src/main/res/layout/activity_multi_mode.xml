@@ -47,14 +47,14 @@
         android:visibility="visible">
 
         <TextView
-            android:id="@+id/roomNameTitle"
+            android:id="@+id/roomNameCreationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Room name"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
-            android:id="@+id/roomNameLabel"
+            android:id="@+id/roomNameCreation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="room name"
@@ -66,28 +66,28 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/passworkTitle"
+                android:id="@+id/roomPasswordCreationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Password :"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <RadioButton
-                android:id="@+id/passwordOffRadio"
+                android:id="@+id/roomPasswordOffRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="Off" />
 
             <RadioButton
-                android:id="@+id/passwordOnRadio"
+                android:id="@+id/roomPasswordOnRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="On" />
         </LinearLayout>
 
         <EditText
-            android:id="@+id/passwordLabel"
+            android:id="@+id/roomPasswordCreation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="true"
@@ -102,14 +102,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/nPlayersTitle"
+                android:id="@+id/roomNbPlayersCreationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Max players :"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
-                android:id="@+id/nPlayersLabel"
+                android:id="@+id/roomNbPlayersCreation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -124,14 +124,14 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/distanceTitle"
+                android:id="@+id/roomDistanceMaxCreationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Max distance :"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
-                android:id="@+id/distanceLabel"
+                android:id="@+id/roomDistanceMaxCreation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:enabled="true"
