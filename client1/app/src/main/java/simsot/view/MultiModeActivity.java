@@ -280,6 +280,7 @@ public class MultiModeActivity extends Activity {
             mySocket.on(CREATE_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
+                    System.out.println(CREATE_RESPONSE);
                     if (mySocket.isRoomCreationRequestSendingFlag()) {
                         mySocket.setRoomCreationRequestSendingFlag(false);
                         if (args[0] instanceof String) {

@@ -1,6 +1,8 @@
 package simsot.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -33,19 +35,44 @@ public class RoomActivity extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
+        builder.setTitle("Exit room");
+        builder.setMessage("Would you leave the room ?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO to complete
+
+                finish();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
     protected void initComponents() {
         roomNameText = (TextView) findViewById(R.id.roomNameText);
         startMultiGame = (Button) findViewById(R.id.startMultiGame);
 
-        if(isHost){
+        if (isHost) {
             startMultiGame.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             startMultiGame.setVisibility(View.INVISIBLE);
         }
 
     }
 
-    protected void initComponentsEvents(){
+
+    protected void initComponentsEvents() {
         startMultiGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

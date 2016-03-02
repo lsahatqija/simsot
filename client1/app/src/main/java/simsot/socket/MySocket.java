@@ -53,6 +53,7 @@ public class MySocket {
 
     public void sendNewRoomRequest(JSONObject data){
         mSocket.emit(SocketConstants.NEW_ROOM_REQUEST, data);
+        roomCreationRequestSendingFlag = true;
     }
 
     public void sendPositionUpdate(String playerName, int x, int y) {
