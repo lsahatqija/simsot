@@ -13,15 +13,15 @@
         android:id="@+id/joinCreateRoomChoiceLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/buttonJoinChoice"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/buttonCreateChoice"
-            android:layout_alignStart="@+id/buttonCreateChoice"
             android:layout_alignLeft="@+id/buttonCreateChoice"
+            android:layout_alignStart="@+id/buttonCreateChoice"
             android:layout_marginBottom="50dp"
             android:nestedScrollingEnabled="false"
             android:text="Join Room" />
@@ -45,23 +45,38 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:visibility="invisible">
+        android:visibility="visible">
 
-        <GridLayout
+        <TextView
+            android:id="@+id/roomNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Room name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/roomNameLabel"
             android:layout_width="match_parent"
-            android:layout_height="296dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="center_horizontal">
+            android:layout_height="wrap_content"
+            android:hint="room name"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/passworkTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password :"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <RadioButton
                 android:id="@+id/passwordOffRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="1"
                 android:checked="true"
                 android:text="Off" />
 
@@ -69,151 +84,96 @@
                 android:id="@+id/passwordOnRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="2"
                 android:text="On" />
+        </LinearLayout>
 
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:layout_column="1"
-                android:layout_row="0" />
+        <EditText
+            android:id="@+id/passwordLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:inputType="textPassword"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="invisible" />
 
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:layout_column="0"
-                android:layout_row="3" />
-
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:layout_column="0"
-                android:layout_row="4" />
-
-            <TextView
-                android:id="@+id/roomNameTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="0"
-                android:text="Nom de la room :"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/roomNameLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="0"
-                android:text="Swoom"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <TextView
-                android:id="@+id/passworkTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="1"
-                android:text="Password :"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/passwordLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="2"
-                android:enabled="true"
-                android:password="true"
-                android:text="Swag"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:visibility="invisible" />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/nPlayersTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="5"
-                android:text="Joueurs max :"
+                android:text="Max players :"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
             <EditText
                 android:id="@+id/nPlayersLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="5"
-                android:text="4"
                 android:inputType="number"
+                android:text="4"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
+        </LinearLayout>
+
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
             <TextView
                 android:id="@+id/nEnnemiesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="6"
-                android:text="Ennemy max :"
+                android:text="Max enemies"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
                 android:id="@+id/nEnnemiesLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="6"
                 android:editable="true"
+                android:inputType="number"
                 android:text="3"
-                android:inputType="number"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
 
-            <Space
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:layout_column="0"
-                android:layout_row="7" />
 
-            <TextView
-                android:id="@+id/distanceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_row="8"
-                android:text="Distance max :"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/distanceLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="2"
-                android:layout_row="8"
-                android:editable="true"
-                android:enabled="true"
-                android:text="50"
-                android:inputType="number"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView
+            android:id="@+id/distanceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max distance :"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <EditText
-                android:id="@+id/distanceUnit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="3"
-                android:layout_row="8"
-                android:editable="true"
-                android:text="m"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        </GridLayout>
+        <EditText
+            android:id="@+id/distanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:inputType="number"
+            android:text="50"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/distanceUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="m"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/createRoomButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Create" />
+            android:text="Create Room" />
 
     </LinearLayout>
 
@@ -229,15 +189,15 @@
         android:weightSum="1">
 
         <Button
+            android:id="@+id/searchRoomButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchRoomButton"
-            android:text="@string/search_room"/>
+            android:text="@string/search_room" />
 
         <ListView
+            android:id="@+id/roomList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/roomList"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
