@@ -29,13 +29,11 @@ import simsot.socket.SocketConstants;
 
 public class ConnectionActivity extends Activity {
 
-    private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
+
     private static final String CONNECTED = "Connected";
     private static final String REGISTERED = "Registered";
     private static final String ACTUAL_LAYOUT = "actualLayout";
 
-    private static final String CONNECTION_RESPONSE = "response_connect";
-    private static final String REGISTRATION_RESPONSE = "response_subscribe";
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
@@ -299,10 +297,9 @@ public class ConnectionActivity extends Activity {
 
     protected void initSocket() {
         try {
-            mySocket = new MySocket(SERVER_URL);
+            mySocket = new MySocket(SocketConstants.SERVER_URL);
 
-            // Messages de connexion
-            mySocket.on(CONNECTION_RESPONSE, new Emitter.Listener() {
+            mySocket.on(SocketConstants.CONNECTION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
                     if (mySocket.isConnectionRequestSendingFlag()) {
@@ -331,8 +328,7 @@ public class ConnectionActivity extends Activity {
                 }
             });
 
-            // Messages d'inscription
-            mySocket.on(REGISTRATION_RESPONSE, new Emitter.Listener() {
+            mySocket.on(SocketConstants.REGISTRATION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
                     if (mySocket.isRegisterRequestSendingFlag()) {

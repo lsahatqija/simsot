@@ -35,10 +35,8 @@ import simsot.socket.SocketConstants;
 
 public class MultiModeActivity extends Activity {
 
-    private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
     private static final String ACTUAL_LAYOUT = "actualLayout";
-    private static final String LIST_ROOM = "list_room";
-    private static final String CREATE_RESPONSE = "response_create";
+
 
     private static final boolean IS_HOST = true;
     private static final boolean IS_NOT_HOST = false;
@@ -263,9 +261,9 @@ public class MultiModeActivity extends Activity {
 
     protected void initSocket() {
         try {
-            mySocket = new MySocket(SERVER_URL);
+            mySocket = new MySocket(SocketConstants.SERVER_URL);
 
-            mySocket.on(LIST_ROOM, new Emitter.Listener() {
+            mySocket.on(SocketConstants.LIST_ROOM, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
                     if (mySocket.isGetRoomListRequestSendingFlag()) {
@@ -277,15 +275,14 @@ public class MultiModeActivity extends Activity {
                 }
             });
 
-            mySocket.on(CREATE_RESPONSE, new Emitter.Listener() {
+            mySocket.on(SocketConstants.CREATE_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    System.out.println(CREATE_RESPONSE);
                     if (mySocket.isRoomCreationRequestSendingFlag()) {
                         mySocket.setRoomCreationRequestSendingFlag(false);
                         if (args[0] instanceof String) {
                             String creationResponse = (String) args[0];
-                            if("Create successful".equals(creationResponse)){
+                            if ("Create successful".equals(creationResponse)) {
                                 showToast("Creation succeeded");
 
                                 // TODO to complete
@@ -296,7 +293,7 @@ public class MultiModeActivity extends Activity {
 
                                 roomWaitingConfirmation = null;
                                 startActivity(intent);
-                            } else{
+                            } else {
                                 showToast("Creation failed");
                             }
                         } else {
@@ -309,11 +306,7 @@ public class MultiModeActivity extends Activity {
             });
 
             mySocket.connect();
-        } catch (
-                URISyntaxException e
-                )
-
-        {
+        } catch (URISyntaxException e) {
             Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
         }
     }
