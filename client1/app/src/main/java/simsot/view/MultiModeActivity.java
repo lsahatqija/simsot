@@ -68,6 +68,8 @@ public class MultiModeActivity extends Activity {
 
     private JSONArray jsonArrayReceived = null;
 
+    private Room roomWaitingConfirmation = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,6 +236,10 @@ public class MultiModeActivity extends Activity {
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     }
                     mySocket.sendNewRoomRequest(room.ToJSONObject());
+                    roomWaitingConfirmation = room;
+
+                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.NEW_ROOM_REQUEST);
+                    progressTask.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -282,6 +288,13 @@ public class MultiModeActivity extends Activity {
                                 showToast("Creation succeeded");
 
                                 // TODO to complete
+                                Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                                intent.putExtra("isHost", IS_HOST);
+                                intent.putExtra("roomName", roomWaitingConfirmation.getRoomName());
+                                intent.putExtra("host", roomWaitingConfirmation.getHost());
+
+                                roomWaitingConfirmation = null;
+                                startActivity(intent);
                             } else{
                                 showToast("Creation failed");
                             }
