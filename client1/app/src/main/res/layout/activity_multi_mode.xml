@@ -36,7 +36,6 @@
             android:text="Create room" />
     </RelativeLayout>
 
-
     <LinearLayout
         android:id="@+id/createRoomLayout"
         android:layout_width="match_parent"
@@ -92,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="true"
+            android:hint="password"
             android:inputType="textPassword"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="invisible" />
@@ -100,12 +100,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/nPlayersTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Max players :"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
             <EditText
                 android:id="@+id/nPlayersLabel"
                 android:layout_width="wrap_content"
@@ -118,9 +120,10 @@
 
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/nEnnemiesTitle"
                 android:layout_width="wrap_content"
@@ -139,33 +142,33 @@
         </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/distanceTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Max distance :"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/distanceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:enabled="true"
-            android:inputType="number"
-            android:text="50"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/distanceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max distance :"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <EditText
-            android:id="@+id/distanceUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="m"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            <EditText
+                android:id="@+id/distanceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:inputType="number"
+                android:text="50"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/distanceUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="m"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
         <Button
