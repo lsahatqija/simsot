@@ -118,30 +118,6 @@
 
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/nEnnemiesTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Max enemies"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/nEnnemiesLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:editable="true"
-                android:inputType="number"
-                android:text="3"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        </LinearLayout>
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

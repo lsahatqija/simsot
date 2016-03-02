@@ -47,7 +47,7 @@ public class MultiModeActivity extends Activity {
     private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, searchRoomButton;
 
     private RadioButton passwordOffRadio, passwordOnRadio;
-    private EditText roomNameLabel, passwordLabel, nPlayersLabel, nEnnemiesLabel, distanceLabel;
+    private EditText roomNameLabel, passwordLabel, nPlayersLabel, distanceLabel;
 
     private MySocket mySocket;
 
@@ -144,7 +144,6 @@ public class MultiModeActivity extends Activity {
         roomNameLabel = (EditText) findViewById(R.id.roomNameLabel);
         passwordLabel = (EditText) findViewById(R.id.passwordLabel);
         nPlayersLabel = (EditText) findViewById(R.id.nPlayersLabel);
-        nEnnemiesLabel = (EditText) findViewById(R.id.nEnnemiesLabel);
         distanceLabel = (EditText) findViewById(R.id.distanceLabel);
     }
 
@@ -223,11 +222,11 @@ public class MultiModeActivity extends Activity {
                     Room room = null;
                     if (passwordOffRadio.isChecked()) {
                         room = new Room(roomNameLabel.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                                Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
+                                Integer.valueOf(nPlayersLabel.getText().toString()),
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     } else {
                         room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                                Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
+                                Integer.valueOf(nPlayersLabel.getText().toString()),
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     }
                     mySocket.sendNewRoomRequest(room.ToJSONObject());

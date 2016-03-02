@@ -14,26 +14,24 @@ public class Room {
     List<String> playersList;
     List<String> enemiesList;
     int nbPlayersMax;
-    int nbEnemiesMax;
     String GPS;
     int distanceMin;
 
     public Room(String roomName, String host){
-        this(roomName, null, host, null, null, 4, 3, null, 100);
+        this(roomName, null, host, null, null, 4, null, 100);
     }
 
-    public Room(String roomName, String host, List<String> playersList, List<String> enemiesList, int nbPlayersMax, int nbEnemiesMax, String GPS, int distanceMin) {
-        this(roomName, null, host, playersList, enemiesList, nbPlayersMax, nbEnemiesMax, GPS, distanceMin);
+    public Room(String roomName, String host, List<String> playersList, List<String> enemiesList, int nbPlayersMax, String GPS, int distanceMin) {
+        this(roomName, null, host, playersList, enemiesList, nbPlayersMax, GPS, distanceMin);
     }
 
-    public Room(String roomName, String roomPassword, String host, List<String> playersList, List<String> enemiesList, int nbPlayersMax, int nbEnemiesMax, String GPS, int distanceMin) {
+    public Room(String roomName, String roomPassword, String host, List<String> playersList, List<String> enemiesList, int nbPlayersMax, String GPS, int distanceMin) {
         this.roomName = roomName;
         this.roomPassword = roomPassword;
         this.host = host;
         this.playersList = playersList;
         this.enemiesList = enemiesList;
         this.nbPlayersMax = nbPlayersMax;
-        this.nbEnemiesMax = nbEnemiesMax;
         this.GPS = GPS;
         this.distanceMin = distanceMin;
     }
@@ -52,7 +50,6 @@ public class Room {
         json.put("list_players", playersList);
         json.put("list_enemies", enemiesList);
         json.put("number_players_max", nbPlayersMax);
-        json.put("number_enemies_max", nbEnemiesMax);
         json.put("GPS", GPS);
         json.put("distance_min", distanceMin);
 
