@@ -392,6 +392,7 @@ public class MultiModeActivity extends Activity {
             progressDialog = new ProgressDialog(MultiModeActivity.this);
             progressDialog.setMessage("Loading...");
             progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
             progressDialog.show();
         }
 

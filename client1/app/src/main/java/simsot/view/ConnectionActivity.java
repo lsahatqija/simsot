@@ -423,6 +423,7 @@ public class ConnectionActivity extends Activity {
             progressDialog = new ProgressDialog(ConnectionActivity.this);
             progressDialog.setMessage("Loading...");
             progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
             progressDialog.show();
         }
 
