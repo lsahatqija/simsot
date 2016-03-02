@@ -2,8 +2,8 @@ package simsot.game;
 
 public class Pacman extends Player {
 
-    public Pacman(int centerX, int centerY, String mode){
-        super(centerX, centerY, mode);
+    public Pacman(int centerX, int centerY, String mode, String playerName){
+        super(centerX, centerY, mode, playerName);
         characterLeft1 = Assets.characterLeft1;
         characterLeft2 = Assets.characterLeft2;
         characterRight1 = Assets.characterRight1;

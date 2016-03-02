@@ -4,8 +4,9 @@ import android.graphics.Rect;
 
 public class Blinky extends Player {
 
-    public Blinky(int centerX, int centerY, String mode){
-        super(centerX, centerY, mode);
+
+    public Blinky(int centerX, int centerY, String mode, String playerName){
+        super(centerX, centerY, mode, playerName);
         characterLeft1 = Assets.blinkyLeft1;
         characterLeft2 = Assets.blinkyLeft2;
         characterRight1 = Assets.blinkyRight1;

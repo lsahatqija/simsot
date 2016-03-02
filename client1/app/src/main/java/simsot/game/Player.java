@@ -44,10 +44,14 @@ public class Player {
 
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
-    public Player (int x, int y, String mode){
+	private String playerName;
+
+
+    public Player (int x, int y, String mode, String playerName){
         this.centerX = x;
         this.centerY = y;
         this.mode=mode;
+		this.playerName = playerName;
         characterLeft1 = Assets.characterLeft1;
         characterLeft2 = Assets.characterLeft2;
         characterRight1 = Assets.characterRight1;
@@ -131,10 +135,11 @@ public class Player {
 		rectY.set(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
 
         //movement
-        if(mode == "local"){
-            movementControl(touchEvents);
-
-        } else if (mode == "AI"){
+        if("local".equals(mode)) {
+			movementControl(touchEvents);
+		} else if("remote".equals(mode) ){
+			// TODO to complete
+        } else if ("AI".equals(mode)){
             direction = Math.random();
             callAI();
         }

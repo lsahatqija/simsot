@@ -10,9 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
+
+import org.json.JSONObject;
+
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
 import simsot.socket.MySocket;
+import simsot.socket.SocketConstants;
 
 public class SampleGame extends AndroidGame {
 
@@ -23,6 +28,9 @@ public class SampleGame extends AndroidGame {
     boolean firstTimeCreate = true;
 
     private String playerName;
+
+    private boolean characterChoiceReceived = false;
+    private JSONObject characterChoiceJSONReceived = null;
 
     private MySocket mySocket;
 
@@ -35,6 +43,14 @@ public class SampleGame extends AndroidGame {
 
         try {
             mySocket = new MySocket(SERVER_URL);
+
+            mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    characterChoiceJSONReceived = (JSONObject) args[0];
+                    characterChoiceReceived = true;
+                }
+            });
             mySocket.connect();
         } catch (URISyntaxException e) {
             Toast.makeText(SampleGame.this,"URISyntaxException", Toast.LENGTH_SHORT).show();
@@ -104,5 +120,13 @@ public class SampleGame extends AndroidGame {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public boolean isCharacterChoiceReceived() {
+        return characterChoiceReceived;
+    }
+
+    public JSONObject getCharacterChoiceJSONReceived() {
+        return characterChoiceJSONReceived;
     }
 }

@@ -145,4 +145,16 @@ public class MySocket {
     public void setRoomCreationRequestResponseFlag(boolean roomCreationRequestResponseFlag) {
         this.roomCreationRequestResponseFlag = roomCreationRequestResponseFlag;
     }
+
+    public void sendCharacterChoice(String character, String playerName) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("playerName", playerName);
+            json.put("character", character);
+            mSocket.emit(SocketConstants.CHARACTER_CHOICE, character);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

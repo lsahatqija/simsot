@@ -4,8 +4,8 @@ import android.graphics.Rect;
 
 public class Clyde extends Player {
 
-    public Clyde(int centerX, int centerY, String mode){
-        super(centerX, centerY, mode);
+    public Clyde(int centerX, int centerY, String mode, String playerName){
+        super(centerX, centerY, mode, playerName);
         characterLeft1 = Assets.clydeLeft1;
         characterLeft2 = Assets.clydeLeft2;
         characterRight1 = Assets.clydeRight1;
