@@ -50,6 +50,8 @@ public class GameScreen extends Screen {
 		mySocket = ((SampleGame) game).getMySocket();
 		playerName = ((SampleGame) game).getPlayerName();
 
+        score = 0;
+
 		// Initialize game objects here
 
 		bg1 = new Background(0, 0);
@@ -312,23 +314,20 @@ public class GameScreen extends Screen {
 
 			if (e.alive) {
 				if ((e.isMovingVer() || e.isMovingHor()) && e.getSpeedX() <= 0) {
-					if (walkCounter % 16 == 0) {
+					if (e.walkCounter % 16 == 0) {
 						e.currentSprite = e.characterLeft1;
 					} else if (walkCounter % 16 == 8) {
 						e.currentSprite = e.characterLeft2;
 					}
 				} else if ((e.isMovingVer() || e.isMovingHor()) && e.getSpeedX() > 0) {
-					if (walkCounter % 16 == 0) {
+					if (e.walkCounter % 16 == 0) {
 						e.currentSprite = e.characterRight1;
 					} else if (walkCounter % 16 == 8) {
 						e.currentSprite = e.characterRight2;
 					}
-				} else if (!e.isMovingVer() || !e.isMovingHor()) {
+				} /*else if (!e.isMovingVer() || !e.isMovingHor()) {
 					e.currentSprite = e.characterLeft1;
-				}
-				if (walkCounter > 1000) {
-					walkCounter = 0;
-				}
+				}*/
 			}
 		}
 

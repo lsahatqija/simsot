@@ -10,7 +10,7 @@ public class Inky extends Player {
         characterLeft2 = Assets.inkyLeft2;
         characterRight1 = Assets.inkyRight1;
         characterRight2 = Assets.inkyRight2;
-        currentSprite = characterLeft1;
+        //currentSprite = characterLeft1;
     }
 
 }

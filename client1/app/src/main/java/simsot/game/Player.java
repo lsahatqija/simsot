@@ -27,7 +27,10 @@ public class Player {
     public int commandType;
     public boolean alive = true;
     private String mode;
-    private int walkCounter = 1;
+    public int walkCounter = 1;
+    public boolean colliding = false;
+    public String collisionDirection;
+    private double direction;
 	//private Firearm weapon;
 
 	// 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
@@ -130,23 +133,53 @@ public class Player {
         //movement
         if(mode == "local"){
             movementControl(touchEvents);
+
         } else if (mode == "AI"){
+            direction = Math.random();
             callAI();
         }
 
+        if(walkCounter > 1000){
+            walkCounter = 0;
+        }
+        walkCounter++;
+
 	}
+
+    public String getMode() {
+        return mode;
+    }
 
     public void callAI() {
         if (alive == true){
-            if (walkCounter % 100 == 51){
-                setSpeedX(MOVESPEED);
-            } else if (walkCounter % 100 == 1) {
-                setSpeedX(-MOVESPEED);
+            if(!colliding){
+                if (walkCounter % 50 == 1){
+                    if(direction < 0.25)
+                        moveRight();
+                    else if(direction < 0.55 && direction >= 0.25)
+                        moveLeft();
+                    else if(direction < 0.75 && direction >= 0.55)
+                        moveUp();
+                    else if(direction < 1.00 && direction >= 0.75)
+                        moveDown();
+                } /*else if (walkCounter % 200 == 51) {
+                    moveDown();
+                } else if (walkCounter % 200 == 101) {
+                    moveLeft();
+                } else if (walkCounter % 200 == 151) {
+                    moveUp();
+                }*/
+            } else{
+                if(direction < 0.25)
+                    moveRight();
+                else if(direction < 0.55 && direction >= 0.25)
+                    moveLeft();
+                else if(direction < 0.75 && direction >= 0.55)
+                    moveUp();
+                else if(direction < 1.00 && direction >= 0.75)
+                    moveDown();
             }
-            if(walkCounter > 1000){
-                walkCounter = 0;
-            }
-            walkCounter++;
+
         }
     }
 

@@ -8,6 +8,6 @@ public class Pacman extends Player {
         characterLeft2 = Assets.characterLeft2;
         characterRight1 = Assets.characterRight1;
         characterRight2 = Assets.characterRight2;
-        currentSprite = characterLeft1;
+        //currentSprite = characterLeft1;
     }
 }

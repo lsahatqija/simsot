@@ -13,6 +13,7 @@ public class Item {
     public boolean touched = false;
     public Image sprite;
     private ArrayList<Player> playerarray = GameScreen.playerarray;
+    private Player pacman = GameScreen.getPlayer();
 
     public Item(int x, int y){
         centerX = (x * 30) + 15;
@@ -23,15 +24,12 @@ public class Item {
     }
 
     public void update() {
-        r.set(getCenterX()-13, getCenterY()-13, getCenterX()+13, getCenterY()+13);
-        for(int j = 0; j < playerarray.size(); j++){
-            Player player = playerarray.get(j);
-            checkCollision(player);
-        }
+        r.set(getCenterX() - 13, getCenterY() - 13, getCenterX() + 13, getCenterY() + 13);
+        checkCollision(pacman);
     }
 
-    public void checkCollision(Player player){
-        if (Rect.intersects(player.rectX, r)) {
+    public void checkCollision(Player pacman){
+        if (Rect.intersects(pacman.rectX, r)) {
             touched = true;
         }
     }

@@ -10,7 +10,7 @@ public class Blinky extends Player {
         characterLeft2 = Assets.blinkyLeft2;
         characterRight1 = Assets.blinkyRight1;
         characterRight2 = Assets.blinkyRight2;
-        currentSprite = characterLeft1;
+        //currentSprite = characterLeft1;
     }
 
 

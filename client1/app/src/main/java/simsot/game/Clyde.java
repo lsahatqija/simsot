@@ -10,7 +10,7 @@ public class Clyde extends Player {
         characterLeft2 = Assets.clydeLeft2;
         characterRight1 = Assets.clydeRight1;
         characterRight2 = Assets.clydeRight2;
-        currentSprite = characterLeft1;
+        //currentSprite = characterLeft1;
     }
 
 }

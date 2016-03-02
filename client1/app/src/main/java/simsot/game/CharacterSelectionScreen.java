@@ -36,7 +36,7 @@ public class CharacterSelectionScreen extends Screen {
             if (event.type == Input.TouchEvent.TOUCH_UP) {
 
                 if (inBounds(event, 203, 185, 75, 75)) {
-                    pacman = new Pacman(100,100,"local");
+                    pacman = new Pacman(100, 200,"local");
                     pinky = new Pinky(300, 100, "AI");
                     inky = new Inky(100, 500, "AI");
                     blinky = new Blinky(300, 500, "AI");
@@ -44,7 +44,7 @@ public class CharacterSelectionScreen extends Screen {
                     game.setScreen(new GameScreen(game));
                 }
                 if (inBounds(event, 96, 335, 75, 75)) {
-                    pacman = new Pacman(100,100,"AI");
+                    pacman = new Pacman(100, 200,"AI");
                     pinky = new Pinky(300, 100, "AI");
                     inky = new Inky(100, 500, "local");
                     blinky = new Blinky(300, 500, "AI");
@@ -52,7 +52,7 @@ public class CharacterSelectionScreen extends Screen {
                     game.setScreen(new GameScreen(game));
                 }
                 if (inBounds(event, 171, 335, 75, 75)) {
-                    pacman = new Pacman(100,100,"AI");
+                    pacman = new Pacman(100, 200,"AI");
                     pinky = new Pinky(300, 100, "local");
                     inky = new Inky(100, 500, "AI");
                     blinky = new Blinky(300, 500, "AI");
@@ -60,7 +60,7 @@ public class CharacterSelectionScreen extends Screen {
                     game.setScreen(new GameScreen(game));
                 }
                 if (inBounds(event, 247, 335, 75, 75)) {
-                    pacman = new Pacman(100,100,"AI");
+                    pacman = new Pacman(100, 200,"AI");
                     pinky = new Pinky(300, 100, "AI");
                     inky = new Inky(100, 500, "AI");
                     blinky = new Blinky(300, 500, "local");
@@ -68,7 +68,7 @@ public class CharacterSelectionScreen extends Screen {
                     game.setScreen(new GameScreen(game));
                 }
                 if (inBounds(event, 322, 335, 75, 75)) {
-                    pacman = new Pacman(100,100,"AI");
+                    pacman = new Pacman(100, 200,"AI");
                     pinky = new Pinky(300, 100, "AI");
                     inky = new Inky(100, 500, "AI");
                     blinky = new Blinky(300, 500, "AI");

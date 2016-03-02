@@ -47,26 +47,38 @@ public class Tile {
 		if (Rect.intersects(player.rectX, r)) {
 			if (player.getCenterX() <= this.getCenterX()) {
 				player.setCenterX(player.getCenterX() - 2);
-				player.setSpeedX(0);
+                player.setSpeedX(0);
+                player.colliding = true;
+                player.collisionDirection = "left";
 			} else if (player.getCenterX() > this.getCenterX()) {
-				player.setCenterX(player.getCenterX() + 2);
-				player.setSpeedX(0);
+                player.setCenterX(player.getCenterX() + 2);
+                player.setSpeedX(0);
+                player.colliding = true;
+                player.collisionDirection = "right";
 			}
-		}
+		} else {
+            player.colliding = false;
+            player.collisionDirection = "none";
+        }
 	}
 
 	public void checkVerticalCollision(Player player) {
 		if (Rect.intersects(player.rectY, r)) {
 			if (player.getCenterY() <= this.getCenterY()) {
-				player.setCenterY(player.getCenterY() - 2);
-				player.setSpeedY(0);
-				//player.isColliding = true;
+                player.setCenterY(player.getCenterY() - 2);
+                player.setSpeedY(0);
+                player.colliding = true;
+                player.collisionDirection = "up";
 			} else if (player.getCenterY() > this.getCenterY()) {
-				player.setCenterY(player.getCenterY() + 2);
-				player.setSpeedY(0);
-				//player.isColliding = true;
+                player.setCenterY(player.getCenterY() + 2);
+                player.setSpeedY(0);
+                player.colliding = true;
+                player.collisionDirection = "down";
 			}
-		}
+		} else {
+            player.colliding = false;
+            player.collisionDirection = "none";
+        }
 	}
 
 	public void checkHorizontalCollision(Enemy enemy) {
