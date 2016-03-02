@@ -28,9 +28,9 @@ public class Enemy {
 	//private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	
 	protected Animation anim;
-	
+
 	//protected Firearm weapon;
-	
+
 	public Image characterLeft1, characterLeft2, characterRight1, characterRight2, currentSprite;
 	public String characterStayPath, characterMove1Path, characterMove2Path, characterDiePath, currentSpritePath;
 

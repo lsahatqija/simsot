@@ -49,6 +49,12 @@ public class LoadingScreen extends Screen {
         Assets.clydeRight1 = g.newImage("clydeRight1.png", ImageFormat.RGB565);
         Assets.clydeRight2 = g.newImage("clydeRight2.png", ImageFormat.RGB565);
 
+        Assets.pacmanSelection = g.newImage("pacmanSelection.png", ImageFormat.RGB565);
+        Assets.inkySelection = g.newImage("inkySelection.png", ImageFormat.RGB565);
+        Assets.pinkySelection = g.newImage("pinkySelection.png", ImageFormat.RGB565);
+        Assets.blinkySelection = g.newImage("blinkySelection.png", ImageFormat.RGB565);
+        Assets.clydeSelection = g.newImage("clydeSelection.png", ImageFormat.RGB565);
+
 		Assets.buttonUp = g.newImage("buttonUp.png", ImageFormat.RGB565);
 		Assets.buttonDown = g.newImage("buttonDown.png", ImageFormat.RGB565);
 		Assets.buttonLeft = g.newImage("buttonLeft.png", ImageFormat.RGB565);
