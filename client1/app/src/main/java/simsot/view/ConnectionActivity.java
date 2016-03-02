@@ -39,20 +39,17 @@ public class ConnectionActivity extends Activity {
 
     private MySocket mySocket;
 
-    // TODO manage to remove it
-    private String userLogin = null;
-
     private String userLoginWaitingConfirmation = null;
 
     private int logoCounter = 0;
 
-    Button directGameButton, registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
-    Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
-    EditText userPseudoConnection, userPasswordConnection, userPseudoRegistration, userPasswordRegistration, userPassword2Registration;
-    TextView welcomeText;
-    LinearLayout layoutConnection, layoutRegistration;
-    RelativeLayout layoutMenu;
-    ImageView menuLogo;
+    private Button directGameButton, registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
+    private Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
+    private EditText userPseudoConnection, userPasswordConnection, userPseudoRegistration, userPasswordRegistration, userPassword2Registration;
+    private TextView welcomeText;
+    private LinearLayout layoutConnection, layoutRegistration;
+    private RelativeLayout layoutMenu;
+    private ImageView menuLogo;
 
     private enum ConnectionActivityActualLayout {
         LAYOUTCONNECTION,
@@ -60,7 +57,7 @@ public class ConnectionActivity extends Activity {
         LAYOUTMENU;
     }
 
-    ConnectionActivityActualLayout actualLayout;
+    private ConnectionActivityActualLayout actualLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +74,9 @@ public class ConnectionActivity extends Activity {
 
         if (actualLayout == null) {
             // TODO remove the duplicate code #55
-            String login = getSharedPreferencesUserLogin();
-            if (login == null) {
+            if (getSharedPreferencesUserLogin() == null) {
                 displayConnectionLayout();
             } else {
-                userLogin = login;
                 displayMenuLayout();
             }
         } else {
@@ -95,10 +90,9 @@ public class ConnectionActivity extends Activity {
                 case LAYOUTMENU:
                     // TODO remove the duplicate code #55
                     String login = getSharedPreferencesUserLogin();
-                    if (login == null) {
+                    if (getSharedPreferencesUserLogin() == null) {
                         displayConnectionLayout();
                     } else {
-                        userLogin = login;
                         displayMenuLayout();
                     }
                     break;
@@ -242,7 +236,7 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
-                intent.putExtra("userLogin", userLogin);
+                intent.putExtra("userLogin", getSharedPreferencesUserLogin());
                 startActivity(intent);
             }
         });
@@ -251,7 +245,6 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, MultiModeActivity.class);
-                intent.putExtra("userLogin", userLogin);
                 startActivity(intent);
             }
         });
@@ -288,7 +281,6 @@ public class ConnectionActivity extends Activity {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.remove(LOGIN_IN_PREFERENCES);
                 editor.commit();
-                userLogin = null;
 
                 displayConnectionLayout();
             }
@@ -312,8 +304,6 @@ public class ConnectionActivity extends Activity {
                                 SharedPreferences.Editor editor = settings.edit();
                                 editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
                                 editor.commit();
-
-                                userLogin = userLoginWaitingConfirmation;
 
                                 showToast(getString(R.string.connection_succeeded));
 
@@ -384,7 +374,7 @@ public class ConnectionActivity extends Activity {
                 layoutConnection.setVisibility(View.INVISIBLE);
                 layoutMenu.setVisibility(View.VISIBLE);
                 layoutRegistration.setVisibility(View.INVISIBLE);
-                welcomeText.setText(getResources().getString(R.string.welcome_user, userLogin));
+                welcomeText.setText(getResources().getString(R.string.welcome_user, getSharedPreferencesUserLogin()));
             }
         });
         actualLayout = ConnectionActivityActualLayout.LAYOUTMENU;

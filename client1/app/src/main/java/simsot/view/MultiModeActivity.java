@@ -2,6 +2,7 @@ package simsot.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -36,25 +37,23 @@ import simsot.socket.SocketConstants;
 public class MultiModeActivity extends Activity {
 
     private static final String ACTUAL_LAYOUT = "actualLayout";
-
+    private static final String LOGIN_IN_PREFERENCES = "login";
 
     private static final boolean IS_HOST = true;
     private static final boolean IS_NOT_HOST = false;
 
-    RelativeLayout joinCreateRoomChoiceLayout;
-    LinearLayout createRoomLayout, joinRoomLayout;
-    Button buttonJoinChoice, buttonCreateChoice, createRoomButton, searchRoomButton;
+    private RelativeLayout joinCreateRoomChoiceLayout;
+    private LinearLayout createRoomLayout, joinRoomLayout;
+    private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, searchRoomButton;
 
-    RadioButton passwordOffRadio, passwordOnRadio;
-    EditText roomNameLabel, passwordLabel, nPlayersLabel, nEnnemiesLabel, distanceLabel;
-
-    String userLogin;
+    private RadioButton passwordOffRadio, passwordOnRadio;
+    private EditText roomNameLabel, passwordLabel, nPlayersLabel, nEnnemiesLabel, distanceLabel;
 
     private MySocket mySocket;
 
-    ListView roomList;
+    private ListView roomList;
 
-    List<Room> foundRooms;
+    private List<Room> foundRooms;
 
     private enum MultiModeActivityActualLayout {
         JOINCREATEROOMCHOICE,
@@ -62,7 +61,7 @@ public class MultiModeActivity extends Activity {
         CREATEROOM;
     }
 
-    MultiModeActivityActualLayout actualLayout;
+    private MultiModeActivityActualLayout actualLayout;
 
     private JSONArray jsonArrayReceived = null;
 
@@ -72,8 +71,6 @@ public class MultiModeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_mode);
-
-        userLogin = getIntent().getStringExtra("userLogin");
 
         initComponents();
         initComponentsEvents();
@@ -202,7 +199,7 @@ public class MultiModeActivity extends Activity {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("room_name", roomName);
-                    json.put("player_name", userLogin);
+                    json.put("player_name", getSharedPreferencesUserLogin());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -225,11 +222,11 @@ public class MultiModeActivity extends Activity {
                 try {
                     Room room = null;
                     if (passwordOffRadio.isChecked()) {
-                        room = new Room(roomNameLabel.getText().toString(), userLogin, null, null,
+                        room = new Room(roomNameLabel.getText().toString(), getSharedPreferencesUserLogin(), null, null,
                                 Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     } else {
-                        room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), userLogin, null, null,
+                        room = new Room(roomNameLabel.getText().toString(), passwordLabel.getText().toString(), getSharedPreferencesUserLogin(), null, null,
                                 Integer.valueOf(nPlayersLabel.getText().toString()), Integer.valueOf(nEnnemiesLabel.getText().toString()),
                                 null, Integer.valueOf(distanceLabel.getText().toString()));
                     }
@@ -368,6 +365,11 @@ public class MultiModeActivity extends Activity {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    protected String getSharedPreferencesUserLogin() {
+        SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+        return settings.getString(LOGIN_IN_PREFERENCES, null);
     }
 
     protected class ProgressTask extends AsyncTask<Void, Void, Void> {
