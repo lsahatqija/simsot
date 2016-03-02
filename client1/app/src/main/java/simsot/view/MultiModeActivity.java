@@ -38,6 +38,10 @@ public class MultiModeActivity extends Activity {
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com";
     private static final String ACTUAL_LAYOUT = "actualLayout";
     private static final String LIST_ROOM = "list_room";
+    private static final String CREATE_RESPONSE = "response_create";
+
+    private static final boolean IS_HOST = true;
+    private static final boolean IS_NOT_HOST = false;
 
     RelativeLayout joinCreateRoomChoiceLayout;
     LinearLayout createRoomLayout, joinRoomLayout;
@@ -205,6 +209,7 @@ public class MultiModeActivity extends Activity {
                 mySocket.sendJoinRoomRequest(json);
 
                 Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                intent.putExtra("isHost", IS_NOT_HOST);
                 intent.putExtra("roomName", roomName);
                 intent.putExtra("host", selectedRoom.getHost());
                 startActivity(intent);
@@ -266,8 +271,35 @@ public class MultiModeActivity extends Activity {
                 }
             });
 
+            mySocket.on(CREATE_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    if (mySocket.isRoomCreationRequestSendingFlag()) {
+                        mySocket.setRoomCreationRequestSendingFlag(false);
+                        if (args[0] instanceof String) {
+                            String creationResponse = (String) args[0];
+                            if("Create successful".equals(creationResponse)){
+                                showToast("Creation succeeded");
+
+                                // TODO to complete
+                            } else{
+                                showToast("Creation failed");
+                            }
+                        } else {
+                            showToast("Creation error");
+                        }
+
+                        mySocket.setRoomCreationRequestResponseFlag(true);
+                    }
+                }
+            });
+
             mySocket.connect();
-        } catch (URISyntaxException e) {
+        } catch (
+                URISyntaxException e
+                )
+
+        {
             Toast.makeText(MultiModeActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
         }
     }
@@ -360,7 +392,9 @@ public class MultiModeActivity extends Activity {
                     }
                     break;
                 case NEW_ROOM_REQUEST:
-                    // TODO to implement
+                    while (!mySocket.isRoomCreationRequestResponseFlag()) {
+                        // TODO add timeout counter
+                    }
                     break;
                 default:
                     break;
@@ -397,7 +431,7 @@ public class MultiModeActivity extends Activity {
                     jsonArrayReceived = null;
                     break;
                 case NEW_ROOM_REQUEST:
-                    // TODO to implement
+                    mySocket.setRoomCreationRequestResponseFlag(false);
                     break;
                 default:
                     break;

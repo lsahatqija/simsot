@@ -20,11 +20,13 @@ public class MySocket {
     private boolean connectionRequestSendingFlag;
     private boolean registerRequestSendingFlag;
     private boolean getRoomListRequestSendingFlag;
+    private boolean roomCreationRequestSendingFlag;
 
 
     private boolean connectionRequestResponseFlag;
     private boolean registerRequestResponseFlag;
     private boolean getRoomListRequestResponseFlag;
+    private boolean roomCreationRequestResponseFlag;
 
     public MySocket(String urlServer) throws URISyntaxException {
         this.mSocket = IO.socket(urlServer);
@@ -75,7 +77,7 @@ public class MySocket {
         mSocket.connect();
     }
 
-    public void sendJoinRoomRequest(JSONObject data){
+    public void sendJoinRoomRequest(JSONObject data) {
         mSocket.emit(SocketConstants.JOIN_ROOM, data);
     }
 
@@ -125,5 +127,21 @@ public class MySocket {
 
     public void setGetRoomListRequestResponseFlag(boolean getRoomListRequestResponseFlag) {
         this.getRoomListRequestResponseFlag = getRoomListRequestResponseFlag;
+    }
+
+    public boolean isRoomCreationRequestSendingFlag() {
+        return roomCreationRequestSendingFlag;
+    }
+
+    public void setRoomCreationRequestSendingFlag(boolean roomCreationRequestSendingFlag) {
+        this.roomCreationRequestSendingFlag = roomCreationRequestSendingFlag;
+    }
+
+    public boolean isRoomCreationRequestResponseFlag() {
+        return roomCreationRequestResponseFlag;
+    }
+
+    public void setRoomCreationRequestResponseFlag(boolean roomCreationRequestResponseFlag) {
+        this.roomCreationRequestResponseFlag = roomCreationRequestResponseFlag;
     }
 }

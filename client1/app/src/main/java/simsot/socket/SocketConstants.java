@@ -13,6 +13,7 @@ public final class SocketConstants {
         CONNECTION_REQUEST,
         REGISTER_REQUEST,
         NEW_ROOM_REQUEST,
-        GET_LIST_ROOM;
+        GET_LIST_ROOM,
+        JOIN_ROOM;
     }
 }

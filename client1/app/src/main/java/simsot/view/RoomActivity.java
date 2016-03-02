@@ -11,6 +11,8 @@ public class RoomActivity extends Activity {
 
     TextView roomNameText;
 
+    private boolean isHost;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +23,7 @@ public class RoomActivity extends Activity {
         Intent intent = getIntent();
         String roomName = intent.getStringExtra("roomName");
         String host = intent.getStringExtra("host");
+        isHost = intent.getBooleanExtra("isHost", false);
 
         roomNameText.setText(getResources().getString(R.string.roomNameText, roomName, host));
 
