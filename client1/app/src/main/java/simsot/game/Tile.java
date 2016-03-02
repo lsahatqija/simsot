@@ -16,7 +16,7 @@ public class Tile {
 	public Image tileImage;
 
 	//private Background bg = StartingClass.getBg1();
-	private Player player = GameScreen.getPlayer();
+	private ArrayList<Player> playerarray = GameScreen.playerarray;
 	private ArrayList<Enemy> enemyarray = GameScreen.getEnemyarray();
 
 	private Rect r;
@@ -106,14 +106,22 @@ public class Tile {
 	}
 	
 	public void checkCollisions() {
-		checkHorizontalCollision(player);
-		checkVerticalCollision(player);
-		for (int i = 0; i < enemyarray.size(); i++) {
-			Enemy e = enemyarray.get(i);
-			checkHorizontalCollision(e);
-			checkVerticalCollision(e);
-            checkPlayerEnemyCollision(player, e);
-		}
+        for(int j = 0; j < playerarray.size(); j++){
+            Player player = playerarray.get(j);
+            checkHorizontalCollision(player);
+            checkVerticalCollision(player);
+            for (int i = 0; i < enemyarray.size(); i++) {
+                Enemy e = enemyarray.get(i);
+                checkHorizontalCollision(e);
+                checkVerticalCollision(e);
+                checkPlayerEnemyCollision(player, e);
+            }
+        }
+        for (int i = 0; i < enemyarray.size(); i++) {
+            Enemy e = enemyarray.get(i);
+            checkHorizontalCollision(e);
+            checkVerticalCollision(e);
+        }
 	}
 
 	public void update() {

@@ -1,9 +1,11 @@
 package simsot.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Rect;
 import simsot.framework.Image;
+import simsot.framework.Input;
 
 public class Player {
 
@@ -11,6 +13,7 @@ public class Player {
 
 	private int centerX = 100;
 	private int centerY = 100;
+    private int rx, ry;
 	private int speedX = 0;
 	private int speedY = 0;
 	private int scrollingSpeed = 0;
@@ -21,6 +24,10 @@ public class Player {
 	public boolean touched = false;
 	public Rect rectX = new Rect(0, 0, 0, 0);
 	public Rect rectY = new Rect(0, 0, 0, 0);
+    public int commandType;
+    public boolean alive = true;
+    private String mode;
+    private int walkCounter = 1;
 	//private Firearm weapon;
 
 	// 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
@@ -34,7 +41,24 @@ public class Player {
 
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
-	public void update() {
+    public Player (int x, int y, String mode){
+        this.centerX = x;
+        this.centerY = y;
+        this.mode=mode;
+        characterLeft1 = Assets.characterLeft1;
+        characterLeft2 = Assets.characterLeft2;
+        characterRight1 = Assets.characterRight1;
+        characterRight2 = Assets.characterRight2;
+        characterDown1 = Assets.characterDown1;
+        characterDown2 = Assets.characterDown2;
+        characterUp1 = Assets.characterUp1;
+        characterUp2 = Assets.characterUp2;
+        characterClosed = Assets.characterClosed;
+
+        currentSprite = characterLeft1;
+    }
+
+	public void update(List touchEvents) {
 
 		// Moves Character or Scrolls Background accordingly.
 		/*
@@ -42,6 +66,21 @@ public class Player {
 			centerY += speedY;
 		}
 		*/
+
+        //Gridding
+        rx=centerX%30;
+        ry=centerY%30;
+        /*
+        if(rx > 0 && rx < 15){
+            centerX -= rx;
+        } else if (rx >= 15){
+            centerX += rx;
+        }
+        if(ry > 0 && ry < 15){
+            centerY -= ry;
+        } else if (ry >= 15){
+            centerY += ry;
+        }*/
 
 		// Updates X Position
 		centerX += speedX;
@@ -62,7 +101,7 @@ public class Player {
 		}*/
 
 		// Prevents going beyond X coordinate of 0 or 800
-
+/*
 		if (centerX + speedX <= 35) {
 			centerX = 36;
 		} else if (centerX + speedX >= 495) {
@@ -77,32 +116,81 @@ public class Player {
 			centerY = 734;
 			//scrollingSpeed = 2*speedY;
 		}
+*/
+        if(centerX > 510){
+            centerX = 0;
+        } else if(centerX < 0){
+            centerX = 510;
+        }
 
 		// Collision
 		rectX.set(centerX - 15, centerY - 10, centerX + 15, centerY + 10);
 		rectY.set(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
-		/*
-		if (isShooting > 0) {
-			if (weapon.isReady2Fire()) {
-				switch (isShooting) {
-				case 1:
-					weapon.shootLeft(centerX, centerY);
-					break;
-				case 2:
-					weapon.shootUp(centerX, centerY);
-					break;
-				case 3:
-					weapon.shootRight(centerX, centerY);
-					break;
-				case 4:
-					weapon.shootDown(centerX, centerY);
-					break;
-				}
-			}
-		}
-		*/
-		//weapon.increaseShootingCounter();
+
+        //movement
+        if(mode == "local"){
+            movementControl(touchEvents);
+        } else if (mode == "AI"){
+            callAI();
+        }
+
 	}
+
+    public void callAI() {
+        if (alive == true){
+            if (walkCounter % 100 == 51){
+                setSpeedX(MOVESPEED);
+            } else if (walkCounter % 100 == 1) {
+                setSpeedX(-MOVESPEED);
+            }
+            if(walkCounter > 1000){
+                walkCounter = 0;
+            }
+            walkCounter++;
+        }
+    }
+
+    public void movementControl(List touchEvents){
+        int len = touchEvents.size();
+        for (int i = 0; i < len; i++) {
+            Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
+            if (event.type == Input.TouchEvent.TOUCH_DOWN) {
+                if (inBounds(event, 215, 645, 50, 50)) {
+                    moveUp();
+                }
+                else if (inBounds(event, 215, 715, 50, 50)) {
+                    moveDown();
+                }
+                if (inBounds(event, 165, 675, 50, 50)) {
+                    moveLeft();
+                }
+                else if (inBounds(event, 265, 675, 50, 50)) {
+                    moveRight();
+                }
+            }
+
+            if (event.type == Input.TouchEvent.TOUCH_UP) {
+                if (inBounds(event, 215, 645, 50, 50)) {
+                    stopVer();
+                } else if (inBounds(event, 215, 715, 50, 50)){
+                    stopVer();
+                }
+                if (inBounds(event, 165, 675, 50, 50)) {
+                    stopHor();
+                }
+                else if (inBounds(event, 265, 675, 50, 50)) {
+                    stopHor();
+                }
+            }
+        }
+    }
+
+    private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
+        if (event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1)
+            return true;
+        else
+            return false;
+    }
 
 	public int isShooting() {
 		return isShooting;

@@ -2,14 +2,20 @@ package simsot.game;
 
 import android.graphics.Rect;
 
-public class Blinky extends Enemy {
+public class Blinky extends Player {
 
-    private Player player = GameScreen.getPlayer();
-
-    public Blinky(int centerX, int centerY){
-        super(centerX, centerY);
+    public Blinky(int centerX, int centerY, String mode){
+        super(centerX, centerY, mode);
+        characterLeft1 = Assets.blinkyLeft1;
+        characterLeft2 = Assets.blinkyLeft2;
+        characterRight1 = Assets.blinkyRight1;
+        characterRight2 = Assets.blinkyRight2;
+        currentSprite = characterLeft1;
     }
 
+
+
+    /*
     @Override
     public void update(){
         setCenterX(getCenterX() + getSpeedX());
@@ -60,7 +66,7 @@ public class Blinky extends Enemy {
             this.setSpeedY(MOVESPEED);
         }
 
-    }
+    }*/
 
 
 }

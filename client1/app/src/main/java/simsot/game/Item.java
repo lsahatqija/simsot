@@ -1,6 +1,9 @@
 package simsot.game;
 
 import android.graphics.Rect;
+
+import java.util.ArrayList;
+
 import simsot.framework.Image;
 
 public class Item {
@@ -9,7 +12,7 @@ public class Item {
     private Rect r;
     public boolean touched = false;
     public Image sprite;
-    private Player player = GameScreen.getPlayer();
+    private ArrayList<Player> playerarray = GameScreen.playerarray;
 
     public Item(int x, int y){
         centerX = (x * 30) + 15;
@@ -21,7 +24,10 @@ public class Item {
 
     public void update() {
         r.set(getCenterX()-13, getCenterY()-13, getCenterX()+13, getCenterY()+13);
-        checkCollision(player);
+        for(int j = 0; j < playerarray.size(); j++){
+            Player player = playerarray.get(j);
+            checkCollision(player);
+        }
     }
 
     public void checkCollision(Player player){
