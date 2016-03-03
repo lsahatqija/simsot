@@ -11,14 +11,16 @@ public class Room {
     String roomName;
     String roomPassword;
     String host;
+    int empty_slot = 0;
     List<String> playersList;
     List<String> enemiesList;
     int nbPlayersMax;
     String GPS;
     int distanceMin;
 
-    public Room(String roomName, String host){
-        this(roomName, null, host, null, null, 4, null, 100);
+    public Room(String roomName, String host, int empty_slot){
+        this(roomName, null, host, null, null, 5, null, 100);
+        this.empty_slot = empty_slot;
     }
 
     public Room(String roomName, String host, List<String> playersList, List<String> enemiesList, int nbPlayersMax, String GPS, int distanceMin) {
@@ -62,5 +64,9 @@ public class Room {
 
     public String getHost() {
         return host;
+    }
+
+    public int getSlotEmpty() {
+        return empty_slot;
     }
 }
