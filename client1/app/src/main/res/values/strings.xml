@@ -27,5 +27,10 @@
     <string name="refresh_rooms">Refresh Rooms</string>
     <string name="title_activity_room">RoomActivity</string>
     <string name="roomNameText">Room %1$s by %2$s</string>
+    <string name="exit_room">Exit room</string>
+    <string name="leave_room_question">Would you leave the room ?</string>
+    <string name="yes_response">Yes</string>
+    <string name="no_response">No</string>
+    <string name="room_deleted">The room you were in: %1$s, has been deleted"</string>
 
 </resources>

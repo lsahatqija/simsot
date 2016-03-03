@@ -67,9 +67,9 @@ public class RoomActivity extends Activity {
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
-        builder.setTitle("Exit room");
-        builder.setMessage("Would you leave the room ?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.exit_room);
+        builder.setMessage(R.string.leave_room_question);
+        builder.setPositiveButton(R.string.yes_response, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 JSONObject json = new JSONObject();
@@ -84,7 +84,7 @@ public class RoomActivity extends Activity {
                 finish();
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no_response, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -141,7 +141,7 @@ public class RoomActivity extends Activity {
             mySocket.on(SocketConstants.KICKED_FROM_ROOM, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    showToast("The room you were in: " + roomName + ", has been deleted");
+                    showToast(getString(R.string.room_deleted, roomName));
                     finish();
                 }
             });
