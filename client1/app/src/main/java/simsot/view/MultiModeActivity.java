@@ -89,6 +89,7 @@ public class MultiModeActivity extends Activity {
                     break;
                 case JOINROOM:
                     displayJoinRoomLayout();
+                    mySocket.sendGetListRoomRequest();
                     break;
                 case CREATEROOM:
                     displayCreateRoomLayout();
@@ -158,6 +159,10 @@ public class MultiModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 displayJoinRoomLayout();
+                mySocket.sendGetListRoomRequest();
+
+                ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
+                progressTask.execute();
             }
         });
 
@@ -174,13 +179,7 @@ public class MultiModeActivity extends Activity {
         searchRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("null", null);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                mySocket.sendGetListRoomRequest(json);
+                mySocket.sendGetListRoomRequest();
 
                 ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
                 progressTask.execute();

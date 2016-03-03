@@ -56,6 +56,7 @@ public class MySocket {
         roomCreationRequestSendingFlag = true;
     }
 
+    // TODO use method
     public void sendPositionUpdate(String playerName, int x, int y) {
         try {
             JSONObject json = new JSONObject();
@@ -69,19 +70,36 @@ public class MySocket {
         }
     }
 
-    public void sendGetListRoomRequest(JSONObject data){
-        mSocket.emit(SocketConstants.GET_LIST_ROOM, data);
+    public void sendGetListRoomRequest(){
+        mSocket.emit(SocketConstants.GET_LIST_ROOM, new JSONObject());
         getRoomListRequestSendingFlag = true;
-    }
-
-    public void connect(){
-        mSocket.connect();
     }
 
     public void sendJoinRoomRequest(JSONObject data) {
         mSocket.emit(SocketConstants.JOIN_ROOM, data);
     }
 
+    public void sendLeaveRoomRequest(JSONObject data) {
+        mSocket.emit(SocketConstants.LEAVE_ROOM, data);
+    }
+
+    public void sendCharacterChoice(String character, String playerName) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("playerName", playerName);
+            json.put("character", character);
+            mSocket.emit(SocketConstants.CHARACTER_CHOICE, character);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*** CONNECT ***/
+    public void connect(){
+        mSocket.connect();
+    }
+
+    /*** FLAGS ***/
     public boolean isConnectionRequestSendingFlag() {
         return connectionRequestSendingFlag;
     }
@@ -144,17 +162,5 @@ public class MySocket {
 
     public void setRoomCreationRequestResponseFlag(boolean roomCreationRequestResponseFlag) {
         this.roomCreationRequestResponseFlag = roomCreationRequestResponseFlag;
-    }
-
-    public void sendCharacterChoice(String character, String playerName) {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("playerName", playerName);
-            json.put("character", character);
-            mSocket.emit(SocketConstants.CHARACTER_CHOICE, character);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
     }
 }

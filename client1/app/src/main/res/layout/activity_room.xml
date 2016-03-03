@@ -30,7 +30,7 @@
         android:text="Refresh player list" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/playerList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
