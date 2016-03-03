@@ -68,6 +68,7 @@ public class MultiModeActivity extends Activity {
     private JSONArray jsonArrayReceived = null;
 
     private Room roomWaitingConfirmation = null;
+    private Room selectedRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,10 +193,9 @@ public class MultiModeActivity extends Activity {
         roomList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Room selectedRoom = foundRooms.get(position);
+                selectedRoom = foundRooms.get(position);
                 String roomName = selectedRoom.getRoomName();
 
-                showToast("connexion à " + roomName);
                 JSONObject json = new JSONObject();
                 try {
                     json.put("room_name", roomName);
@@ -204,12 +204,6 @@ public class MultiModeActivity extends Activity {
                     e.printStackTrace();
                 }
                 mySocket.sendJoinRoomRequest(json);
-
-                Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                intent.putExtra("isHost", IS_NOT_HOST);
-                intent.putExtra("roomName", roomName);
-                intent.putExtra("host", selectedRoom.getHost());
-                startActivity(intent);
             }
         });
 
@@ -268,6 +262,26 @@ public class MultiModeActivity extends Activity {
 
                         jsonArrayReceived = (JSONArray) args[0];
                         mySocket.setGetRoomListRequestResponseFlag(true);
+                    }
+                }
+            });
+
+            mySocket.on(SocketConstants.JOIN_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    if (args[0] instanceof String) {
+                        String joinResponse = (String) args[0];
+                        if ("Join successful".equals(joinResponse)) {
+                            Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                            intent.putExtra("isHost", IS_NOT_HOST);
+                            intent.putExtra("roomName", selectedRoom.getRoomName());
+                            intent.putExtra("host", selectedRoom.getHost());
+                            startActivity(intent);
+                        } else {
+                            showToast(joinResponse);
+                        }
+                    } else {
+                        showToast("Join error");
                     }
                 }
             });

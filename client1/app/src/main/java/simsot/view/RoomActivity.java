@@ -138,6 +138,14 @@ public class RoomActivity extends Activity {
                 }
             });
 
+            mySocket.on(SocketConstants.KICKED_FROM_ROOM, new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    showToast("The room you were in: " + roomName + ", has been deleted");
+                    finish();
+                }
+            });
+
             mySocket.connect();
         } catch (URISyntaxException e) {
             Toast.makeText(RoomActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
