@@ -44,9 +44,8 @@ public class MultiModeActivity extends Activity {
 
     private static final int NB_PLAYERS = 5;
 
-    private RelativeLayout joinCreateRoomChoiceLayout;
-    private LinearLayout createRoomLayout, joinRoomLayout;
-    private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, refreshRoomsButton;
+    private LinearLayout joinCreateRoomChoiceLayout, createRoomLayout, joinRoomLayout;
+    private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, refreshRoomsButton, joinCreateRoomChoiceBackButton,createRoomBackButton, joinRoomBackButton;
 
     private RadioButton roomPasswordOffRadio, roomPasswordOnRadio;
     private EditText roomNameCreation, roomPasswordCreation, roomNbPlayersCreation, roomDistanceMaxCreation;
@@ -118,7 +117,7 @@ public class MultiModeActivity extends Activity {
     }
 
     protected void initComponents() {
-        joinCreateRoomChoiceLayout = (RelativeLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
+        joinCreateRoomChoiceLayout = (LinearLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
         joinRoomLayout = (LinearLayout) findViewById(R.id.joinRoomLayout);
         createRoomLayout = (LinearLayout) findViewById(R.id.createRoomLayout);
 
@@ -130,25 +129,28 @@ public class MultiModeActivity extends Activity {
     protected void initJoinCreateRoomChoiceLayoutComponents() {
         buttonJoinChoice = (Button) findViewById(R.id.buttonJoinChoice);
         buttonCreateChoice = (Button) findViewById(R.id.buttonCreateChoice);
+        joinCreateRoomChoiceBackButton = (Button) findViewById(R.id.joinCreateRoomChoiceBackButton);
     }
 
     protected void initJoinRoomLayoutComponents() {
         roomList = (ListView) findViewById(R.id.roomList);
 
         refreshRoomsButton = (Button) findViewById(R.id.refreshRoomsButton);
+        joinRoomBackButton = (Button) findViewById(R.id.joinRoomBackButton);
 
         foundRooms = new ArrayList<Room>();
 
     }
 
     protected void initCreateRoomLayoutComponents() {
-        createRoomButton = (Button) findViewById(R.id.createRoomButton);
         roomPasswordOffRadio = (RadioButton) findViewById(R.id.roomPasswordOffRadio);
         roomPasswordOnRadio = (RadioButton) findViewById(R.id.roomPasswordOnRadio);
         roomNameCreation = (EditText) findViewById(R.id.roomNameCreation);
         roomPasswordCreation = (EditText) findViewById(R.id.roomPasswordCreation);
         roomNbPlayersCreation = (EditText) findViewById(R.id.roomNbPlayersCreation);
         roomDistanceMaxCreation = (EditText) findViewById(R.id.roomDistanceMaxCreation);
+        createRoomButton = (Button) findViewById(R.id.createRoomButton);
+        createRoomBackButton = (Button) findViewById(R.id.createRoomBackButton);
     }
 
     protected void initComponentsEvents() {
@@ -175,6 +177,14 @@ public class MultiModeActivity extends Activity {
                 displayCreateRoomLayout();
             }
         });
+
+        joinCreateRoomChoiceBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     protected void initJoinRoomLayoutComponentsEvents() {
@@ -204,6 +214,13 @@ public class MultiModeActivity extends Activity {
                     e.printStackTrace();
                 }
                 mySocket.sendJoinRoomRequest(json);
+            }
+        });
+
+        joinRoomBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayJoinCreateRoomChoiceLayout();
             }
         });
 
@@ -246,6 +263,13 @@ public class MultiModeActivity extends Activity {
             public void onClick(View v) {
                 roomPasswordCreation.setVisibility(v.VISIBLE);
                 roomPasswordOffRadio.setChecked(false);
+            }
+        });
+
+        createRoomBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayJoinCreateRoomChoiceLayout();
             }
         });
     }

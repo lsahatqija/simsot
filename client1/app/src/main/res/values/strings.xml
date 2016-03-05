@@ -13,6 +13,7 @@
     <string name="welcome_user">Welcome %1$s</string>
     <string name="register_button">Register</string>
     <string name="cancel_button">Cancel</string>
+    <string name="back_button">Back</string>
     <string name="single_player_button">Single player</string>
     <string name="multi_player_button">Multi player</string>
     <string name="settings_button">Settings</string>

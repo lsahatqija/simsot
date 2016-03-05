@@ -9,32 +9,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="simsot.view.MultiModeActivity">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/joinCreateRoomChoiceLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <Button
             android:id="@+id/buttonJoinChoice"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/buttonCreateChoice"
-            android:layout_alignLeft="@+id/buttonCreateChoice"
-            android:layout_alignStart="@+id/buttonCreateChoice"
-            android:layout_marginBottom="50dp"
-            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="20dp"
             android:text="Join Room" />
 
         <Button
             android:id="@+id/buttonCreateChoice"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="20dp"
             android:text="Create room" />
-    </RelativeLayout>
+
+        <Button
+            android:id="@+id/joinCreateRoomChoiceBackButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back_button" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/createRoomLayout"
@@ -44,7 +46,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/roomNameCreationLabel"
@@ -151,8 +153,12 @@
             android:id="@+id/createRoomButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:text="Create Room" />
+        <Button
+            android:id="@+id/createRoomBackButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back_button" />
 
     </LinearLayout>
 
@@ -172,6 +178,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/refresh_rooms" />
+
+        <Button
+            android:id="@+id/joinRoomBackButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back_button" />
 
         <ListView
             android:id="@+id/roomList"
