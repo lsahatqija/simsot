@@ -24,6 +24,7 @@ public class GameScreen extends Screen {
 	// Variable Setup
 
 	private int walkCounter = 1;
+    private int countDown = 180;
     private int score = 0;
 	private static Background bg1;
 	private static Player pacman, pinky, inky, blinky, clyde;
@@ -193,13 +194,11 @@ public class GameScreen extends Screen {
 
 	private void updateReady(List touchEvents) {
 
-		// This example starts with a "Ready" screen.
-		// When the user touches the screen, the game begins.
-		// state now becomes GameState.Running.
-		// Now the updateRunning() method will be called!
-
-		if (touchEvents.size() > 0)
-			state = GameState.Running;
+		if(countDown > 0){
+            countDown--;
+        } else{
+            state = GameState.Running;
+        }
 	}
 
 	private void updateRunning(List touchEvents, float deltaTime) {
@@ -535,7 +534,8 @@ public class GameScreen extends Screen {
 		Graphics g = game.getGraphics();
 
 		g.drawARGB(155, 0, 0, 0);
-		g.drawString("Tap to Start.", 240, 400, paint);
+        g.drawString("Start in...", 240, 400, paint);
+		g.drawString(""+(countDown/60 + 1), 240, 550, paint);
 
 	}
 

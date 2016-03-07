@@ -69,7 +69,7 @@ public class LoadingScreen extends Screen {
         //This is how you would load a sound if you had one.
         //Assets.click = game.getAudio().createSound("explode.ogg");
      
-        game.setScreen(new MainMenuScreen(game));
+        game.setScreen(new CharacterSelectionScreen(game));
 
     }
 
