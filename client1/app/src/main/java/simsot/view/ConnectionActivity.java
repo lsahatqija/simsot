@@ -160,6 +160,7 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
                 intent.putExtra("userLogin", "player_test");
+                intent.putExtra("isHost", true);
                 startActivity(intent);
             }
         });
@@ -236,6 +237,7 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
                 intent.putExtra("userLogin", getSharedPreferencesUserLogin());
+                intent.putExtra("isHost", true);
                 startActivity(intent);
             }
         });

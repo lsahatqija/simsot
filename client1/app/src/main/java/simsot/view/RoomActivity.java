@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import simsot.game.R;
+import simsot.game.SampleGame;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
@@ -111,7 +112,7 @@ public class RoomActivity extends Activity {
         startMultiGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO to complete
+                mySocket.sendGameStart(roomName);
             }
         });
     }
@@ -141,6 +142,16 @@ public class RoomActivity extends Activity {
                 public void call(final Object... args) {
                     showToast(getString(R.string.room_deleted, roomName));
                     finish();
+                }
+            });
+
+            mySocket.on(SocketConstants.GAME_START_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Intent intent = new Intent(RoomActivity.this, SampleGame.class);
+                    intent.putExtra("userLogin", getSharedPreferencesUserLogin());
+                    intent.putExtra("isHost", isHost);
+                    startActivity(intent);
                 }
             });
 

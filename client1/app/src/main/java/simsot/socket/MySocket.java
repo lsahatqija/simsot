@@ -94,6 +94,10 @@ public class MySocket {
         }
     }
 
+    public void sendGameStart(String room){
+        mSocket.emit(SocketConstants.GAME_START, "start");
+    }
+
     /*** CONNECT ***/
     public void connect(){
         mSocket.connect();

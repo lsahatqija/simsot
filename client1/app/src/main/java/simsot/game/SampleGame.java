@@ -28,9 +28,13 @@ public class SampleGame extends AndroidGame {
     boolean firstTimeCreate = true;
 
     private String playerName;
+    private boolean isHost;
 
     private boolean characterChoiceReceived = false;
     private JSONObject characterChoiceJSONReceived = null;
+
+    private boolean characterPositionReceived = false;
+    private JSONObject characterPositionJSONReceived = null;
 
     private MySocket mySocket;
 
@@ -40,6 +44,7 @@ public class SampleGame extends AndroidGame {
 
         // TODO manage when userLogin is null
         playerName = getIntent().getStringExtra(USER_LOGIN);
+        isHost = getIntent().getBooleanExtra("isHost", false);
 
         try {
             mySocket = new MySocket(SERVER_URL);
@@ -51,6 +56,15 @@ public class SampleGame extends AndroidGame {
                     characterChoiceReceived = true;
                 }
             });
+
+            mySocket.on(SocketConstants.CHARACTER_POSITION, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    characterPositionJSONReceived = (JSONObject) args[0];
+                    characterPositionReceived = true;
+                }
+            });
+
             mySocket.connect();
         } catch (URISyntaxException e) {
             Toast.makeText(SampleGame.this,"URISyntaxException", Toast.LENGTH_SHORT).show();
@@ -128,5 +142,21 @@ public class SampleGame extends AndroidGame {
 
     public JSONObject getCharacterChoiceJSONReceived() {
         return characterChoiceJSONReceived;
+    }
+
+    public void setCharacterChoiceReceived(boolean characterChoiceReceived) {
+        this.characterChoiceReceived = characterChoiceReceived;
+    }
+
+    public boolean isCharacterPositionReceived() {
+        return characterPositionReceived;
+    }
+
+    public JSONObject getCharacterPositionJSONReceived() {
+        return characterPositionJSONReceived;
+    }
+
+    public void setCharacterPositionReceived(boolean characterPositionReceived) {
+        this.characterPositionReceived = characterPositionReceived;
     }
 }

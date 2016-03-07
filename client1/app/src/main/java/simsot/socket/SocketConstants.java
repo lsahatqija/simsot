@@ -15,6 +15,7 @@ public final class SocketConstants {
     public static final String KICKED_FROM_ROOM = "kick";
     public static final String LEAVE_ROOM = "leave";
     public static final String CHARACTER_CHOICE = "character_choice";
+    public static final String GAME_START = "game_start";
 
 
     public static final String CONNECTION_RESPONSE = "response_connect";
@@ -23,6 +24,8 @@ public final class SocketConstants {
     public static final String JOIN_RESPONSE = "response_join";
     public static final String CREATE_RESPONSE = "response_create";
     public static final String CHARACTER_CHOICE_RESPONSE = "character_choice_response";
+    public static final String CHARACTER_POSITION = "character_position";
+    public static final String GAME_START_RESPONSE = "game_start_response";
 
     public enum SocketRequestType {
         CONNECTION_REQUEST,

@@ -79,6 +79,7 @@ public class CharacterSelectionScreen extends Screen {
                 Input.TouchEvent event = touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_UP) {
                     if (((SampleGame) game).isCharacterChoiceReceived()) {
+                        ((SampleGame) game).setCharacterChoiceReceived(false);
                         try {
                             JSONObject characterChoiceJSONReceived = ((SampleGame) game).getCharacterChoiceJSONReceived();
                             String character = characterChoiceJSONReceived.getString("character");

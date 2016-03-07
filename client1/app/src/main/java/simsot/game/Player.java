@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Rect;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import simsot.framework.Image;
 import simsot.framework.Input;
 
@@ -46,7 +50,6 @@ public class Player {
 
 	private String playerName;
 
-
     public Player (int x, int y, String mode, String playerName){
         this.centerX = x;
         this.centerY = y;
@@ -65,7 +68,7 @@ public class Player {
         currentSprite = characterLeft1;
     }
 
-	public void update(List touchEvents) {
+	public void update(List touchEvents, SampleGame game) {
 
 		// Moves Character or Scrolls Background accordingly.
 		/*
@@ -134,7 +137,19 @@ public class Player {
         if("local".equals(mode)) {
 			movementControl(touchEvents);
 		} else if("remote".equals(mode) ){
-			// TODO to complete
+			if(game.isCharacterPositionReceived()){
+                try {
+                    JSONObject json = game.getCharacterPositionJSONReceived();
+                    String name = json.getString("playerName");
+                    if(playerName.equals(name)){
+                        game.setCharacterPositionReceived(false);
+                        centerX = json.getInt("x");
+                        centerY = json.getInt("y");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         } else if ("AI".equals(mode)){
             direction = Math.random();
             callAI();

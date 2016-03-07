@@ -306,7 +306,7 @@ public class GameScreen extends Screen {
                 }
             }*/
 
-            play.update(touchEvents);
+            play.update(touchEvents, (SampleGame) game);
         }
 
         for (int j = 0; j < playerarray.size(); j++) {
