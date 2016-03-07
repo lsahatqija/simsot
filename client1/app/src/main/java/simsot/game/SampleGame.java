@@ -58,6 +58,8 @@ public class SampleGame extends AndroidGame {
                 @Override
                 public void call(Object... args) {
                     characterChoiceJSONReceived = (JSONObject) args[0];
+                    System.out.print(SocketConstants.CHARACTER_CHOICE_RESPONSE);
+                    System.out.println(" : + "+characterChoiceJSONReceived.toString());
                     characterChoiceReceived = true;
                 }
             });
@@ -66,6 +68,8 @@ public class SampleGame extends AndroidGame {
                 @Override
                 public void call(Object... args) {
                     characterPositionJSONReceived = (JSONObject) args[0];
+                    System.out.print(SocketConstants.CHARACTER_POSITION_RESPONSE);
+                    System.out.println(" : + "+characterPositionJSONReceived.toString());
                     characterPositionReceived = true;
                 }
             });

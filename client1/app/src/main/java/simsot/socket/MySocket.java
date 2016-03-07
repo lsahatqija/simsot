@@ -12,12 +12,6 @@ import java.net.URISyntaxException;
 
 public class MySocket {
 
-    private static final String PLAYER_NAME = "playerName";
-    private static final String X = "x";
-    private static final String Y = "y";
-    private static final String ROOM_NAME = "room_name";
-    private static final String CHARACTER = "character";
-
     private Socket mSocket;
 
     private boolean connectionRequestSendingFlag;
@@ -62,10 +56,10 @@ public class MySocket {
     public void sendPositionUpdate(String playerName, String roomName,  int x, int y) {
         try {
             JSONObject json = new JSONObject();
-            json.put(PLAYER_NAME, playerName);
-            json.put(X, x);
-            json.put(Y, y);
-            json.put(ROOM_NAME, roomName);
+            json.put(SocketConstants.PLAYER_NAME, playerName);
+            json.put(SocketConstants.X, x);
+            json.put(SocketConstants.Y, y);
+            json.put(SocketConstants.ROOM_NAME, roomName);
             mSocket.emit(SocketConstants.CHARACTER_POSITION, json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -88,9 +82,9 @@ public class MySocket {
     public void sendCharacterChoice(String character, String playerName, String roomName) {
         JSONObject json = new JSONObject();
         try {
-            json.put(PLAYER_NAME, playerName);
-            json.put(CHARACTER, character);
-            json.put(ROOM_NAME, roomName);
+            json.put(SocketConstants.PLAYER_NAME, playerName);
+            json.put(SocketConstants.CHARACTER, character);
+            json.put(SocketConstants.ROOM_NAME, roomName);
 
             mSocket.emit(SocketConstants.CHARACTER_CHOICE, json);
         } catch (JSONException e) {
@@ -101,7 +95,7 @@ public class MySocket {
     public void sendGameStart(String roomName){
         JSONObject json = new JSONObject();
         try {
-            json.put(ROOM_NAME, roomName);
+            json.put(SocketConstants.ROOM_NAME, roomName);
             mSocket.emit(SocketConstants.GAME_START, json);
         } catch (JSONException e) {
             e.printStackTrace();

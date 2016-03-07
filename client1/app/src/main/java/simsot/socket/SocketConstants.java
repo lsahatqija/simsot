@@ -28,6 +28,14 @@ public final class SocketConstants {
     public static final String CHARACTER_POSITION_RESPONSE = "character_position_response";
     public static final String GAME_START_RESPONSE = "game_start_response";
 
+
+
+    public static final String PLAYER_NAME = "playerName";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String ROOM_NAME = "room_name";
+    public static final String CHARACTER = "character";
+
     public enum SocketRequestType {
         CONNECTION_REQUEST,
         REGISTER_REQUEST,

@@ -13,6 +13,7 @@ import simsot.framework.Graphics;
 import simsot.framework.Input;
 import simsot.framework.Screen;
 import simsot.socket.MySocket;
+import simsot.socket.SocketConstants;
 
 public class CharacterSelectionScreen extends Screen {
 
@@ -84,8 +85,8 @@ public class CharacterSelectionScreen extends Screen {
                         ((SampleGame) game).setCharacterChoiceReceived(false);
                         try {
                             JSONObject characterChoiceJSONReceived = ((SampleGame) game).getCharacterChoiceJSONReceived();
-                            String character = characterChoiceJSONReceived.getString("character");
-                            String playerNameReceived = characterChoiceJSONReceived.getString("playerName");
+                            String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
+                            String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
 
                             switch (character) {
                                 case PACMAN:

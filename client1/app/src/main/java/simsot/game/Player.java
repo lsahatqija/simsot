@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import simsot.framework.Image;
 import simsot.framework.Input;
 import simsot.socket.MySocket;
+import simsot.socket.SocketConstants;
 
 public class Player {
 
@@ -146,11 +147,11 @@ public class Player {
 			if(game.isCharacterPositionReceived()){
                 try {
                     JSONObject json = game.getCharacterPositionJSONReceived();
-                    String name = json.getString("playerName");
+                    String name = json.getString(SocketConstants.PLAYER_NAME);
                     if(playerName.equals(name)){
                         game.setCharacterPositionReceived(false);
-                        centerX = json.getInt("x");
-                        centerY = json.getInt("y");
+                        centerX = json.getInt(SocketConstants.X);
+                        centerY = json.getInt(SocketConstants.Y);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
