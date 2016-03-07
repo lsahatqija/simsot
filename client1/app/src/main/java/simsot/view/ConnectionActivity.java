@@ -32,8 +32,6 @@ public class ConnectionActivity extends Activity {
 
     private static final String ACTUAL_LAYOUT = "actualLayout";
 
-    private static final int NOT_ERROR = 0;
-
     private static final String LOGIN_IN_PREFERENCES = "login";
 
     private MySocket mySocket;
@@ -302,7 +300,7 @@ public class ConnectionActivity extends Activity {
                             try {
                                 int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
 
-                                if (errorCode == NOT_ERROR) {
+                                if (errorCode == 0) {
                                     SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
                                     SharedPreferences.Editor editor = settings.edit();
                                     editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
@@ -337,7 +335,7 @@ public class ConnectionActivity extends Activity {
                             JSONObject registrationResponse = (JSONObject) args[0];
                             try {
                                 int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
-                                if (errorCode == NOT_ERROR) {
+                                if (errorCode == 0) {
                                     showToast(getString(R.string.registration_succeeded));
 
                                     displayConnectionLayout();

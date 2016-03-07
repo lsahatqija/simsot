@@ -43,5 +43,6 @@
     <string name="player_already_in_room">Player already in the room</string>
     <string name="join_failed">Join failed</string>
     <string name="join_error">Join error</string>
+    <string name="room_created">Room created</string>
 
 </resources>

@@ -327,22 +327,32 @@ public class MultiModeActivity extends Activity {
                 public void call(final Object... args) {
                     if (mySocket.isRoomCreationRequestSendingFlag()) {
                         mySocket.setRoomCreationRequestSendingFlag(false);
-                        if (args[0] instanceof String) {
-                            String creationResponse = (String) args[0];
-                            if ("Create successful".equals(creationResponse)) {
-                                showToast("Creation succeeded");
+                        if (args[0] instanceof JSONObject) {
+                            JSONObject creationResponse = (JSONObject) args[0];
 
-                                // TODO to complete
-                                Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                                intent.putExtra(IntentParameters.IS_HOST, IS_HOST);
-                                intent.putExtra(IntentParameters.ROOM_NAME, roomWaitingConfirmation.getRoomName());
-                                intent.putExtra(IntentParameters.HOST, roomWaitingConfirmation.getHost());
+                            try {
+                                int errorCode = creationResponse.getInt(SocketConstants.ERROR_CODE);
+                                if (errorCode == 0) {
+                                    showToast(getString(R.string.room_created));
 
-                                roomWaitingConfirmation = null;
-                                startActivity(intent);
-                            } else {
-                                showToast("Creation failed");
+                                    // TODO to complete
+                                    Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                                    intent.putExtra(IntentParameters.IS_HOST, IS_HOST);
+                                    intent.putExtra(IntentParameters.ROOM_NAME, roomWaitingConfirmation.getRoomName());
+                                    intent.putExtra(IntentParameters.HOST, roomWaitingConfirmation.getHost());
+
+                                    roomWaitingConfirmation = null;
+                                    startActivity(intent);
+                                } else if(errorCode == 1){
+                                    // TODO message a preciser
+                                    showToast("Creation fail");
+                                } else {
+                                    showToast("Creation failed");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+
                         } else {
                             showToast("Creation error");
                         }
