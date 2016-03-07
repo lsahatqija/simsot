@@ -18,7 +18,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/startMultiGame"
+        android:id="@+id/startMultiGameButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Start Game" />

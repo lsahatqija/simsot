@@ -36,7 +36,7 @@ public class RoomActivity extends Activity {
     private static final String LOGIN_IN_PREFERENCES = "login";
 
     TextView roomNameText;
-    Button startMultiGame;
+    Button startMultiGameButton;
     ListView playerList;
 
     private boolean isHost;
@@ -52,16 +52,20 @@ public class RoomActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        initComponents();
-        initComponentsEvents();
-        initSocket();
-
         Intent intent = getIntent();
         roomName = intent.getStringExtra("roomName");
         String host = intent.getStringExtra("host");
         isHost = intent.getBooleanExtra("isHost", false);
 
-        roomNameText.setText(getResources().getString(R.string.roomNameText, roomName, host));
+        initComponents();
+        initComponentsEvents();
+        initSocket();
+
+        if(isHost){
+            roomNameText.setText(getResources().getString(R.string.yourRoomNameText, roomName));
+        } else{
+            roomNameText.setText(getResources().getString(R.string.roomNameText, roomName, host));
+        }
 
     }
 
@@ -96,20 +100,20 @@ public class RoomActivity extends Activity {
 
     protected void initComponents() {
         roomNameText = (TextView) findViewById(R.id.roomNameText);
-        startMultiGame = (Button) findViewById(R.id.startMultiGame);
+        startMultiGameButton = (Button) findViewById(R.id.startMultiGameButton);
         playerList = (ListView) findViewById(R.id.playerList);
 
         if (isHost) {
-            startMultiGame.setVisibility(View.VISIBLE);
+            startMultiGameButton.setVisibility(View.VISIBLE);
         } else {
-            startMultiGame.setVisibility(View.INVISIBLE);
+            startMultiGameButton.setVisibility(View.INVISIBLE);
         }
 
     }
 
 
     protected void initComponentsEvents() {
-        startMultiGame.setOnClickListener(new View.OnClickListener() {
+        startMultiGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mySocket.sendGameStart(roomName);
