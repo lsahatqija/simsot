@@ -169,8 +169,8 @@ public class RoomActivity extends Activity {
     protected void exitRoom(){
         JSONObject json = new JSONObject();
         try {
-            json.put("room_name", roomName);
-            json.put("player_name", getSharedPreferencesUserLogin());
+            json.put(SocketConstants.ROOM_NAME, roomName);
+            json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
         } catch (JSONException e) {
             e.printStackTrace();
         }

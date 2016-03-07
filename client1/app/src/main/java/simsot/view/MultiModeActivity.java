@@ -208,8 +208,8 @@ public class MultiModeActivity extends Activity {
 
                 JSONObject json = new JSONObject();
                 try {
-                    json.put("room_name", roomName);
-                    json.put("player_name", getSharedPreferencesUserLogin());
+                    json.put(SocketConstants.ROOM_NAME, roomName);
+                    json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -466,9 +466,9 @@ public class MultiModeActivity extends Activity {
                         try {
                             JSONObject jsonObject = (JSONObject) jsonArrayReceived.get(i);
 
-                            String roomName = jsonObject.getString("room_name");
-                            String host = jsonObject.getString("host");
-                            int slot_empty = jsonObject.getInt("slot_empty");
+                            String roomName = jsonObject.getString(SocketConstants.ROOM_NAME);
+                            String host = jsonObject.getString(SocketConstants.HOST);
+                            int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
 
                             foundRooms.add(new Room(roomName, host, slot_empty));
 
