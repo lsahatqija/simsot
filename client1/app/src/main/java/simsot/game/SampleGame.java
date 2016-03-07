@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,19 +17,21 @@ import org.json.JSONObject;
 
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
+import simsot.model.IntentParameters;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
 public class SampleGame extends AndroidGame {
 
     private static final String SERVER_URL = "https://simsot-server.herokuapp.com/";
-    private static final String USER_LOGIN = "userLogin";
+
 	
 	public static String map;
     boolean firstTimeCreate = true;
 
     private String playerName;
     private boolean isHost;
+    private String roomName;
 
     private boolean characterChoiceReceived = false;
     private JSONObject characterChoiceJSONReceived = null;
@@ -42,9 +45,11 @@ public class SampleGame extends AndroidGame {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO manage when userLogin is null
-        playerName = getIntent().getStringExtra(USER_LOGIN);
-        isHost = getIntent().getBooleanExtra("isHost", false);
+        Intent intent = getIntent();
+        // TODO manage when there are null
+        playerName = intent.getStringExtra(IntentParameters.USER_LOGIN);
+        isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
+        roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
 
         try {
             mySocket = new MySocket(SERVER_URL);
@@ -57,7 +62,7 @@ public class SampleGame extends AndroidGame {
                 }
             });
 
-            mySocket.on(SocketConstants.CHARACTER_POSITION, new Emitter.Listener() {
+            mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     characterPositionJSONReceived = (JSONObject) args[0];
@@ -134,6 +139,10 @@ public class SampleGame extends AndroidGame {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public String getRoomName() {
+        return roomName;
     }
 
     public boolean isCharacterChoiceReceived() {

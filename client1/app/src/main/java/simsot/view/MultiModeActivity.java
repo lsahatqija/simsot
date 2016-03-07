@@ -1,11 +1,11 @@
 package simsot.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import simsot.game.R;
+import simsot.model.IntentParameters;
 import simsot.model.Room;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
@@ -297,9 +297,9 @@ public class MultiModeActivity extends Activity {
                         String joinResponse = (String) args[0];
                         if ("Join successful".equals(joinResponse)) {
                             Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                            intent.putExtra("isHost", IS_NOT_HOST);
-                            intent.putExtra("roomName", selectedRoom.getRoomName());
-                            intent.putExtra("host", selectedRoom.getHost());
+                            intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
+                            intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
+                            intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
                             startActivity(intent);
                         } else {
                             showToast(joinResponse);
@@ -322,9 +322,9 @@ public class MultiModeActivity extends Activity {
 
                                 // TODO to complete
                                 Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                                intent.putExtra("isHost", IS_HOST);
-                                intent.putExtra("roomName", roomWaitingConfirmation.getRoomName());
-                                intent.putExtra("host", roomWaitingConfirmation.getHost());
+                                intent.putExtra(IntentParameters.IS_HOST, IS_HOST);
+                                intent.putExtra(IntentParameters.ROOM_NAME, roomWaitingConfirmation.getRoomName());
+                                intent.putExtra(IntentParameters.HOST, roomWaitingConfirmation.getHost());
 
                                 roomWaitingConfirmation = null;
                                 startActivity(intent);

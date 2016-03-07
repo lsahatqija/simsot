@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 
 import simsot.game.R;
 import simsot.game.SampleGame;
+import simsot.model.IntentParameters;
 import simsot.model.User;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
@@ -159,8 +160,8 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
-                intent.putExtra("userLogin", "player_test");
-                intent.putExtra("isHost", true);
+                intent.putExtra(IntentParameters.USER_LOGIN, "player_test");
+                intent.putExtra(IntentParameters.IS_HOST, true);
                 startActivity(intent);
             }
         });
@@ -236,8 +237,8 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
-                intent.putExtra("userLogin", getSharedPreferencesUserLogin());
-                intent.putExtra("isHost", true);
+                intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
+                intent.putExtra(IntentParameters.IS_HOST, true);
                 startActivity(intent);
             }
         });

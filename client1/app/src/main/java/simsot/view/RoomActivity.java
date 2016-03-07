@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,11 +21,11 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import simsot.game.R;
 import simsot.game.SampleGame;
+import simsot.model.IntentParameters;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
@@ -53,9 +51,9 @@ public class RoomActivity extends Activity {
         setContentView(R.layout.activity_room);
 
         Intent intent = getIntent();
-        roomName = intent.getStringExtra("roomName");
-        String host = intent.getStringExtra("host");
-        isHost = intent.getBooleanExtra("isHost", false);
+        roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
+        String host = intent.getStringExtra(IntentParameters.HOST);
+        isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
 
         initComponents();
         initComponentsEvents();
@@ -153,8 +151,9 @@ public class RoomActivity extends Activity {
                 @Override
                 public void call(Object... args) {
                     Intent intent = new Intent(RoomActivity.this, SampleGame.class);
-                    intent.putExtra("userLogin", getSharedPreferencesUserLogin());
-                    intent.putExtra("isHost", isHost);
+                    intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
+                    intent.putExtra(IntentParameters.IS_HOST, isHost);
+                    intent.putExtra(IntentParameters.ROOM_NAME, roomName);
                     startActivity(intent);
                 }
             });

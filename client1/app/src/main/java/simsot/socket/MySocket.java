@@ -15,6 +15,7 @@ public class MySocket {
     private static final String NAME = "name";
     private static final String X = "x";
     private static final String Y = "y";
+    private static final String ROOM_NAME = "room_name";
     private Socket mSocket;
 
     private boolean connectionRequestSendingFlag;
@@ -56,15 +57,14 @@ public class MySocket {
         roomCreationRequestSendingFlag = true;
     }
 
-    // TODO use method
-    public void sendPositionUpdate(String playerName, int x, int y) {
+    public void sendPositionUpdate(String playerName, String roomName,  int x, int y) {
         try {
             JSONObject json = new JSONObject();
-
             json.put(NAME, playerName);
             json.put(X, x);
             json.put(Y, y);
-            mSocket.emit("client_data", json);
+            json.put(ROOM_NAME, roomName);
+            mSocket.emit(SocketConstants.CHARACTER_POSITION, json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -83,19 +83,26 @@ public class MySocket {
         mSocket.emit(SocketConstants.LEAVE_ROOM, data);
     }
 
-    public void sendCharacterChoice(String character, String playerName) {
+    public void sendCharacterChoice(String character, String playerName, String roomName) {
         JSONObject json = new JSONObject();
         try {
             json.put("playerName", playerName);
             json.put("character", character);
+            json.put(ROOM_NAME, roomName);
             mSocket.emit(SocketConstants.CHARACTER_CHOICE, character);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendGameStart(String room){
-        mSocket.emit(SocketConstants.GAME_START, "start");
+    public void sendGameStart(String roomName){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(ROOM_NAME, roomName);
+            mSocket.emit(SocketConstants.GAME_START, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /*** CONNECT ***/
