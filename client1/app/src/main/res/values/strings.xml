@@ -34,5 +34,8 @@
     <string name="yes_response">Yes</string>
     <string name="no_response">No</string>
     <string name="room_deleted">The room you were in: %1$s, has been deleted"</string>
+    <string name="authentification_failed">Authentification failed !</string>
+    <string name="already_used_login">Already used login !</string>
+    <string name="field_empty">Field empty !</string>
 
 </resources>

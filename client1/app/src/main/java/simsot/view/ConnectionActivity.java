@@ -29,9 +29,7 @@ import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
 public class ConnectionActivity extends Activity {
-
-    private static final String CONNECTED = "Connected";
-    private static final String REGISTERED = "Registered";
+    
     private static final String ACTUAL_LAYOUT = "actualLayout";
 
     private static final int NOT_ERROR = 0;
@@ -313,12 +311,14 @@ public class ConnectionActivity extends Activity {
                                     showToast(getString(R.string.connection_succeeded));
 
                                     displayMenuLayout();
+                                } else if (errorCode == 1) {
+                                    showToast(getString(R.string.authentification_failed));
                                 } else {
                                     showToast(getString(R.string.connection_failed));
                                 }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             showToast(getString(R.string.connection_error));
                             // TODO add log
@@ -335,16 +335,20 @@ public class ConnectionActivity extends Activity {
                         mySocket.setRegisterRequestResponseFlag(true);
                         if (args[0] instanceof JSONObject) {
                             JSONObject registrationResponse = (JSONObject) args[0];
-                            try{
+                            try {
                                 int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
                                 if (errorCode == NOT_ERROR) {
                                     showToast(getString(R.string.registration_succeeded));
 
                                     displayConnectionLayout();
-                                } else {
+                                } else if (errorCode == 1) {
+                                    showToast(getString(R.string.already_used_login));
+                                } else if (errorCode == 2) {
+                                    showToast(getString(R.string.field_empty));
+                                }  else {
                                     showToast(getString(R.string.registration_failed));
                                 }
-                            } catch(JSONException e){
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
@@ -415,7 +419,7 @@ public class ConnectionActivity extends Activity {
 
         private SocketConstants.SocketRequestType socketRequestType;
 
-        public ProgressTask(SocketConstants.SocketRequestType socketRequestType){
+        public ProgressTask(SocketConstants.SocketRequestType socketRequestType) {
             this.socketRequestType = socketRequestType;
         }
 
