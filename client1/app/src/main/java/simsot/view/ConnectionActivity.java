@@ -29,7 +29,7 @@ import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
 public class ConnectionActivity extends Activity {
-    
+
     private static final String ACTUAL_LAYOUT = "actualLayout";
 
     private static final int NOT_ERROR = 0;
@@ -427,7 +427,7 @@ public class ConnectionActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(ConnectionActivity.this);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getString(R.string.loading_message));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.show();

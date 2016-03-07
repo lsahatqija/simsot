@@ -293,19 +293,31 @@ public class MultiModeActivity extends Activity {
             mySocket.on(SocketConstants.JOIN_RESPONSE, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    if (args[0] instanceof String) {
-                        String joinResponse = (String) args[0];
-                        if ("Join successful".equals(joinResponse)) {
-                            Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                            intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
-                            intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
-                            intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
-                            startActivity(intent);
-                        } else {
-                            showToast(joinResponse);
+                    if (args[0] instanceof JSONObject) {
+                        JSONObject joinResponse = (JSONObject) args[0];
+                        try{
+                            int errorCode = joinResponse.getInt(SocketConstants.ERROR_CODE);
+                            if (errorCode == 0) {
+                                Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                                intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
+                                intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
+                                intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
+                                startActivity(intent);
+                            } else if(errorCode == 1){
+                                showToast(getString(R.string.room_not_found));
+                            } else if(errorCode == 2){
+                                showToast(getString(R.string.room_full));
+                            } else if(errorCode == 3){
+                                showToast(getString(R.string.player_already_in_room));
+                            } else {
+                                showToast(getString(R.string.join_failed));
+                            }
+                        } catch (JSONException e){
+                            e.printStackTrace();
                         }
+
                     } else {
-                        showToast("Join error");
+                        showToast(getString(R.string.join_error));
                     }
                 }
             });
@@ -425,7 +437,7 @@ public class MultiModeActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(MultiModeActivity.this);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getString(R.string.loading_message));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.show();

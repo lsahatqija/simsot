@@ -37,5 +37,11 @@
     <string name="authentification_failed">Authentification failed !</string>
     <string name="already_used_login">Already used login !</string>
     <string name="field_empty">Field empty !</string>
+    <string name="loading_message">Loading...</string>
+    <string name="room_not_found">Room not found</string>
+    <string name="room_full">Room full</string>
+    <string name="player_already_in_room">Player already in the room</string>
+    <string name="join_failed">Join failed</string>
+    <string name="join_error">Join error</string>
 
 </resources>
