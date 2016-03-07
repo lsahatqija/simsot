@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.github.nkzawa.emitter.Emitter;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
@@ -32,6 +33,8 @@ public class ConnectionActivity extends Activity {
     private static final String CONNECTED = "Connected";
     private static final String REGISTERED = "Registered";
     private static final String ACTUAL_LAYOUT = "actualLayout";
+
+    private static final int NOT_ERROR = 0;
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
@@ -296,22 +299,29 @@ public class ConnectionActivity extends Activity {
                     if (mySocket.isConnectionRequestSendingFlag()) {
                         mySocket.setConnectionRequestSendingFlag(false);
                         mySocket.setConnectionRequestResponseFlag(true);
-                        if (args[0] instanceof String) {
-                            String connectionResponse = (String) args[0];
-                            if (CONNECTED.equals(connectionResponse)) {
-                                SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = settings.edit();
-                                editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
-                                editor.commit();
+                        if (args[0] instanceof JSONObject) {
+                            JSONObject connectionResponse = (JSONObject) args[0];
+                            try {
+                                int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
 
-                                showToast(getString(R.string.connection_succeeded));
+                                if (errorCode == NOT_ERROR) {
+                                    SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
+                                    editor.commit();
 
-                                displayMenuLayout();
-                            } else {
-                                showToast(getString(R.string.connection_failed));
-                            }
+                                    showToast(getString(R.string.connection_succeeded));
+
+                                    displayMenuLayout();
+                                } else {
+                                    showToast(getString(R.string.connection_failed));
+                                }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                         } else {
                             showToast(getString(R.string.connection_error));
+                            // TODO add log
                         }
                     }
                 }
@@ -323,17 +333,24 @@ public class ConnectionActivity extends Activity {
                     if (mySocket.isRegisterRequestSendingFlag()) {
                         mySocket.setRegisterRequestSendingFlag(false);
                         mySocket.setRegisterRequestResponseFlag(true);
-                        if (args[0] instanceof String) {
-                            String registrationResponse = (String) args[0];
-                            if (REGISTERED.equals(registrationResponse)) {
-                                showToast(getString(R.string.registration_succeeded));
+                        if (args[0] instanceof JSONObject) {
+                            JSONObject registrationResponse = (JSONObject) args[0];
+                            try{
+                                int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
+                                if (errorCode == NOT_ERROR) {
+                                    showToast(getString(R.string.registration_succeeded));
 
-                                displayConnectionLayout();
-                            } else {
-                                showToast(getString(R.string.registration_failed));
+                                    displayConnectionLayout();
+                                } else {
+                                    showToast(getString(R.string.registration_failed));
+                                }
+                            } catch(JSONException e){
+                                e.printStackTrace();
                             }
+
                         } else {
                             showToast(getString(R.string.registration_error));
+                            // TODO add log
                         }
                     }
                 }

@@ -30,6 +30,7 @@ public final class SocketConstants {
 
 
 
+    public static final String ERROR_CODE = "error_code";
     public static final String PLAYER_NAME = "player_name";
     public static final String X = "x";
     public static final String Y = "y";
@@ -37,6 +38,7 @@ public final class SocketConstants {
     public static final String CHARACTER = "character";
     public static final String HOST = "host";
     public static final String SLOT_EMPTY = "slot_empty";
+
 
     public enum SocketRequestType {
         CONNECTION_REQUEST,
