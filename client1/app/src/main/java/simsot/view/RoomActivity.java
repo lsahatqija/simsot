@@ -65,6 +65,13 @@ public class RoomActivity extends Activity {
     }
 
     @Override
+    protected void onPause(){
+        exitRoom();
+
+        super.onPause();
+    }
+
+    @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
         builder.setTitle(R.string.exit_room);
@@ -72,16 +79,7 @@ public class RoomActivity extends Activity {
         builder.setPositiveButton(R.string.yes_response, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("room_name", roomName);
-                    json.put("player_name", getSharedPreferencesUserLogin());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                mySocket.sendLeaveRoomRequest(json);
-
-                finish();
+                exitRoom();
             }
         });
         builder.setNegativeButton(R.string.no_response, new DialogInterface.OnClickListener() {
@@ -159,6 +157,19 @@ public class RoomActivity extends Activity {
                 playerList.setAdapter(adapter);
             }
         });
+    }
+
+    protected void exitRoom(){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("room_name", roomName);
+            json.put("player_name", getSharedPreferencesUserLogin());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mySocket.sendLeaveRoomRequest(json);
+
+        finish();
     }
 
     protected void showToast(final String message) {
