@@ -47,8 +47,7 @@ public class ConnectionActivity extends Activity {
     private Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
     private EditText userPseudoConnection, userPasswordConnection, userPseudoRegistration, userPasswordRegistration, userPassword2Registration;
     private TextView welcomeText;
-    private LinearLayout layoutConnection, layoutRegistration;
-    private RelativeLayout layoutMenu;
+    private LinearLayout layoutConnection, layoutRegistration, layoutMenu;
     private ImageView menuLogo;
 
     private enum ConnectionActivityActualLayout {
@@ -119,7 +118,7 @@ public class ConnectionActivity extends Activity {
 
         layoutConnection = (LinearLayout) findViewById(R.id.layoutConnection);
         layoutRegistration = (LinearLayout) findViewById(R.id.layoutRegistration);
-        layoutMenu = (RelativeLayout) findViewById(R.id.layoutMenu);
+        layoutMenu = (LinearLayout) findViewById(R.id.layoutMenu);
 
         initConnectionLayoutComponents();
         initRegistrationLayoutComponents();
