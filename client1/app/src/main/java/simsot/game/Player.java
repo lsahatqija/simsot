@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import simsot.framework.Image;
 import simsot.framework.Input;
+import simsot.socket.MySocket;
 
 public class Player {
 
@@ -49,12 +50,16 @@ public class Player {
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
 	private String playerName;
+	private String roomName;
+	private MySocket mySocket;
 
-    public Player (int x, int y, String mode, String playerName){
+    public Player (int x, int y, String mode, String playerName, String roomName, MySocket mySocket){
         this.centerX = x;
         this.centerY = y;
         this.mode=mode;
 		this.playerName = playerName;
+		this.roomName =  roomName;
+		this.mySocket = mySocket;
         characterLeft1 = Assets.characterLeft1;
         characterLeft2 = Assets.characterLeft2;
         characterRight1 = Assets.characterRight1;
@@ -136,6 +141,7 @@ public class Player {
         //movement
         if("local".equals(mode)) {
 			movementControl(touchEvents);
+			mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
 		} else if("remote".equals(mode) ){
 			if(game.isCharacterPositionReceived()){
                 try {

@@ -2,11 +2,13 @@ package simsot.game;
 
 import android.graphics.Rect;
 
+import simsot.socket.MySocket;
+
 public class Blinky extends Player {
 
 
-    public Blinky(int centerX, int centerY, String mode, String playerName){
-        super(centerX, centerY, mode, playerName);
+    public Blinky(int centerX, int centerY, String mode, String playerName, String roomName, MySocket mySocket){
+        super(centerX, centerY, mode, playerName, roomName, mySocket);
         characterLeft1 = Assets.blinkyLeft1;
         characterLeft2 = Assets.blinkyLeft2;
         characterRight1 = Assets.blinkyRight1;

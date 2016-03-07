@@ -332,7 +332,7 @@ public class GameScreen extends Screen {
 		}
 
 
-		//mySocket.sendPositionUpdate(playerName, player.getCenterX(), player.getCenterY());
+
 
         //blinky.update();
         //blinky.movementControl(touchEvents);

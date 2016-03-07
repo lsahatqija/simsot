@@ -12,10 +12,12 @@ import java.net.URISyntaxException;
 
 public class MySocket {
 
-    private static final String NAME = "name";
+    private static final String PLAYER_NAME = "playerName";
     private static final String X = "x";
     private static final String Y = "y";
     private static final String ROOM_NAME = "room_name";
+    private static final String CHARACTER = "character";
+
     private Socket mSocket;
 
     private boolean connectionRequestSendingFlag;
@@ -60,7 +62,7 @@ public class MySocket {
     public void sendPositionUpdate(String playerName, String roomName,  int x, int y) {
         try {
             JSONObject json = new JSONObject();
-            json.put(NAME, playerName);
+            json.put(PLAYER_NAME, playerName);
             json.put(X, x);
             json.put(Y, y);
             json.put(ROOM_NAME, roomName);
@@ -86,10 +88,11 @@ public class MySocket {
     public void sendCharacterChoice(String character, String playerName, String roomName) {
         JSONObject json = new JSONObject();
         try {
-            json.put("playerName", playerName);
-            json.put("character", character);
+            json.put(PLAYER_NAME, playerName);
+            json.put(CHARACTER, character);
             json.put(ROOM_NAME, roomName);
-            mSocket.emit(SocketConstants.CHARACTER_CHOICE, character);
+
+            mSocket.emit(SocketConstants.CHARACTER_CHOICE, json);
         } catch (JSONException e) {
             e.printStackTrace();
         }

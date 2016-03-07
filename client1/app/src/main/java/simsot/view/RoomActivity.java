@@ -68,13 +68,6 @@ public class RoomActivity extends Activity {
     }
 
     @Override
-    protected void onPause(){
-        exitRoom();
-
-        super.onPause();
-    }
-
-    @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
         builder.setTitle(R.string.exit_room);
