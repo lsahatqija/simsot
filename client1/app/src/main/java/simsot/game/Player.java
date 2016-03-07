@@ -73,10 +73,6 @@ public class Player {
 			centerY += speedY;
 		}
 		*/
-
-        //Gridding
-        rx=centerX%30;
-        ry=centerY%30;
         /*
         if(rx > 0 && rx < 15){
             centerX -= rx;
@@ -271,11 +267,23 @@ public class Player {
 	}
 
 	public void stopHor() {
+        //Gridding
+        rx=centerX%30;
+        if(rx < 15)
+            centerX += rx-15;
+        else if(ry >= 15)
+            centerX -= rx-15;
 		speedX = 0;
 		setMovingHor(false);
 	}
 
 	public void stopVer() {
+        //Gridding
+        ry=centerY%30;
+        if(ry < 15)
+            centerY += ry-15;
+        else if(ry >= 15)
+            centerY -= ry-15;
 		speedY = 0;
 		setMovingVer(false);
 	}

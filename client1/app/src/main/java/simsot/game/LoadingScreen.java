@@ -54,6 +54,8 @@ public class LoadingScreen extends Screen {
         Assets.pinkySelection = g.newImage("pinkySelection.png", ImageFormat.RGB565);
         Assets.blinkySelection = g.newImage("blinkySelection.png", ImageFormat.RGB565);
         Assets.clydeSelection = g.newImage("clydeSelection.png", ImageFormat.RGB565);
+        Assets.playerSelectionLocal = g.newImage("playerSelectionlocal.png", ImageFormat.RGB565);
+        Assets.playerSelectionRemote = g.newImage("playerSelectionremote.png", ImageFormat.RGB565);
 
 		Assets.buttonUp = g.newImage("buttonUp.png", ImageFormat.RGB565);
 		Assets.buttonDown = g.newImage("buttonDown.png", ImageFormat.RGB565);

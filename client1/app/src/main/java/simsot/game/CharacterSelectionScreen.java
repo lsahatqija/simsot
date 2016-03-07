@@ -17,7 +17,7 @@ import simsot.socket.MySocket;
 public class CharacterSelectionScreen extends Screen {
 
     Paint paint = new Paint();
-    int timeout = 600;
+    int timeout = 900;
     private long clock = System.currentTimeMillis();
 
     public static Player pacman;
@@ -34,6 +34,20 @@ public class CharacterSelectionScreen extends Screen {
     private boolean inkyTaken;
     private boolean blinkyTaken;
     private boolean clydeTaken;
+
+    private boolean pacmanTakenLocal;
+    private boolean pinkyTakenLocal;
+    private boolean inkyTakenLocal;
+    private boolean blinkyTakenLocal;
+    private boolean clydeTakenLocal;
+
+    private boolean playerSelect = false;
+
+    private static String pacmanName;
+    private static String pinkyName;
+    private static String inkyName;
+    private static String blinkyName;
+    private static String clydeName;
 
     private static final String PACMAN = "Pacman";
     private static final String PINKY = "Pinky";
@@ -59,7 +73,7 @@ public class CharacterSelectionScreen extends Screen {
 
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
-        while(timeout > 0) {
+        //while(timeout > 0) {
             int len = touchEvents.size();
             for (int i = 0; i < len; i++) {
                 Input.TouchEvent event = touchEvents.get(i);
@@ -73,18 +87,23 @@ public class CharacterSelectionScreen extends Screen {
                             switch (character) {
                                 case PACMAN:
                                     pacman = new Pacman(100, 200, REMOTE, playerNameReceived);
+                                    pacmanName = playerNameReceived;
                                     break;
                                 case INKY:
                                     inky = new Inky(100, 500, REMOTE, playerNameReceived);
+                                    inkyName = playerNameReceived;
                                     break;
                                 case PINKY:
                                     pinky = new Pinky(300, 100, REMOTE, playerNameReceived);
+                                    pinkyName = playerNameReceived;
                                     break;
                                 case BLINKY:
                                     blinky = new Blinky(300, 500, REMOTE, playerNameReceived);
+                                    blinkyName = playerNameReceived;
                                     break;
                                 case CLYDE:
                                     clyde = new Clyde(100, 100, REMOTE, playerNameReceived);
+                                    clydeName = playerNameReceived;
                                     break;
                                 default:
                                     break;
@@ -95,38 +114,48 @@ public class CharacterSelectionScreen extends Screen {
                         }
                     }
                     if (inBounds(event, 203, 185, 75, 75)) {
-                        if (!pacmanTaken) {
+                        if (!pacmanTaken && !playerSelect) {
                             pacman = new Pacman(100, 200, LOCAL, playerName);
                             mySocket.sendCharacterChoice(PACMAN, playerName);
                             pacmanTaken = true;
+                            pacmanTakenLocal = true;
+                            playerSelect = true;
                         }
                     }
                     if (inBounds(event, 96, 335, 75, 75)) {
-                        if (!inkyTaken) {
+                        if (!inkyTaken && !playerSelect) {
                             inky = new Inky(100, 500, LOCAL, playerName);
                             mySocket.sendCharacterChoice(INKY, playerName);
                             inkyTaken = true;
+                            inkyTakenLocal = true;
+                            playerSelect = true;
                         }
                     }
                     if (inBounds(event, 171, 335, 75, 75)) {
-                        if (!pinkyTaken) {
+                        if (!pinkyTaken && !playerSelect) {
                             pinky = new Pinky(300, 100, LOCAL, playerName);
                             mySocket.sendCharacterChoice(PINKY, playerName);
                             pinkyTaken = true;
+                            pinkyTakenLocal = true;
+                            playerSelect = true;
                         }
                     }
                     if (inBounds(event, 247, 335, 75, 75)) {
-                        if (!blinkyTaken) {
+                        if (!blinkyTaken && !playerSelect) {
                             blinky = new Blinky(300, 500, LOCAL, playerName);
                             mySocket.sendCharacterChoice(BLINKY, playerName);
                             blinkyTaken = true;
+                            blinkyTakenLocal = true;
+                            playerSelect = true;
                         }
                     }
                     if (inBounds(event, 322, 335, 75, 75)) {
-                        if (!clydeTaken) {
+                        if (!clydeTaken && !playerSelect) {
                             clyde = new Clyde(100, 100, LOCAL, playerName);
                             mySocket.sendCharacterChoice(CLYDE, playerName);
                             clydeTaken = true;
+                            clydeTakenLocal = true;
+                            playerSelect = true;
                         }
                     }
 
@@ -140,23 +169,25 @@ public class CharacterSelectionScreen extends Screen {
                 e.printStackTrace();
             }
             clock = System.currentTimeMillis();
+        //}
+        if(timeout == 0){
+            if(!pacmanTaken){
+                pacman = new Pacman(100, 200, AI, PACMAN);
+            }
+            if(!inkyTaken){
+                inky = new Inky(100, 500, AI, INKY);
+            }
+            if(!pinkyTaken){
+                pinky = new Pinky(300, 100, AI, PINKY);
+            }
+            if(!blinkyTaken){
+                blinky = new Blinky(300, 500, AI, BLINKY);
+            }
+            if(!clydeTaken){
+                clyde = new Clyde(100, 100, AI, CLYDE);
+            }
+            game.setScreen(new GameScreen(game));
         }
-        if(!pacmanTaken){
-            pacman = new Pacman(100, 200, AI, PACMAN);
-        }
-        if(!inkyTaken){
-            inky = new Inky(100, 500, AI, INKY);
-        }
-        if(!pinkyTaken){
-            pinky = new Pinky(300, 100, AI, PINKY);
-        }
-        if(!blinkyTaken){
-            blinky = new Blinky(300, 500, AI, BLINKY);
-        }
-        if(!clydeTaken){
-            clyde = new Clyde(100, 100, AI, CLYDE);
-        }
-        game.setScreen(new GameScreen(game));
     }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
@@ -177,12 +208,55 @@ public class CharacterSelectionScreen extends Screen {
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
         g.drawString("Select your character!", 240, 100, paint);
+        g.drawString("Timeout in: "+timeout/60, 240, 600, paint);
 
         g.drawImage(Assets.pacmanSelection, 203, 185);
+        if(pacmanTaken){
+            if(pacmanTakenLocal){
+                g.drawImage(Assets.playerSelectionLocal, 203, 185);
+                //g.drawString(playerName, 203, 200, paint);
+            } else {
+                g.drawImage(Assets.playerSelectionRemote, 203, 185);
+                //g.drawString(pacmanName, 203, 200, paint);
+            }
+
+        }
         g.drawImage(Assets.inkySelection, 96, 335);
+        if(inkyTaken){
+            if(inkyTakenLocal){
+                g.drawImage(Assets.playerSelectionLocal, 96, 335);
+            } else {
+                g.drawImage(Assets.playerSelectionRemote, 96, 335);
+            }
+
+        }
         g.drawImage(Assets.pinkySelection, 171, 335);
+        if(pinkyTaken){
+            if(pinkyTakenLocal){
+                g.drawImage(Assets.playerSelectionLocal, 171, 335);
+            } else {
+                g.drawImage(Assets.playerSelectionRemote, 171, 335);
+            }
+
+        }
         g.drawImage(Assets.blinkySelection, 247, 335);
+        if(blinkyTaken){
+            if(blinkyTakenLocal){
+                g.drawImage(Assets.playerSelectionLocal, 247, 335);
+            } else {
+                g.drawImage(Assets.playerSelectionRemote, 247, 335);
+            }
+
+        }
         g.drawImage(Assets.clydeSelection, 322, 335);
+        if(clydeTaken){
+            if(clydeTakenLocal){
+                g.drawImage(Assets.playerSelectionLocal, 322, 335);
+            } else {
+                g.drawImage(Assets.playerSelectionRemote, 322, 335);
+            }
+
+        }
     }
 
     @Override

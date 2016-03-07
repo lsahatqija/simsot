@@ -15,6 +15,7 @@ public class Assets {
     public static Image pinkyLeft1, pinkyLeft2, pinkyRight1, pinkyRight2;
     public static Image blinkyLeft1, blinkyLeft2, blinkyRight1, blinkyRight2;
     public static Image clydeLeft1, clydeLeft2, clydeRight1, clydeRight2;
+    public static Image playerSelectionLocal, playerSelectionRemote;
 
     public static Image pacmanSelection, inkySelection, pinkySelection, blinkySelection, clydeSelection;
 
