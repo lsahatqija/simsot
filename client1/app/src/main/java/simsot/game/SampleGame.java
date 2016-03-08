@@ -37,6 +37,8 @@ public class SampleGame extends AndroidGame {
 
     private Map<String, JSONObject> receivedCharacterPositionJSONMap;
 
+    private boolean gameCanStart;
+
     private MySocket mySocket;
 
     @Override
@@ -52,6 +54,8 @@ public class SampleGame extends AndroidGame {
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
 
         receivedCharacterPositionJSONMap = new HashMap<String, JSONObject>();
+
+        gameCanStart = false;
 
         mySocket = MySocket.getInstance();
 
@@ -85,6 +89,28 @@ public class SampleGame extends AndroidGame {
                 } else {
                     //TODO manage this error
                     System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
+                }
+            }
+        });
+
+        mySocket.on(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if (args[0] instanceof JSONObject) {
+                    try {
+                        int errorCode = ((JSONObject) args[0]).getInt(SocketConstants.ERROR_CODE);
+
+                        if(errorCode == 0){
+                            gameCanStart = true;
+                        } else{
+                            // TODO manage else
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    //TODO manage this error
+                    System.out.println(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
@@ -172,4 +198,11 @@ public class SampleGame extends AndroidGame {
         return receivedCharacterPositionJSONMap;
     }
 
+    public boolean isGameCanStart() {
+        return gameCanStart;
+    }
+
+    public void setGameCanStart(boolean gameCanStart) {
+        this.gameCanStart = gameCanStart;
+    }
 }

@@ -124,6 +124,16 @@ public final class MySocket {
         }
     }
 
+    public void sendCharacterTimeoutEnded(String roomName){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(SocketConstants.ROOM_NAME, roomName);
+            mSocket.emit(SocketConstants.CHARACTER_TIMEOUT_ENDED, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*** CONNECT ***/
     private void connect(){
         mSocket.connect();
