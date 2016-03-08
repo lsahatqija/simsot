@@ -141,13 +141,13 @@ public class Player {
         rectY.set(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
 
         //movement
-        if ("local".equals(mode)) {
+        if (PacManConstants.LOCAL.equals(mode)) {
             movementControl(touchEvents);
             centerX += speedX;
             centerY += speedY;
             //System.out.println("sending : {\"player_name\":\""+playerName+"\",\"y\":"+centerY+",\"room_name\":\""+roomName+"\",\"x\":"+centerX+"}");
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
-        } else if ("remote".equals(mode)) {
+        } else if (PacManConstants.REMOTE.equals(mode)) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
             if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
                 try {
@@ -158,7 +158,7 @@ public class Player {
                     e.printStackTrace();
                 }
             }
-        } else if ("AI".equals(mode)) {
+        } else if (PacManConstants.AI.equals(mode)) {
             direction = Math.random();
             callAI();
             centerX += speedX;
