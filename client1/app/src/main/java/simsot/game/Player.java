@@ -2,6 +2,7 @@ package simsot.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.graphics.Rect;
 
@@ -147,16 +148,12 @@ public class Player {
             System.out.println("sending : {\"player_name\":\""+playerName+"\",\"y\":"+centerY+",\"room_name\":\""+roomName+"\",\"x\":"+centerX+"}");
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         } else if ("remote".equals(mode)) {
-            List<JSONObject> receivedCharacterPositionJSON = game.getReceivedCharacterPositionJSONList();
-            if (!receivedCharacterPositionJSON.isEmpty()) {
+            Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
+            if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
                 try {
-                    JSONObject json = receivedCharacterPositionJSON.get(0);
-                    String name = json.getString(SocketConstants.PLAYER_NAME);
-                    if (playerName.equals(name)) {
-                        centerX = json.getInt(SocketConstants.X);
-                        centerY = json.getInt(SocketConstants.Y);
-                        receivedCharacterPositionJSON.remove(0);
-                    }
+                    JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
+                    centerX = json.getInt(SocketConstants.X);
+                    centerY = json.getInt(SocketConstants.Y);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
@@ -33,7 +35,7 @@ public class SampleGame extends AndroidGame {
 
     private List<JSONObject> receivedCharacterChoiceJSONList;
 
-    private List<JSONObject> receivedCharacterPositionJSONList;
+    private Map<String, JSONObject> receivedCharacterPositionJSONMap;
 
     private MySocket mySocket;
 
@@ -49,7 +51,7 @@ public class SampleGame extends AndroidGame {
 
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
 
-        receivedCharacterPositionJSONList = new ArrayList<JSONObject>();
+        receivedCharacterPositionJSONMap = new HashMap<String, JSONObject>();
 
         mySocket = MySocket.getInstance();
 
@@ -75,7 +77,7 @@ public class SampleGame extends AndroidGame {
                         String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
 
                         if(!playerName.equals(name)){
-                            receivedCharacterPositionJSONList.add((JSONObject) args[0]);
+                            receivedCharacterPositionJSONMap.put(name,(JSONObject)args[0]);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -166,8 +168,8 @@ public class SampleGame extends AndroidGame {
         return receivedCharacterChoiceJSONList;
     }
 
-    public List<JSONObject> getReceivedCharacterPositionJSONList() {
-        return receivedCharacterPositionJSONList;
+    public Map<String,JSONObject> getReceivedCharacterPositionJSONMap() {
+        return receivedCharacterPositionJSONMap;
     }
 
 }
