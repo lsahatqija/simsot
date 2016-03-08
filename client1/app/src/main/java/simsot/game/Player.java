@@ -144,8 +144,6 @@ public class Player {
 			movementControl(touchEvents);
 			mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
 		} else if("remote".equals(mode) ){
-			while(!game.isReceivedCharacterPositionJSONListMutex());
-			game.setReceivedCharacterPositionJSONListMutex(false);
 			List<JSONObject> receivedCharacterPositionJSON = game.getReceivedCharacterPositionJSONList();
 			if(!receivedCharacterPositionJSON.isEmpty()){
                 try {
@@ -160,7 +158,6 @@ public class Player {
                     e.printStackTrace();
                 }
             }
-			game.setReceivedCharacterPositionJSONListMutex(true);
         } else if ("AI".equals(mode)){
             direction = Math.random();
             callAI();

@@ -78,8 +78,6 @@ public class CharacterSelectionScreen extends Screen {
         paint(deltaTime);
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
-        while(!((SampleGame) game).isReceivedCharacterChoiceJSONListMutex());
-        ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(false);
         List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
         if (!receivedCharacterChoiceJSONList.isEmpty()) {
             try {
@@ -122,7 +120,6 @@ public class CharacterSelectionScreen extends Screen {
                 e.printStackTrace();
             }
         }
-        ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(true);
 
         //while(timeout > 0) {
             int len = touchEvents.size();
