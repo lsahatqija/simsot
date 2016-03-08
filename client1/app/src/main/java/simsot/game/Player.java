@@ -160,6 +160,7 @@ public class Player {
         } else if ("AI".equals(mode)){
             direction = Math.random();
             callAI();
+            mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         }
 
         if(walkCounter > 1000){

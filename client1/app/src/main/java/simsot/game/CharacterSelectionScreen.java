@@ -75,7 +75,7 @@ public class CharacterSelectionScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         Graphics g = game.getGraphics();
-
+        paint(deltaTime);
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
         //while(timeout > 0) {
@@ -192,18 +192,23 @@ public class CharacterSelectionScreen extends Screen {
             
             if(!pacmanTaken){
                 pacman = new Pacman(100, 200, characterMode, PACMAN, roomName, mySocket);
+                mySocket.sendCharacterChoice(PACMAN, PACMAN, roomName);
             }
             if(!inkyTaken){
                 inky = new Inky(100, 500, characterMode, INKY, roomName, mySocket);
+                mySocket.sendCharacterChoice(INKY, INKY, roomName);
             }
             if(!pinkyTaken){
                 pinky = new Pinky(300, 100, characterMode, PINKY, roomName, mySocket);
+                mySocket.sendCharacterChoice(PINKY, PINKY, roomName);
             }
             if(!blinkyTaken){
                 blinky = new Blinky(300, 500, characterMode, BLINKY, roomName, mySocket);
+                mySocket.sendCharacterChoice(BLINKY, BLINKY, roomName);
             }
             if(!clydeTaken){
                 clyde = new Clyde(100, 100, characterMode, CLYDE, roomName, mySocket);
+                mySocket.sendCharacterChoice(CLYDE, CLYDE, roomName);
             }
 
             game.setScreen(new GameScreen(game));
