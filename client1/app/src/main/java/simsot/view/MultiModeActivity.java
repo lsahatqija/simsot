@@ -239,11 +239,11 @@ public class MultiModeActivity extends Activity {
                 try {
                     Room room;
                     if (roomPasswordOffRadio.isChecked()) {
-                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
                                 null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     } else {
-                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
                                 null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     }

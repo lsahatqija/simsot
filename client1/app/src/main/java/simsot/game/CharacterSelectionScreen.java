@@ -121,7 +121,6 @@ public class CharacterSelectionScreen extends Screen {
 
         }
 
-        //while(timeout > 0) {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
             Input.TouchEvent event = touchEvents.get(i);
@@ -182,7 +181,7 @@ public class CharacterSelectionScreen extends Screen {
             e.printStackTrace();
         }
         clock = System.currentTimeMillis();
-        //}
+
         if (timeout == 0) {
             String characterMode;
             if (isHost) {
