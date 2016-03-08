@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -55,10 +56,10 @@ public class SampleGame extends AndroidGame {
         mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                if(args[0] instanceof JSONObject){
+                if (args[0] instanceof JSONObject) {
                     System.out.println(((JSONObject) args[0]).toString());
                     receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
-                } else{
+                } else {
                     //TODO manage this error
                     System.out.println(SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
@@ -68,10 +69,18 @@ public class SampleGame extends AndroidGame {
         mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                if(args[0] instanceof JSONObject){
-                    System.out.println(((JSONObject) args[0]).toString());
-                    receivedCharacterPositionJSONList.add((JSONObject) args[0]);
-                } else{
+                if (args[0] instanceof JSONObject) {
+                    try {
+                        System.out.println(((JSONObject) args[0]).toString());
+                        String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
+
+                        if(!playerName.equals(name)){
+                            receivedCharacterPositionJSONList.add((JSONObject) args[0]);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
                     //TODO manage this error
                     System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
