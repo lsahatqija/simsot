@@ -30,6 +30,7 @@ public class CharacterSelectionScreen extends Screen {
     private MySocket mySocket;
     private String playerName;
     private String roomName;
+    private boolean isHost;
 
     private boolean pacmanTaken;
     private boolean pinkyTaken;
@@ -66,6 +67,7 @@ public class CharacterSelectionScreen extends Screen {
         mySocket = ((SampleGame) game).getMySocket();
         playerName = ((SampleGame) game).getPlayerName();
         roomName = ((SampleGame) game).getRoomName();
+        isHost = ((SampleGame) game).isHost();
     }
 
 
@@ -180,21 +182,30 @@ public class CharacterSelectionScreen extends Screen {
             clock = System.currentTimeMillis();
         //}
         if(timeout == 0){
+            String characterMode;
+            if(isHost)
+            {
+                characterMode = AI;
+            } else {
+                characterMode = REMOTE;
+            }
+            
             if(!pacmanTaken){
-                pacman = new Pacman(100, 200, AI, PACMAN, roomName, mySocket);
+                pacman = new Pacman(100, 200, characterMode, PACMAN, roomName, mySocket);
             }
             if(!inkyTaken){
-                inky = new Inky(100, 500, AI, INKY, roomName, mySocket);
+                inky = new Inky(100, 500, characterMode, INKY, roomName, mySocket);
             }
             if(!pinkyTaken){
-                pinky = new Pinky(300, 100, AI, PINKY, roomName, mySocket);
+                pinky = new Pinky(300, 100, characterMode, PINKY, roomName, mySocket);
             }
             if(!blinkyTaken){
-                blinky = new Blinky(300, 500, AI, BLINKY, roomName, mySocket);
+                blinky = new Blinky(300, 500, characterMode, BLINKY, roomName, mySocket);
             }
             if(!clydeTaken){
-                clyde = new Clyde(100, 100, AI, CLYDE, roomName, mySocket);
+                clyde = new Clyde(100, 100, characterMode, CLYDE, roomName, mySocket);
             }
+
             game.setScreen(new GameScreen(game));
         }
     }

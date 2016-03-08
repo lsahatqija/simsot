@@ -141,6 +141,10 @@ public class SampleGame extends AndroidGame {
         return roomName;
     }
 
+    public boolean isHost() {
+        return isHost;
+    }
+
     public boolean isCharacterChoiceReceived() {
         return characterChoiceReceived;
     }
