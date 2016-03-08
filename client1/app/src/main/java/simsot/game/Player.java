@@ -145,7 +145,7 @@ public class Player {
             movementControl(touchEvents);
             centerX += speedX;
             centerY += speedY;
-            System.out.println("sending : {\"player_name\":\""+playerName+"\",\"y\":"+centerY+",\"room_name\":\""+roomName+"\",\"x\":"+centerX+"}");
+            //System.out.println("sending : {\"player_name\":\""+playerName+"\",\"y\":"+centerY+",\"room_name\":\""+roomName+"\",\"x\":"+centerX+"}");
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         } else if ("remote".equals(mode)) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();

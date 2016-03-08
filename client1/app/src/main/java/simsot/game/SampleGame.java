@@ -59,7 +59,7 @@ public class SampleGame extends AndroidGame {
             @Override
             public void call(Object... args) {
                 if (args[0] instanceof JSONObject) {
-                    System.out.println("receiving  : " + ((JSONObject) args[0]).toString());
+                    //System.out.println("receiving  : " + ((JSONObject) args[0]).toString());
                     receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
                 } else {
                     //TODO manage this error
@@ -73,7 +73,7 @@ public class SampleGame extends AndroidGame {
             public void call(Object... args) {
                 if (args[0] instanceof JSONObject) {
                     try {
-                        System.out.println("receiving  : "+((JSONObject) args[0]).toString());
+                       // System.out.println("receiving  : "+((JSONObject) args[0]).toString());
                         String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
 
                         if(!playerName.equals(name)){
