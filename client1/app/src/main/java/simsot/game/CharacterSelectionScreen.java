@@ -78,56 +78,57 @@ public class CharacterSelectionScreen extends Screen {
         paint(deltaTime);
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
+        while(!((SampleGame) game).isReceivedCharacterChoiceJSONListMutex());
+        ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(false);
+        List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
+        if (!receivedCharacterChoiceJSONList.isEmpty()) {
+            try {
+                JSONObject characterChoiceJSONReceived = receivedCharacterChoiceJSONList.get(0);
+                receivedCharacterChoiceJSONList.remove(0);
+                String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
+                String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
+
+                switch (character) {
+                    case PACMAN:
+                        pacman = new Pacman(100, 200, REMOTE, playerNameReceived, roomName, mySocket);
+                        pacmanName = playerNameReceived;
+                        pacmanTaken = true;
+                        break;
+                    case INKY:
+                        inky = new Inky(100, 500, REMOTE, playerNameReceived, roomName, mySocket);
+                        inkyName = playerNameReceived;
+                        inkyTaken = true;
+                        break;
+                    case PINKY:
+                        pinky = new Pinky(300, 100, REMOTE, playerNameReceived, roomName, mySocket);
+                        pinkyName = playerNameReceived;
+                        pinkyTaken = true;
+                        break;
+                    case BLINKY:
+                        blinky = new Blinky(300, 500, REMOTE, playerNameReceived, roomName, mySocket);
+                        blinkyName = playerNameReceived;
+                        blinkyTaken = true;
+                        break;
+                    case CLYDE:
+                        clyde = new Clyde(100, 100, REMOTE, playerNameReceived, roomName, mySocket);
+                        clydeName = playerNameReceived;
+                        clydeTaken = true;
+                        break;
+                    default:
+                        break;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(true);
+
         //while(timeout > 0) {
             int len = touchEvents.size();
             for (int i = 0; i < len; i++) {
                 Input.TouchEvent event = touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_UP) {
-                    while(!((SampleGame) game).isReceivedCharacterChoiceJSONListMutex());
-                    ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(false);
-                    List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
-                    if (!receivedCharacterChoiceJSONList.isEmpty()) {
-                        try {
-                            JSONObject characterChoiceJSONReceived = receivedCharacterChoiceJSONList.get(0);
-                            receivedCharacterChoiceJSONList.remove(0);
-                            String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
-                            String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
-
-                            switch (character) {
-                                case PACMAN:
-                                    pacman = new Pacman(100, 200, REMOTE, playerNameReceived, roomName, mySocket);
-                                    pacmanName = playerNameReceived;
-                                    pacmanTaken = true;
-                                    break;
-                                case INKY:
-                                    inky = new Inky(100, 500, REMOTE, playerNameReceived, roomName, mySocket);
-                                    inkyName = playerNameReceived;
-                                    inkyTaken = true;
-                                    break;
-                                case PINKY:
-                                    pinky = new Pinky(300, 100, REMOTE, playerNameReceived, roomName, mySocket);
-                                    pinkyName = playerNameReceived;
-                                    pinkyTaken = true;
-                                    break;
-                                case BLINKY:
-                                    blinky = new Blinky(300, 500, REMOTE, playerNameReceived, roomName, mySocket);
-                                    blinkyName = playerNameReceived;
-                                    blinkyTaken = true;
-                                    break;
-                                case CLYDE:
-                                    clyde = new Clyde(100, 100, REMOTE, playerNameReceived, roomName, mySocket);
-                                    clydeName = playerNameReceived;
-                                    clydeTaken = true;
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(true);
                     if (inBounds(event, 203, 185, 75, 75)) {
                         if (!pacmanTaken && !playerSelect) {
                             pacman = new Pacman(100, 200, LOCAL, playerName, roomName, mySocket);
