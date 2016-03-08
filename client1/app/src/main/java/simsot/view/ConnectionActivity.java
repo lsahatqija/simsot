@@ -19,8 +19,6 @@ import com.github.nkzawa.emitter.Emitter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
-
 import simsot.game.R;
 import simsot.game.SampleGame;
 import simsot.model.IntentParameters;
@@ -85,7 +83,6 @@ public class ConnectionActivity extends Activity {
                     break;
                 case LAYOUTMENU:
                     // TODO remove the duplicate code #55
-                    String login = getSharedPreferencesUserLogin();
                     if (getSharedPreferencesUserLogin() == null) {
                         displayConnectionLayout();
                     } else {

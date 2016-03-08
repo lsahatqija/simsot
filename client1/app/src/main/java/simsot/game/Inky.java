@@ -1,7 +1,5 @@
 package simsot.game;
 
-import android.graphics.Rect;
-
 import simsot.socket.MySocket;
 
 public class Inky extends Player {

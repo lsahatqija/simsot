@@ -145,7 +145,8 @@ public class SampleGame extends AndroidGame {
         String line = null;
         try {
             while ((line = reader.readLine()) != null) {
-                sb.append((line + "\n"));
+                sb.append(line);
+                sb.append("\n");
             }
         } catch (IOException e) {
             Log.w("LOG", e.getMessage());
