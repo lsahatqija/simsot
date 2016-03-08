@@ -31,9 +31,10 @@ public class SampleGame extends AndroidGame {
     private String roomName;
 
     private List<JSONObject> receivedCharacterChoiceJSONList;
+    private boolean receivedCharacterChoiceJSONListMutex;
 
     private List<JSONObject> receivedCharacterPositionJSONList;
-
+    private boolean receivedCharacterPositionJSONListMutex;
 
     private MySocket mySocket;
 
@@ -47,7 +48,10 @@ public class SampleGame extends AndroidGame {
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
 
+        receivedCharacterChoiceJSONListMutex = true;
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
+
+        receivedCharacterPositionJSONListMutex = true;
         receivedCharacterPositionJSONList = new ArrayList<JSONObject>();
 
         mySocket = MySocket.getInstance();
@@ -57,7 +61,10 @@ public class SampleGame extends AndroidGame {
             public void call(Object... args) {
                 if(args[0] instanceof JSONObject){
                     System.out.println(((JSONObject) args[0]).toString());
+                    while(!receivedCharacterChoiceJSONListMutex);
+                    receivedCharacterChoiceJSONListMutex = false;
                     receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
+                    receivedCharacterChoiceJSONListMutex = true;
                 } else{
                     //TODO manage this error
                     System.out.println(SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
@@ -70,7 +77,10 @@ public class SampleGame extends AndroidGame {
             public void call(Object... args) {
                 if(args[0] instanceof JSONObject){
                     System.out.println(((JSONObject) args[0]).toString());
+                    while(!receivedCharacterPositionJSONListMutex);
+                    receivedCharacterPositionJSONListMutex = false;
                     receivedCharacterPositionJSONList.add((JSONObject) args[0]);
+                    receivedCharacterPositionJSONListMutex = true;
                 } else{
                     //TODO manage this error
                     System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
@@ -159,5 +169,21 @@ public class SampleGame extends AndroidGame {
 
     public List<JSONObject> getReceivedCharacterPositionJSONList() {
         return receivedCharacterPositionJSONList;
+    }
+
+    public boolean isReceivedCharacterChoiceJSONListMutex() {
+        return receivedCharacterChoiceJSONListMutex;
+    }
+
+    public void setReceivedCharacterChoiceJSONListMutex(boolean receivedCharacterChoiceJSONListMutex) {
+        this.receivedCharacterChoiceJSONListMutex = receivedCharacterChoiceJSONListMutex;
+    }
+
+    public boolean isReceivedCharacterPositionJSONListMutex() {
+        return receivedCharacterPositionJSONListMutex;
+    }
+
+    public void setReceivedCharacterPositionJSONListMutex(boolean receivedCharacterPositionJSONListMutex) {
+        this.receivedCharacterPositionJSONListMutex = receivedCharacterPositionJSONListMutex;
     }
 }

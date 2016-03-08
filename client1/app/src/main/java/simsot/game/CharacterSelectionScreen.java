@@ -83,6 +83,8 @@ public class CharacterSelectionScreen extends Screen {
             for (int i = 0; i < len; i++) {
                 Input.TouchEvent event = touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_UP) {
+                    while(!((SampleGame) game).isReceivedCharacterChoiceJSONListMutex());
+                    ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(false);
                     List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
                     if (!receivedCharacterChoiceJSONList.isEmpty()) {
                         try {
@@ -125,6 +127,7 @@ public class CharacterSelectionScreen extends Screen {
                             e.printStackTrace();
                         }
                     }
+                    ((SampleGame) game).setReceivedCharacterChoiceJSONListMutex(true);
                     if (inBounds(event, 203, 185, 75, 75)) {
                         if (!pacmanTaken && !playerSelect) {
                             pacman = new Pacman(100, 200, LOCAL, playerName, roomName, mySocket);
