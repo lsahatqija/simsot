@@ -50,7 +50,7 @@ public class ConnectionActivity extends Activity {
     private enum ConnectionActivityActualLayout {
         LAYOUTCONNECTION,
         LAYOUTREGISTRATION,
-        LAYOUTMENU;
+        LAYOUTMENU
     }
 
     private ConnectionActivityActualLayout actualLayout;
@@ -177,8 +177,9 @@ public class ConnectionActivity extends Activity {
                 String userPseudo = userPseudoConnection.getText().toString();
                 String userPassword = userPasswordConnection.getText().toString();
 
+                userLoginWaitingConfirmation = userPseudo;
+
                 User user = new User(userPseudo, userPassword);
-                userLoginWaitingConfirmation = user.getUserLogin();
 
                 try {
                     mySocket.sendConnectionRequest(user.ToJSONObject());

@@ -81,7 +81,7 @@ public class Enemy {
 	// Behavioral Methods
 	public void update() {
 		
-		if (alive == true) {
+		if (alive) {
 			
 			centerX += speedX;
 			centerY += speedY;
@@ -124,7 +124,7 @@ public class Enemy {
 	}
 
 	public void callAI() {
-		if (alive == true){
+		if (alive){
 			if (walkCounter % 100 == 51){
 				setSpeedX(MOVESPEED);
 			} else if (walkCounter % 100 == 1) {

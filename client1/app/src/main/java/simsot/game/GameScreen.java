@@ -462,7 +462,7 @@ public class GameScreen extends Screen {
         for(int i = 0; i < playerarray.size(); i++){
             Player play = playerarray.get(i);
 		    g.drawImage(play.currentSprite, play.getCenterX() - 30, play.getCenterY() - 30);
-            if(play.touched == true){
+            if(play.touched){
                 g.drawString("Hit!", play.getCenterX(), play.getCenterY(), paint);
                 play.touched = false;
             }

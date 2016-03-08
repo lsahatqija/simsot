@@ -262,28 +262,28 @@ public class Player {
     }
 
     public void moveRight() {
-        if (isColliding == false) {
+        if (!isColliding) {
             speedX = MOVESPEED;
             setMovingHor(true);
         }
     }
 
     public void moveLeft() {
-        if (isColliding == false) {
+        if (!isColliding) {
             speedX = -MOVESPEED;
             setMovingHor(true);
         }
     }
 
     public void moveUp() {
-        if (isColliding == false) {
+        if (!isColliding) {
             this.setSpeedY(-MOVESPEED);
             setMovingVer(true);
         }
     }
 
     public void moveDown() {
-        if (isColliding == false) {
+        if (!isColliding) {
             this.setSpeedY(MOVESPEED);
             setMovingVer(true);
         }

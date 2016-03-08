@@ -17,14 +17,6 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getUserLogin() {
-        return userLogin;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
     public JSONObject ToJSONObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(USERNAME, userLogin);
