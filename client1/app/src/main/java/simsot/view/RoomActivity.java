@@ -64,7 +64,6 @@ public class RoomActivity extends Activity {
         } else {
             roomNameText.setText(getResources().getString(R.string.roomNameText, roomName, host));
         }
-
     }
 
     @Override
@@ -198,8 +197,6 @@ public class RoomActivity extends Activity {
             e.printStackTrace();
         }
         mySocket.sendLeaveRoomRequest(json);
-
-        mySocket.sendGetListRoomRequest();
 
         finish();
     }

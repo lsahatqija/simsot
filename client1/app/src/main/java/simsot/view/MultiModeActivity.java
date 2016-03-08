@@ -116,6 +116,13 @@ public class MultiModeActivity extends Activity {
         actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mySocket.sendGetListRoomRequest();
+    }
+
     protected void initComponents() {
         joinCreateRoomChoiceLayout = (LinearLayout) findViewById(R.id.joinCreateRoomChoiceLayout);
         joinRoomLayout = (LinearLayout) findViewById(R.id.joinRoomLayout);
