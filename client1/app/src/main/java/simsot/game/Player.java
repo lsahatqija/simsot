@@ -144,12 +144,13 @@ public class Player {
 			movementControl(touchEvents);
 			mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
 		} else if("remote".equals(mode) ){
-			if(game.isCharacterPositionReceived()){
+			List<JSONObject> receivedCharacterChoiceJSON = game.getReceivedCharacterChoiceJSONList();
+			if(!receivedCharacterChoiceJSON.isEmpty()){
                 try {
-                    JSONObject json = game.getCharacterPositionJSONReceived();
+                    JSONObject json = receivedCharacterChoiceJSON.get(0);
                     String name = json.getString(SocketConstants.PLAYER_NAME);
                     if(playerName.equals(name)){
-                        game.setCharacterPositionReceived(false);
+						receivedCharacterChoiceJSON.remove(0);
                         centerX = json.getInt(SocketConstants.X);
                         centerY = json.getInt(SocketConstants.Y);
                     }

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,11 +32,10 @@ public class SampleGame extends AndroidGame {
     private boolean isHost;
     private String roomName;
 
-    private boolean characterChoiceReceived = false;
-    private JSONObject characterChoiceJSONReceived = null;
+    private List<JSONObject> receivedCharacterChoiceJSONList;
 
-    private boolean characterPositionReceived = false;
-    private JSONObject characterPositionJSONReceived = null;
+    private List<JSONObject> receivedCharacterPositionJSONList;
+
 
     private MySocket mySocket;
 
@@ -48,25 +49,30 @@ public class SampleGame extends AndroidGame {
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
 
+        receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
+        receivedCharacterPositionJSONList = new ArrayList<JSONObject>();
+
         mySocket = MySocket.getInstance();
 
         mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                characterChoiceJSONReceived = (JSONObject) args[0];
-                System.out.print(SocketConstants.CHARACTER_CHOICE_RESPONSE);
-                System.out.println(" : + " + characterChoiceJSONReceived.toString());
-                characterChoiceReceived = true;
+                if(args[0] instanceof JSONObject){
+                    receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
+                } else{
+                    //TODO manage this error
+                }
             }
         });
 
         mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                characterPositionJSONReceived = (JSONObject) args[0];
-                System.out.print(SocketConstants.CHARACTER_POSITION_RESPONSE);
-                System.out.println(" : + " + characterPositionJSONReceived.toString());
-                characterPositionReceived = true;
+                if(args[0] instanceof JSONObject){
+                    receivedCharacterPositionJSONList.add((JSONObject) args[0]);
+                } else{
+                    //TODO manage this error
+                }
             }
         });
 
@@ -145,27 +151,11 @@ public class SampleGame extends AndroidGame {
         return isHost;
     }
 
-    public boolean isCharacterChoiceReceived() {
-        return characterChoiceReceived;
+    public List<JSONObject> getReceivedCharacterChoiceJSONList() {
+        return receivedCharacterChoiceJSONList;
     }
 
-    public JSONObject getCharacterChoiceJSONReceived() {
-        return characterChoiceJSONReceived;
-    }
-
-    public void setCharacterChoiceReceived(boolean characterChoiceReceived) {
-        this.characterChoiceReceived = characterChoiceReceived;
-    }
-
-    public boolean isCharacterPositionReceived() {
-        return characterPositionReceived;
-    }
-
-    public JSONObject getCharacterPositionJSONReceived() {
-        return characterPositionJSONReceived;
-    }
-
-    public void setCharacterPositionReceived(boolean characterPositionReceived) {
-        this.characterPositionReceived = characterPositionReceived;
+    public List<JSONObject> getReceivedCharacterPositionJSONList() {
+        return receivedCharacterPositionJSONList;
     }
 }

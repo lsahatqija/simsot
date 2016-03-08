@@ -83,10 +83,11 @@ public class CharacterSelectionScreen extends Screen {
             for (int i = 0; i < len; i++) {
                 Input.TouchEvent event = touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_UP) {
-                    if (((SampleGame) game).isCharacterChoiceReceived()) {
-                        ((SampleGame) game).setCharacterChoiceReceived(false);
+                    List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
+                    if (!receivedCharacterChoiceJSONList.isEmpty()) {
                         try {
-                            JSONObject characterChoiceJSONReceived = ((SampleGame) game).getCharacterChoiceJSONReceived();
+                            JSONObject characterChoiceJSONReceived = receivedCharacterChoiceJSONList.get(0);
+                            receivedCharacterChoiceJSONList.remove(0);
                             String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
                             String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
 
