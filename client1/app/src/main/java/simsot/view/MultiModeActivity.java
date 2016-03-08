@@ -306,7 +306,12 @@ public class MultiModeActivity extends Activity {
                             showToast(getString(R.string.room_not_found));
                         } else if (errorCode == 2) {
                             showToast(getString(R.string.room_full));
-                        } else if (errorCode == 3) {
+                        } else if (errorCode == 3) { // if player in room, let him start intent
+                            Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                            intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
+                            intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
+                            intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
+                            startActivity(intent);
                             showToast(getString(R.string.player_already_in_room));
                         } else {
                             showToast(getString(R.string.join_failed));
