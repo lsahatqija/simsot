@@ -286,82 +286,76 @@ public class ConnectionActivity extends Activity {
     }
 
     protected void initSocket() {
-        try {
-            mySocket = new MySocket(SocketConstants.SERVER_URL);
+        mySocket = MySocket.getInstance();
 
-            mySocket.on(SocketConstants.CONNECTION_RESPONSE, new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                    if (mySocket.isConnectionRequestSendingFlag()) {
-                        mySocket.setConnectionRequestSendingFlag(false);
-                        mySocket.setConnectionRequestResponseFlag(true);
-                        if (args[0] instanceof JSONObject) {
-                            JSONObject connectionResponse = (JSONObject) args[0];
-                            try {
-                                int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
+        mySocket.on(SocketConstants.CONNECTION_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                if (mySocket.isConnectionRequestSendingFlag()) {
+                    mySocket.setConnectionRequestSendingFlag(false);
+                    mySocket.setConnectionRequestResponseFlag(true);
+                    if (args[0] instanceof JSONObject) {
+                        JSONObject connectionResponse = (JSONObject) args[0];
+                        try {
+                            int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
 
-                                if (errorCode == 0) {
-                                    SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = settings.edit();
-                                    editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
-                                    editor.commit();
+                            if (errorCode == 0) {
+                                SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
+                                editor.commit();
 
-                                    showToast(getString(R.string.connection_succeeded));
+                                showToast(getString(R.string.connection_succeeded));
 
-                                    displayMenuLayout();
-                                } else if (errorCode == 1) {
-                                    showToast(getString(R.string.authentification_failed));
-                                } else {
-                                    showToast(getString(R.string.connection_failed));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                displayMenuLayout();
+                            } else if (errorCode == 1) {
+                                showToast(getString(R.string.authentification_failed));
+                            } else {
+                                showToast(getString(R.string.connection_failed));
                             }
-                        } else {
-                            showToast(getString(R.string.connection_error));
-                            // TODO add log
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                    } else {
+                        showToast(getString(R.string.connection_error));
+                        // TODO add log
                     }
                 }
-            });
+            }
+        });
 
-            mySocket.on(SocketConstants.REGISTRATION_RESPONSE, new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                    if (mySocket.isRegisterRequestSendingFlag()) {
-                        mySocket.setRegisterRequestSendingFlag(false);
-                        mySocket.setRegisterRequestResponseFlag(true);
-                        if (args[0] instanceof JSONObject) {
-                            JSONObject registrationResponse = (JSONObject) args[0];
-                            try {
-                                int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
-                                if (errorCode == 0) {
-                                    showToast(getString(R.string.registration_succeeded));
+        mySocket.on(SocketConstants.REGISTRATION_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                if (mySocket.isRegisterRequestSendingFlag()) {
+                    mySocket.setRegisterRequestSendingFlag(false);
+                    mySocket.setRegisterRequestResponseFlag(true);
+                    if (args[0] instanceof JSONObject) {
+                        JSONObject registrationResponse = (JSONObject) args[0];
+                        try {
+                            int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
+                            if (errorCode == 0) {
+                                showToast(getString(R.string.registration_succeeded));
 
-                                    displayConnectionLayout();
-                                } else if (errorCode == 1) {
-                                    showToast(getString(R.string.already_used_login));
-                                } else if (errorCode == 2) {
-                                    showToast(getString(R.string.field_empty));
-                                }  else {
-                                    showToast(getString(R.string.registration_failed));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                displayConnectionLayout();
+                            } else if (errorCode == 1) {
+                                showToast(getString(R.string.already_used_login));
+                            } else if (errorCode == 2) {
+                                showToast(getString(R.string.field_empty));
+                            } else {
+                                showToast(getString(R.string.registration_failed));
                             }
-
-                        } else {
-                            showToast(getString(R.string.registration_error));
-                            // TODO add log
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+
+                    } else {
+                        showToast(getString(R.string.registration_error));
+                        // TODO add log
                     }
                 }
-            });
-            mySocket.connect();
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+            }
+        });
     }
 
     protected void displayConnectionLayout() {

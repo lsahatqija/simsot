@@ -23,10 +23,7 @@ import simsot.socket.SocketConstants;
 
 public class SampleGame extends AndroidGame {
 
-    private static final String SERVER_URL = "https://simsot-server.herokuapp.com/";
-
-	
-	public static String map;
+    public static String map;
     boolean firstTimeCreate = true;
 
     private String playerName;
@@ -51,33 +48,28 @@ public class SampleGame extends AndroidGame {
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
 
-        try {
-            mySocket = new MySocket(SERVER_URL);
+        mySocket = MySocket.getInstance();
 
-            mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    characterChoiceJSONReceived = (JSONObject) args[0];
-                    System.out.print(SocketConstants.CHARACTER_CHOICE_RESPONSE);
-                    System.out.println(" : + "+characterChoiceJSONReceived.toString());
-                    characterChoiceReceived = true;
-                }
-            });
+        mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                characterChoiceJSONReceived = (JSONObject) args[0];
+                System.out.print(SocketConstants.CHARACTER_CHOICE_RESPONSE);
+                System.out.println(" : + " + characterChoiceJSONReceived.toString());
+                characterChoiceReceived = true;
+            }
+        });
 
-            mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    characterPositionJSONReceived = (JSONObject) args[0];
-                    System.out.print(SocketConstants.CHARACTER_POSITION_RESPONSE);
-                    System.out.println(" : + "+characterPositionJSONReceived.toString());
-                    characterPositionReceived = true;
-                }
-            });
+        mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                characterPositionJSONReceived = (JSONObject) args[0];
+                System.out.print(SocketConstants.CHARACTER_POSITION_RESPONSE);
+                System.out.println(" : + " + characterPositionJSONReceived.toString());
+                characterPositionReceived = true;
+            }
+        });
 
-            mySocket.connect();
-        } catch (URISyntaxException e) {
-            Toast.makeText(SampleGame.this,"URISyntaxException", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override

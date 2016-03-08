@@ -59,9 +59,9 @@ public class RoomActivity extends Activity {
         initComponentsEvents();
         initSocket();
 
-        if(isHost){
+        if (isHost) {
             roomNameText.setText(getResources().getString(R.string.yourRoomNameText, roomName));
-        } else{
+        } else {
             roomNameText.setText(getResources().getString(R.string.roomNameText, roomName, host));
         }
 
@@ -113,48 +113,44 @@ public class RoomActivity extends Activity {
     }
 
     protected void initSocket() {
-        try {
-            mySocket = new MySocket(SocketConstants.SERVER_URL);
+        mySocket = MySocket.getInstance();
 
-            mySocket.on(SocketConstants.LIST_PLAYER, new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                    List<String> playersList = new ArrayList<String>();
-                    jsonArrayReceived = (JSONArray) args[0];
-                    for (int i = 0; i < jsonArrayReceived.length(); i++) {
-                        try {
-                            playersList.add((String) jsonArrayReceived.get(i));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+        mySocket.on(SocketConstants.LIST_PLAYER, new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                List<String> playersList = new ArrayList<String>();
+                jsonArrayReceived = (JSONArray) args[0];
+                for (int i = 0; i < jsonArrayReceived.length(); i++) {
+                    try {
+                        playersList.add((String) jsonArrayReceived.get(i));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    updatePlayersList(playersList);
                 }
-            });
+                updatePlayersList(playersList);
+            }
+        });
 
-            mySocket.on(SocketConstants.KICKED_FROM_ROOM, new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                    showToast(getString(R.string.room_deleted, roomName));
-                    finish();
-                }
-            });
+        mySocket.on(SocketConstants.KICKED_FROM_ROOM, new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                showToast(getString(R.string.room_deleted, roomName));
+                finish();
+            }
+        });
 
-            mySocket.on(SocketConstants.GAME_START_RESPONSE, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Intent intent = new Intent(RoomActivity.this, SampleGame.class);
-                    intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
-                    intent.putExtra(IntentParameters.IS_HOST, isHost);
-                    intent.putExtra(IntentParameters.ROOM_NAME, roomName);
-                    startActivity(intent);
-                }
-            });
+        mySocket.on(SocketConstants.GAME_START_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Intent intent = new Intent(RoomActivity.this, SampleGame.class);
+                intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
+                intent.putExtra(IntentParameters.IS_HOST, isHost);
+                intent.putExtra(IntentParameters.ROOM_NAME, roomName);
+                startActivity(intent);
+            }
+        });
 
-            mySocket.connect();
-        } catch (URISyntaxException e) {
-            Toast.makeText(RoomActivity.this, "URISyntaxException", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     protected void updatePlayersList(final List<String> playersList) {
@@ -166,7 +162,7 @@ public class RoomActivity extends Activity {
         });
     }
 
-    protected void exitRoom(){
+    protected void exitRoom() {
         JSONObject json = new JSONObject();
         try {
             json.put(SocketConstants.ROOM_NAME, roomName);

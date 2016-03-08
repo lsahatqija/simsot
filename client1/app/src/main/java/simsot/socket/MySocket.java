@@ -10,7 +10,9 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-public class MySocket {
+public final class MySocket {
+
+    private static volatile MySocket instance = null;
 
     private Socket mSocket;
 
@@ -19,19 +21,36 @@ public class MySocket {
     private boolean getRoomListRequestSendingFlag;
     private boolean roomCreationRequestSendingFlag;
 
-
     private boolean connectionRequestResponseFlag;
     private boolean registerRequestResponseFlag;
     private boolean getRoomListRequestResponseFlag;
     private boolean roomCreationRequestResponseFlag;
 
-    public MySocket(String urlServer) throws URISyntaxException {
-        this.mSocket = IO.socket(urlServer);
-        this.connectionRequestSendingFlag = false;
-        this.connectionRequestResponseFlag = false;
+    private MySocket(String urlServer) {
+        try {
+            this.mSocket = IO.socket(urlServer);
 
-        this.registerRequestSendingFlag = false;
-        this.registerRequestResponseFlag = false;
+            this.connectionRequestSendingFlag = false;
+            this.connectionRequestResponseFlag = false;
+
+            this.registerRequestSendingFlag = false;
+            this.registerRequestResponseFlag = false;
+
+            connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public final static MySocket getInstance() {
+        if (MySocket.instance == null) {
+            synchronized(MySocket.class) {
+                if (MySocket.instance == null) {
+                    MySocket.instance = new MySocket(SocketConstants.SERVER_URL);
+                }
+            }
+        }
+        return MySocket.instance;
     }
 
     public Emitter on(String event, Emitter.Listener fn) {
@@ -103,7 +122,7 @@ public class MySocket {
     }
 
     /*** CONNECT ***/
-    public void connect(){
+    private void connect(){
         mSocket.connect();
     }
 
