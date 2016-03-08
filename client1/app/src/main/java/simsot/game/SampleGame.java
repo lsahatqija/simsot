@@ -1,21 +1,19 @@
 package simsot.game;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
@@ -58,9 +56,11 @@ public class SampleGame extends AndroidGame {
             @Override
             public void call(Object... args) {
                 if(args[0] instanceof JSONObject){
+                    System.out.println(((JSONObject) args[0]).toString());
                     receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
                 } else{
                     //TODO manage this error
+                    System.out.println(SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
@@ -69,9 +69,11 @@ public class SampleGame extends AndroidGame {
             @Override
             public void call(Object... args) {
                 if(args[0] instanceof JSONObject){
+                    System.out.println(((JSONObject) args[0]).toString());
                     receivedCharacterPositionJSONList.add((JSONObject) args[0]);
                 } else{
                     //TODO manage this error
+                    System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
