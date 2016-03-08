@@ -81,7 +81,6 @@ public class CharacterSelectionScreen extends Screen {
         if (!receivedCharacterChoiceJSONList.isEmpty()) {
             try {
                 JSONObject characterChoiceJSONReceived = receivedCharacterChoiceJSONList.get(0);
-                receivedCharacterChoiceJSONList.remove(0);
                 String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
                 String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
 
@@ -124,10 +123,12 @@ public class CharacterSelectionScreen extends Screen {
                     default:
                         break;
                 }
+                receivedCharacterChoiceJSONList.remove(0);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
         }
 
         //while(timeout > 0) {

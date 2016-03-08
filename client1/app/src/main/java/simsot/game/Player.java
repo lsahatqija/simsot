@@ -152,9 +152,9 @@ public class Player {
                     JSONObject json = receivedCharacterPositionJSON.get(0);
                     String name = json.getString(SocketConstants.PLAYER_NAME);
                     if (playerName.equals(name)) {
-                        receivedCharacterPositionJSON.remove(0);
                         centerX = json.getInt(SocketConstants.X);
                         centerY = json.getInt(SocketConstants.Y);
+                        receivedCharacterPositionJSON.remove(0);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
