@@ -20,11 +20,13 @@ public final class MySocket {
     private boolean registerRequestSendingFlag;
     private boolean getRoomListRequestSendingFlag;
     private boolean roomCreationRequestSendingFlag;
+    private boolean joinRoomRequestSendingFlag;
 
     private boolean connectionRequestResponseFlag;
     private boolean registerRequestResponseFlag;
     private boolean getRoomListRequestResponseFlag;
     private boolean roomCreationRequestResponseFlag;
+    private boolean joinRoomRequestResponseFlag;
 
     private MySocket(String urlServer) {
         try {
@@ -92,6 +94,7 @@ public final class MySocket {
 
     public void sendJoinRoomRequest(JSONObject data) {
         mSocket.emit(SocketConstants.JOIN_ROOM, data);
+        joinRoomRequestSendingFlag = true;
     }
 
     public void sendLeaveRoomRequest(JSONObject data) {
@@ -189,5 +192,21 @@ public final class MySocket {
 
     public void setRoomCreationRequestResponseFlag(boolean roomCreationRequestResponseFlag) {
         this.roomCreationRequestResponseFlag = roomCreationRequestResponseFlag;
+    }
+
+    public boolean isJoinRoomRequestSendingFlag() {
+        return joinRoomRequestSendingFlag;
+    }
+
+    public void setJoinRoomRequestSendingFlag(boolean joinRoomRequestSendingFlag) {
+        this.joinRoomRequestSendingFlag = joinRoomRequestSendingFlag;
+    }
+
+    public boolean isJoinRoomRequestResponseFlag() {
+        return joinRoomRequestResponseFlag;
+    }
+
+    public void setJoinRoomRequestResponseFlag(boolean joinRoomRequestResponseFlag) {
+        this.joinRoomRequestResponseFlag = joinRoomRequestResponseFlag;
     }
 }

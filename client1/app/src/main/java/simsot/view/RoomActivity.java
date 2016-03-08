@@ -134,7 +134,7 @@ public class RoomActivity extends Activity {
             @Override
             public void call(final Object... args) {
                 showToast(getString(R.string.room_deleted, roomName));
-                finishActivity();
+                exitRoom();
             }
         });
 
@@ -171,7 +171,7 @@ public class RoomActivity extends Activity {
         }
         mySocket.sendLeaveRoomRequest(json);
 
-        finishActivity();
+        finish();
     }
 
     protected void showToast(final String message) {
@@ -185,19 +185,5 @@ public class RoomActivity extends Activity {
     protected String getSharedPreferencesUserLogin() {
         SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
         return settings.getString(LOGIN_IN_PREFERENCES, null);
-    }
-
-    protected void finishActivity()
-    {
-        JSONObject json = new JSONObject();
-        try {
-            json.put(SocketConstants.ROOM_NAME, roomName);
-            json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mySocket.sendLeaveRoomRequest(json);
-
-        finish();
     }
 }

@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +58,7 @@ public class MultiModeActivity extends Activity {
     private enum MultiModeActivityActualLayout {
         JOINCREATEROOMCHOICE,
         JOINROOM,
-        CREATEROOM;
+        CREATEROOM
     }
 
     private MultiModeActivityActualLayout actualLayout;
@@ -91,7 +90,11 @@ public class MultiModeActivity extends Activity {
                     break;
                 case JOINROOM:
                     displayJoinRoomLayout();
+
                     mySocket.sendGetListRoomRequest();
+
+                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
+                    progressTask.execute();
                     break;
                 case CREATEROOM:
                     displayCreateRoomLayout();
@@ -114,13 +117,6 @@ public class MultiModeActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
 
         actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        mySocket.sendGetListRoomRequest();
     }
 
     protected void initComponents() {
@@ -221,6 +217,9 @@ public class MultiModeActivity extends Activity {
                     e.printStackTrace();
                 }
                 mySocket.sendJoinRoomRequest(json);
+
+                ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.JOIN_ROOM_REQUEST);
+                progressTask.execute();
             }
         });
 
@@ -238,7 +237,7 @@ public class MultiModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
-                    Room room = null;
+                    Room room;
                     if (roomPasswordOffRadio.isChecked()) {
                         room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
@@ -299,31 +298,36 @@ public class MultiModeActivity extends Activity {
         mySocket.on(SocketConstants.JOIN_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
-                if (args[0] instanceof JSONObject) {
-                    JSONObject joinResponse = (JSONObject) args[0];
-                    try {
-                        int errorCode = joinResponse.getInt(SocketConstants.ERROR_CODE);
-                        if (errorCode == 0) {
-                            Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                            intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
-                            intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
-                            intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
-                            startActivity(intent);
-                        } else if (errorCode == 1) {
-                            showToast(getString(R.string.room_not_found));
-                        } else if (errorCode == 2) {
-                            showToast(getString(R.string.room_full));
-                        } else if (errorCode == 3) {
-                            showToast(getString(R.string.player_already_in_room));
-                        } else {
-                            showToast(getString(R.string.join_failed));
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                if (mySocket.isJoinRoomRequestSendingFlag()) {
+                    mySocket.setJoinRoomRequestSendingFlag(false);
 
-                } else {
-                    showToast(getString(R.string.join_error));
+                    if (args[0] instanceof JSONObject) {
+                        JSONObject joinResponse = (JSONObject) args[0];
+                        try {
+                            int errorCode = joinResponse.getInt(SocketConstants.ERROR_CODE);
+                            if (errorCode == 0) {
+                                Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
+                                intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
+                                intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
+                                intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
+                                startActivity(intent);
+                            } else if (errorCode == 1) {
+                                showToast(getString(R.string.room_not_found));
+                            } else if (errorCode == 2) {
+                                showToast(getString(R.string.room_full));
+                            } else if (errorCode == 3) {
+                                showToast(getString(R.string.player_already_in_room));
+                            } else {
+                                showToast(getString(R.string.join_failed));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        showToast(getString(R.string.join_error));
+                    }
+                    mySocket.setJoinRoomRequestResponseFlag(true);
                 }
             }
         });
@@ -468,6 +472,11 @@ public class MultiModeActivity extends Activity {
                         // TODO add timeout counter
                     }
                     break;
+                case JOIN_ROOM_REQUEST:
+                    while (!mySocket.isJoinRoomRequestResponseFlag()) {
+                        // TODO add timeout counter
+                    }
+                    break;
                 default:
                     break;
             }
@@ -485,26 +494,31 @@ public class MultiModeActivity extends Activity {
                 case GET_LIST_ROOM:
                     mySocket.setGetRoomListRequestResponseFlag(false);
                     foundRooms.clear();
-                    for (int i = 0; i < jsonArrayReceived.length(); i++) {
-                        try {
-                            JSONObject jsonObject = (JSONObject) jsonArrayReceived.get(i);
+                    if (jsonArrayReceived != null) {
+                        for (int i = 0; i < jsonArrayReceived.length(); i++) {
+                            try {
+                                JSONObject jsonObject = (JSONObject) jsonArrayReceived.get(i);
 
-                            String roomName = jsonObject.getString(SocketConstants.ROOM_NAME);
-                            String host = jsonObject.getString(SocketConstants.HOST);
-                            int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
+                                String roomName = jsonObject.getString(SocketConstants.ROOM_NAME);
+                                String host = jsonObject.getString(SocketConstants.HOST);
+                                int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
 
-                            foundRooms.add(new Room(roomName, host, slot_empty));
+                                foundRooms.add(new Room(roomName, host, slot_empty));
 
-                            updateRoomsList();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
 
+                    updateRoomsList();
                     jsonArrayReceived = null;
                     break;
                 case NEW_ROOM_REQUEST:
                     mySocket.setRoomCreationRequestResponseFlag(false);
+                    break;
+                case JOIN_ROOM_REQUEST:
+                    mySocket.setJoinRoomRequestResponseFlag(false);
                     break;
                 default:
                     break;

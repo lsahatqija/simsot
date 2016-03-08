@@ -18,7 +18,6 @@ public final class SocketConstants {
     public static final String GAME_START = "game_start";
     public static final String CHARACTER_POSITION = "character_position";
 
-
     public static final String CONNECTION_RESPONSE = "response_connect";
     public static final String REGISTRATION_RESPONSE = "response_subscribe";
     public static final String LIST_ROOM = "list_room";
@@ -27,8 +26,6 @@ public final class SocketConstants {
     public static final String CHARACTER_CHOICE_RESPONSE = "character_choice_response";
     public static final String CHARACTER_POSITION_RESPONSE = "character_position_response";
     public static final String GAME_START_RESPONSE = "game_start_response";
-
-
 
     public static final String ERROR_CODE = "error_code";
     public static final String PLAYER_NAME = "player_name";
@@ -39,11 +36,11 @@ public final class SocketConstants {
     public static final String HOST = "host";
     public static final String SLOT_EMPTY = "slot_empty";
 
-
     public enum SocketRequestType {
         CONNECTION_REQUEST,
         REGISTER_REQUEST,
         NEW_ROOM_REQUEST,
-        GET_LIST_ROOM
+        GET_LIST_ROOM,
+        JOIN_ROOM_REQUEST
     }
 }
