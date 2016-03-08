@@ -92,22 +92,27 @@ public class CharacterSelectionScreen extends Screen {
                                 case PACMAN:
                                     pacman = new Pacman(100, 200, REMOTE, playerNameReceived, roomName, mySocket);
                                     pacmanName = playerNameReceived;
+                                    pacmanTaken = true;
                                     break;
                                 case INKY:
                                     inky = new Inky(100, 500, REMOTE, playerNameReceived, roomName, mySocket);
                                     inkyName = playerNameReceived;
+                                    inkyTaken = true;
                                     break;
                                 case PINKY:
                                     pinky = new Pinky(300, 100, REMOTE, playerNameReceived, roomName, mySocket);
                                     pinkyName = playerNameReceived;
+                                    pinkyTaken = true;
                                     break;
                                 case BLINKY:
                                     blinky = new Blinky(300, 500, REMOTE, playerNameReceived, roomName, mySocket);
                                     blinkyName = playerNameReceived;
+                                    blinkyTaken = true;
                                     break;
                                 case CLYDE:
                                     clyde = new Clyde(100, 100, REMOTE, playerNameReceived, roomName, mySocket);
                                     clydeName = playerNameReceived;
+                                    clydeTaken = true;
                                     break;
                                 default:
                                     break;
