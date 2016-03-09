@@ -45,4 +45,10 @@ public final class SocketConstants {
         GET_LIST_ROOM,
         JOIN_ROOM_REQUEST
     }
+
+    public enum GameMode{
+        SINGLE_MODE,
+        MULTI_MODE,
+        NONE
+    }
 }

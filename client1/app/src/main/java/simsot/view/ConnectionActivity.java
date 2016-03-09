@@ -96,6 +96,14 @@ public class ConnectionActivity extends Activity {
     }
 
     @Override
+    protected void onResume(){
+        super.onResume();
+
+        mySocket.setGameMode(SocketConstants.GameMode.NONE);
+    }
+
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
         super.onSaveInstanceState(savedInstanceState);
@@ -233,6 +241,7 @@ public class ConnectionActivity extends Activity {
                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
                 intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
                 intent.putExtra(IntentParameters.IS_HOST, true);
+                mySocket.setGameMode(SocketConstants.GameMode.SINGLE_MODE);
                 startActivity(intent);
             }
         });
@@ -241,6 +250,7 @@ public class ConnectionActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, MultiModeActivity.class);
+                mySocket.setGameMode(SocketConstants.GameMode.MULTI_MODE);
                 startActivity(intent);
             }
         });

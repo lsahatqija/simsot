@@ -67,58 +67,59 @@ public class CharacterSelectionScreen extends Screen {
         paint(deltaTime);
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
-        List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
-        if (!receivedCharacterChoiceJSONList.isEmpty()) {
-            try {
-                JSONObject characterChoiceJSONReceived = receivedCharacterChoiceJSONList.get(0);
-                String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
-                String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
+        if(SocketConstants.GameMode.MULTI_MODE.equals(mySocket.getGameMode())){
+            List<JSONObject> receivedCharacterChoiceJSONList = ((SampleGame) game).getReceivedCharacterChoiceJSONList();
+            if (!receivedCharacterChoiceJSONList.isEmpty()) {
+                try {
+                    JSONObject characterChoiceJSONReceived = receivedCharacterChoiceJSONList.get(0);
+                    String character = characterChoiceJSONReceived.getString(SocketConstants.CHARACTER);
+                    String playerNameReceived = characterChoiceJSONReceived.getString(SocketConstants.PLAYER_NAME);
 
-                switch (character) {
-                    case PacManConstants.PACMAN:
-                        if (!pacmanTakenLocal) {
-                            pacman = new Pacman(100, 200, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
-                            pacmanName = playerNameReceived;
-                            pacmanTaken = true;
-                        }
-                        break;
-                    case PacManConstants.INKY:
-                        if (!inkyTakenLocal) {
-                            inky = new Inky(100, 500, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
-                            inkyName = playerNameReceived;
-                            inkyTaken = true;
-                        }
-                        break;
-                    case PacManConstants.PINKY:
-                        if (!pinkyTakenLocal) {
-                            pinky = new Pinky(300, 100, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
-                            pinkyName = playerNameReceived;
-                            pinkyTaken = true;
-                        }
-                        break;
-                    case PacManConstants.BLINKY:
-                        if (!blinkyTakenLocal) {
-                            blinky = new Blinky(300, 500, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
-                            blinkyName = playerNameReceived;
-                            blinkyTaken = true;
-                        }
-                        break;
-                    case PacManConstants.CLYDE:
-                        if (!clydeTakenLocal) {
-                            clyde = new Clyde(100, 100, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
-                            clydeName = playerNameReceived;
-                            clydeTaken = true;
-                        }
-                        break;
-                    default:
-                        break;
+                    switch (character) {
+                        case PacManConstants.PACMAN:
+                            if (!pacmanTakenLocal) {
+                                pacman = new Pacman(100, 200, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                                pacmanName = playerNameReceived;
+                                pacmanTaken = true;
+                            }
+                            break;
+                        case PacManConstants.INKY:
+                            if (!inkyTakenLocal) {
+                                inky = new Inky(100, 500, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                                inkyName = playerNameReceived;
+                                inkyTaken = true;
+                            }
+                            break;
+                        case PacManConstants.PINKY:
+                            if (!pinkyTakenLocal) {
+                                pinky = new Pinky(300, 100, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                                pinkyName = playerNameReceived;
+                                pinkyTaken = true;
+                            }
+                            break;
+                        case PacManConstants.BLINKY:
+                            if (!blinkyTakenLocal) {
+                                blinky = new Blinky(300, 500, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                                blinkyName = playerNameReceived;
+                                blinkyTaken = true;
+                            }
+                            break;
+                        case PacManConstants.CLYDE:
+                            if (!clydeTakenLocal) {
+                                clyde = new Clyde(100, 100, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                                clydeName = playerNameReceived;
+                                clydeTaken = true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    receivedCharacterChoiceJSONList.remove(0);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                receivedCharacterChoiceJSONList.remove(0);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-
         }
 
         int len = touchEvents.size();
@@ -211,12 +212,14 @@ public class CharacterSelectionScreen extends Screen {
                 mySocket.sendCharacterChoice(PacManConstants.CLYDE, PacManConstants.CLYDE, roomName);
             }
 
-            if(isHost) {
-                mySocket.sendCharacterTimeoutEnded(roomName);
-            }
+            if(SocketConstants.GameMode.MULTI_MODE.equals(mySocket.getGameMode())){
+                if(isHost) {
+                    mySocket.sendCharacterTimeoutEnded(roomName);
+                }
 
-            while(!((SampleGame) game).isGameCanStart());
-            ((SampleGame) game).setGameCanStart(false);
+                while(!((SampleGame) game).isGameCanStart());
+                ((SampleGame) game).setGameCanStart(false);
+            }
 
             game.setScreen(new GameScreen(game));
         }
