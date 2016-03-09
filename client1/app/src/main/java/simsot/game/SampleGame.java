@@ -59,61 +59,63 @@ public class SampleGame extends AndroidGame {
 
         mySocket = MySocket.getInstance();
 
-        mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                if (args[0] instanceof JSONObject) {
-                    //System.out.println("receiving  : " + ((JSONObject) args[0]).toString());
-                    receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
-                } else {
-                    //TODO manage this error
-                    System.out.println(SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
-                }
-            }
-        });
-
-        mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                if (args[0] instanceof JSONObject) {
-                    try {
-                       // System.out.println("receiving  : "+((JSONObject) args[0]).toString());
-                        String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
-
-                        if(!playerName.equals(name)){
-                            receivedCharacterPositionJSONMap.put(name,(JSONObject)args[0]);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        if(SocketConstants.GameMode.MULTI_MODE.equals(mySocket.getGameMode())){
+            mySocket.on(SocketConstants.CHARACTER_CHOICE_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    if (args[0] instanceof JSONObject) {
+                        //System.out.println("receiving  : " + ((JSONObject) args[0]).toString());
+                        receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
+                    } else {
+                        //TODO manage this error
+                        System.out.println(SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
                     }
-                } else {
-                    //TODO manage this error
-                    System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
-            }
-        });
+            });
 
-        mySocket.on(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                if (args[0] instanceof JSONObject) {
-                    try {
-                        int errorCode = ((JSONObject) args[0]).getInt(SocketConstants.ERROR_CODE);
+            mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    if (args[0] instanceof JSONObject) {
+                        try {
+                            // System.out.println("receiving  : "+((JSONObject) args[0]).toString());
+                            String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
 
-                        if(errorCode == 0){
-                            gameCanStart = true;
-                        } else{
-                            // TODO manage else
+                            if(!playerName.equals(name)){
+                                receivedCharacterPositionJSONMap.put(name,(JSONObject)args[0]);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } else {
+                        //TODO manage this error
+                        System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
                     }
-                } else {
-                    //TODO manage this error
-                    System.out.println(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
-            }
-        });
+            });
+
+            mySocket.on(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    if (args[0] instanceof JSONObject) {
+                        try {
+                            int errorCode = ((JSONObject) args[0]).getInt(SocketConstants.ERROR_CODE);
+
+                            if(errorCode == 0){
+                                gameCanStart = true;
+                            } else{
+                                // TODO manage else
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        //TODO manage this error
+                        System.out.println(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + " args[0]  not instanceof JSONObject");
+                    }
+                }
+            });
+        }
 
     }
 

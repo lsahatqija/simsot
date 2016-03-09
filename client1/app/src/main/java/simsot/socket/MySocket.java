@@ -16,6 +16,8 @@ public final class MySocket {
 
     private Socket mSocket;
 
+    private SocketConstants.GameMode gameMode;
+
     private boolean connectionRequestSendingFlag;
     private boolean registerRequestSendingFlag;
     private boolean getRoomListRequestSendingFlag;
@@ -137,6 +139,14 @@ public final class MySocket {
     /*** CONNECT ***/
     private void connect(){
         mSocket.connect();
+    }
+
+    public SocketConstants.GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(SocketConstants.GameMode gameMode) {
+        this.gameMode = gameMode;
     }
 
     /*** FLAGS ***/
