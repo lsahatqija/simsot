@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -52,6 +54,7 @@ public class MultiModeActivity extends Activity {
     private MySocket mySocket;
 
     private ListView roomList;
+    private TextView notRoomFoundText;
 
     private List<Room> foundRooms;
 
@@ -92,10 +95,7 @@ public class MultiModeActivity extends Activity {
                 case JOINROOM:
                     displayJoinRoomLayout();
 
-                    mySocket.sendGetListRoomRequest();
-
-                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
-                    progressTask.execute();
+                    sendGetListRoomRequest();
                     break;
                 case CREATEROOM:
                     displayCreateRoomLayout();
@@ -142,6 +142,8 @@ public class MultiModeActivity extends Activity {
         refreshRoomsButton = (Button) findViewById(R.id.refreshRoomsButton);
         joinRoomBackButton = (Button) findViewById(R.id.joinRoomBackButton);
 
+        notRoomFoundText = (TextView) findViewById(R.id.notRoomFoundText);
+
         foundRooms = new ArrayList<Room>();
     }
 
@@ -167,10 +169,7 @@ public class MultiModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 displayJoinRoomLayout();
-                mySocket.sendGetListRoomRequest();
-
-                ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
-                progressTask.execute();
+                sendGetListRoomRequest();
             }
         });
 
@@ -195,10 +194,7 @@ public class MultiModeActivity extends Activity {
         refreshRoomsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mySocket.sendGetListRoomRequest();
-
-                ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
-                progressTask.execute();
+                sendGetListRoomRequest();
             }
         });
 
@@ -289,7 +285,18 @@ public class MultiModeActivity extends Activity {
                 if (mySocket.isGetRoomListRequestSendingFlag()) {
                     mySocket.setGetRoomListRequestSendingFlag(false);
 
-                    jsonArrayReceived = (JSONArray) args[0];
+                    if(args[0] instanceof JSONObject){
+                        try {
+                            jsonArrayReceived = ((JSONObject) args[0]).getJSONArray(SocketConstants.ROOMS);
+                        } catch (JSONException e) {
+                            Log.e("SocketError", "error getJSONArray(SocketConstants.ROOMS)");
+                            jsonArrayReceived = null;
+                        }
+                    } else{
+                        Log.e("SocketError", "ListRoomResponse not a JSONObject");
+                        jsonArrayReceived = null;
+                    }
+
                     mySocket.setGetRoomListRequestResponseFlag(true);
                 }
             }
@@ -381,23 +388,37 @@ public class MultiModeActivity extends Activity {
         }
     }
 
+    protected void sendGetListRoomRequest(){
+        mySocket.sendGetListRoomRequest();
+
+        ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
+        progressTask.execute();
+    }
+
     protected void updateRoomsList() {
-        List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
-        HashMap<String, String> element;
-        for (Room room : foundRooms) {
-            element = new HashMap<String, String>();
+        if(foundRooms.isEmpty()){
+            notRoomFoundText.setVisibility(View.VISIBLE);
+            roomList.setVisibility(View.INVISIBLE);
+        } else {
+            List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
+            HashMap<String, String> element;
+            for (Room room : foundRooms) {
+                element = new HashMap<String, String>();
 
-            element.put("title", "Room " + room.getRoomName() + " by " + room.getHost());
-            element.put("subtitle", "Number of players: " + (NB_PLAYERS - room.getSlotEmpty()) + "/" + NB_PLAYERS);
-            liste.add(element);
+                element.put("title", "Room " + room.getRoomName() + " by " + room.getHost());
+                element.put("subtitle", "Number of players: " + (NB_PLAYERS - room.getSlotEmpty()) + "/" + NB_PLAYERS);
+                liste.add(element);
+            }
+
+            ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
+                    liste,
+                    android.R.layout.simple_list_item_2,
+                    new String[]{"title", "subtitle"},
+                    new int[]{android.R.id.text1, android.R.id.text2});
+            roomList.setAdapter(adapter);
+            notRoomFoundText.setVisibility(View.INVISIBLE);
+            roomList.setVisibility(View.VISIBLE);
         }
-
-        ListAdapter adapter = new SimpleAdapter(MultiModeActivity.this,
-                liste,
-                android.R.layout.simple_list_item_2,
-                new String[]{"title", "subtitle"},
-                new int[]{android.R.id.text1, android.R.id.text2});
-        roomList.setAdapter(adapter);
     }
 
     protected void displayJoinCreateRoomChoiceLayout() {

@@ -186,6 +186,13 @@
             android:layout_height="wrap_content"
             android:text="@string/back_button" />
 
+        <TextView
+            android:id="@+id/notRoomFoundText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_room_found"
+            android:visibility="invisible"/>
+
         <ListView
             android:id="@+id/roomList"
             android:layout_width="match_parent"
