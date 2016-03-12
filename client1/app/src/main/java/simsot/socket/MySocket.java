@@ -1,6 +1,8 @@
 package simsot.socket;
 
 
+import android.util.Log;
+
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -16,17 +18,17 @@ public final class MySocket {
 
     private Socket mSocket;
 
-    private boolean connectionRequestSendingFlag;
-    private boolean registerRequestSendingFlag;
-    private boolean getRoomListRequestSendingFlag;
-    private boolean roomCreationRequestSendingFlag;
-    private boolean joinRoomRequestSendingFlag;
+    private volatile boolean connectionRequestSendingFlag;
+    private volatile boolean registerRequestSendingFlag;
+    private volatile boolean getRoomListRequestSendingFlag;
+    private volatile boolean roomCreationRequestSendingFlag;
+    private volatile boolean joinRoomRequestSendingFlag;
 
-    private boolean connectionRequestResponseFlag;
-    private boolean registerRequestResponseFlag;
-    private boolean getRoomListRequestResponseFlag;
-    private boolean roomCreationRequestResponseFlag;
-    private boolean joinRoomRequestResponseFlag;
+    private volatile boolean connectionRequestResponseFlag;
+    private volatile boolean registerRequestResponseFlag;
+    private volatile boolean getRoomListRequestResponseFlag;
+    private volatile boolean roomCreationRequestResponseFlag;
+    private volatile boolean joinRoomRequestResponseFlag;
 
     private MySocket(String urlServer) {
         try {
@@ -46,7 +48,7 @@ public final class MySocket {
 
     public final static MySocket getInstance() {
         if (MySocket.instance == null) {
-            synchronized(MySocket.class) {
+            synchronized (MySocket.class) {
                 if (MySocket.instance == null) {
                     MySocket.instance = new MySocket(SocketConstants.SERVER_URL);
                 }
@@ -56,25 +58,25 @@ public final class MySocket {
     }
 
     public Emitter on(String event, Emitter.Listener fn) {
-       return mSocket.on(event, fn);
+        return mSocket.on(event, fn);
     }
 
-    public void sendConnectionRequest(JSONObject data){
+    public void sendConnectionRequest(JSONObject data) {
         mSocket.emit(SocketConstants.CONNECTION_REQUEST, data);
-        connectionRequestSendingFlag = true;
+        setConnectionRequestSendingFlag(true);
     }
 
-    public void sendRegistrationRequest(JSONObject data){
+    public void sendRegistrationRequest(JSONObject data) {
         mSocket.emit(SocketConstants.REGISTER_REQUEST, data);
-        registerRequestSendingFlag = true;
+        setRegisterRequestSendingFlag(true);
     }
 
-    public void sendNewRoomRequest(JSONObject data){
+    public void sendNewRoomRequest(JSONObject data) {
         mSocket.emit(SocketConstants.NEW_ROOM_REQUEST, data);
-        roomCreationRequestSendingFlag = true;
+        setRoomCreationRequestSendingFlag(true);
     }
 
-    public void sendPositionUpdate(String playerName, String roomName,  int x, int y) {
+    public void sendPositionUpdate(String playerName, String roomName, int x, int y) {
         try {
             JSONObject json = new JSONObject();
             json.put(SocketConstants.PLAYER_NAME, playerName);
@@ -87,14 +89,14 @@ public final class MySocket {
         }
     }
 
-    public void sendGetListRoomRequest(){
+    public void sendGetListRoomRequest() {
         mSocket.emit(SocketConstants.GET_LIST_ROOM, new JSONObject());
-        getRoomListRequestSendingFlag = true;
+        setGetRoomListRequestSendingFlag(true);
     }
 
     public void sendJoinRoomRequest(JSONObject data) {
         mSocket.emit(SocketConstants.JOIN_ROOM, data);
-        joinRoomRequestSendingFlag = true;
+        setJoinRoomRequestSendingFlag(true);
     }
 
     public void sendLeaveRoomRequest(JSONObject data) {
@@ -114,7 +116,7 @@ public final class MySocket {
         }
     }
 
-    public void sendGameStart(String roomName){
+    public void sendGameStart(String roomName) {
         JSONObject json = new JSONObject();
         try {
             json.put(SocketConstants.ROOM_NAME, roomName);
@@ -124,7 +126,7 @@ public final class MySocket {
         }
     }
 
-    public void sendCharacterTimeoutEnded(String roomName){
+    public void sendCharacterTimeoutEnded(String roomName) {
         JSONObject json = new JSONObject();
         try {
             json.put(SocketConstants.ROOM_NAME, roomName);
@@ -134,12 +136,16 @@ public final class MySocket {
         }
     }
 
-    /*** CONNECT ***/
-    private void connect(){
+    /***
+     * CONNECT
+     ***/
+    private void connect() {
         mSocket.connect();
     }
 
-    /*** FLAGS ***/
+    /***
+     * FLAGS
+     ***/
     public boolean isConnectionRequestSendingFlag() {
         return connectionRequestSendingFlag;
     }

@@ -32,17 +32,17 @@ public class RoomActivity extends Activity {
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
-    TextView roomNameText;
-    Button startMultiGameButton;
-    ListView playerList;
+    private TextView roomNameText;
+    private Button startMultiGameButton;
+    private ListView playerList;
 
     private boolean isHost;
 
     private MySocket mySocket;
 
-    String roomName;
+    private String roomName;
 
-    JSONArray jsonArrayReceived;
+    private volatile JSONArray jsonArrayReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

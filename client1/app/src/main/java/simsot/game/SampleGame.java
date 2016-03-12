@@ -33,11 +33,11 @@ public class SampleGame extends AndroidGame {
     private boolean isHost;
     private String roomName;
 
-    private List<JSONObject> receivedCharacterChoiceJSONList;
+    private volatile List<JSONObject> receivedCharacterChoiceJSONList;
 
-    private Map<String, JSONObject> receivedCharacterPositionJSONMap;
+    private volatile Map<String, JSONObject> receivedCharacterPositionJSONMap;
 
-    private boolean gameCanStart;
+    private volatile boolean gameCanStart;
 
     private MySocket mySocket;
 

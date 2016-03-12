@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,11 +35,11 @@ public class ConnectionActivity extends Activity {
 
     private MySocket mySocket;
 
-    private String userLoginWaitingConfirmation = null;
+    private volatile String userLoginWaitingConfirmation = null;
 
     private int logoCounter = 0;
 
-    private Button directGameButton, registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
+    private Button registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
     private Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
     private EditText userPseudoConnection, userPasswordConnection, userPseudoRegistration, userPasswordRegistration, userPassword2Registration;
     private TextView welcomeText;
@@ -108,8 +109,6 @@ public class ConnectionActivity extends Activity {
     }
 
     protected void initComponents() {
-        directGameButton = (Button) findViewById(R.id.directGameButton);
-
         layoutConnection = (LinearLayout) findViewById(R.id.layoutConnection);
         layoutRegistration = (LinearLayout) findViewById(R.id.layoutRegistration);
         layoutMenu = (LinearLayout) findViewById(R.id.layoutMenu);
@@ -148,16 +147,6 @@ public class ConnectionActivity extends Activity {
         initConnectionLayoutComponentsEvents();
         initRegistrationLayoutComponentsEvents();
         initMenuLayoutComponentsEvents();
-
-        directGameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
-                intent.putExtra(IntentParameters.USER_LOGIN, "player_test");
-                intent.putExtra(IntentParameters.IS_HOST, true);
-                startActivity(intent);
-            }
-        });
     }
 
     protected void initConnectionLayoutComponentsEvents() {
@@ -185,8 +174,7 @@ public class ConnectionActivity extends Activity {
                     progressTask.execute();
 
                 } catch (JSONException e) {
-                    // TODO manage exception
-                    e.printStackTrace();
+                    Log.e("JSONException", e.getMessage(), e);
                 }
             }
         });
@@ -209,8 +197,7 @@ public class ConnectionActivity extends Activity {
                         ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.REGISTER_REQUEST);
                         progressTask.execute();
                     } catch (JSONException e) {
-                        // TODO manage exception
-                        e.printStackTrace();
+                        Log.e("JSONException", e.getMessage(), e);
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.password_not_match, Toast.LENGTH_SHORT).show();
@@ -292,32 +279,10 @@ public class ConnectionActivity extends Activity {
                 if (mySocket.isConnectionRequestSendingFlag()) {
                     mySocket.setConnectionRequestSendingFlag(false);
                     mySocket.setConnectionRequestResponseFlag(true);
-                    if (args[0] instanceof JSONObject) {
-                        JSONObject connectionResponse = (JSONObject) args[0];
-                        try {
-                            int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
 
-                            if (errorCode == 0) {
-                                SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = settings.edit();
-                                editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
-                                editor.commit();
-
-                                showToast(getString(R.string.connection_succeeded));
-
-                                displayMenuLayout();
-                            } else if (errorCode == 1) {
-                                showToast(getString(R.string.authentification_failed));
-                            } else {
-                                showToast(getString(R.string.connection_failed));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        showToast(getString(R.string.connection_error));
-                        // TODO add log
-                    }
+                    onConnectionRequestResponse(args[0]);
+                } else {
+                    Log.e("SocketError", SocketConstants.CONNECTION_RESPONSE + " received and not asked");
                 }
             }
         });
@@ -328,32 +293,68 @@ public class ConnectionActivity extends Activity {
                 if (mySocket.isRegisterRequestSendingFlag()) {
                     mySocket.setRegisterRequestSendingFlag(false);
                     mySocket.setRegisterRequestResponseFlag(true);
-                    if (args[0] instanceof JSONObject) {
-                        JSONObject registrationResponse = (JSONObject) args[0];
-                        try {
-                            int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
-                            if (errorCode == 0) {
-                                showToast(getString(R.string.registration_succeeded));
 
-                                displayConnectionLayout();
-                            } else if (errorCode == 1) {
-                                showToast(getString(R.string.already_used_login));
-                            } else if (errorCode == 2) {
-                                showToast(getString(R.string.field_empty));
-                            } else {
-                                showToast(getString(R.string.registration_failed));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else {
-                        showToast(getString(R.string.registration_error));
-                        // TODO add log
-                    }
+                    onRegistrationRequestResponse(args[0]);
+                } else {
+                    Log.e("SocketError", SocketConstants.REGISTRATION_RESPONSE + " received and not asked");
                 }
             }
         });
+    }
+
+    protected void onConnectionRequestResponse(Object response) {
+        if (response instanceof JSONObject) {
+            JSONObject connectionResponse = (JSONObject) response;
+            try {
+                int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
+
+                if (errorCode == 0) {
+                    SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
+                    editor.commit();
+
+                    showToast(getString(R.string.connection_succeeded));
+
+                    displayMenuLayout();
+                } else if (errorCode == 1) {
+                    showToast(getString(R.string.authentification_failed));
+                } else {
+                    showToast(getString(R.string.connection_failed));
+                }
+            } catch (JSONException e) {
+                Log.e("JSONException", e.getMessage(), e);
+            }
+        } else {
+            showToast(getString(R.string.connection_error));
+            Log.e("SocketError", "ConnectionRequestResponse not a JSONObject");
+        }
+    }
+
+    protected void onRegistrationRequestResponse(Object response) {
+        if (response instanceof JSONObject) {
+            JSONObject registrationResponse = (JSONObject) response;
+            try {
+                int errorCode = registrationResponse.getInt(SocketConstants.ERROR_CODE);
+                if (errorCode == 0) {
+                    showToast(getString(R.string.registration_succeeded));
+
+                    displayConnectionLayout();
+                } else if (errorCode == 1) {
+                    showToast(getString(R.string.already_used_login));
+                } else if (errorCode == 2) {
+                    showToast(getString(R.string.field_empty));
+                } else {
+                    showToast(getString(R.string.registration_failed));
+                }
+            } catch (JSONException e) {
+                Log.e("JSONException", e.getMessage(), e);
+            }
+
+        } else {
+            showToast(getString(R.string.registration_error));
+            Log.e("SocketError", "RegistrationRequestResponse not a JSONObject");
+        }
     }
 
     protected void displayConnectionLayout() {

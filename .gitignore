@@ -4,3 +4,4 @@ client1/build
 *.bin
 *.lock
 *.class
+client1/.idea/workspace.xml

@@ -154,12 +154,4 @@
             android:text="@string/disconnect_button" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/directGameButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Direct Game Link" />
 </RelativeLayout>
