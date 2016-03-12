@@ -30,12 +30,13 @@ import simsot.socket.SocketConstants;
 public class ConnectionActivity extends Activity {
 
     private static final String ACTUAL_LAYOUT = "actualLayout";
+    private static final String USER_WAITING_CONFIRMATION = "userWaitingConfirmation";
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
     private MySocket mySocket;
 
-    private volatile String userLoginWaitingConfirmation = null;
+    private volatile User userWaitingConfirmation;
 
     private int logoCounter = 0;
 
@@ -99,6 +100,10 @@ public class ConnectionActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
+
+        if(userWaitingConfirmation != null) {
+            savedInstanceState.putSerializable(USER_WAITING_CONFIRMATION, userWaitingConfirmation);
+        }
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -106,6 +111,10 @@ public class ConnectionActivity extends Activity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         actualLayout = (ConnectionActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
+
+        if(savedInstanceState.containsKey(USER_WAITING_CONFIRMATION)){
+            userWaitingConfirmation = (User) savedInstanceState.getSerializable(USER_WAITING_CONFIRMATION);
+        }
     }
 
     protected void initComponents() {
@@ -163,12 +172,10 @@ public class ConnectionActivity extends Activity {
                 String userPseudo = userPseudoConnection.getText().toString();
                 String userPassword = userPasswordConnection.getText().toString();
 
-                userLoginWaitingConfirmation = userPseudo;
-
-                User user = new User(userPseudo, userPassword);
+                userWaitingConfirmation = new User(userPseudo, userPassword);
 
                 try {
-                    mySocket.sendConnectionRequest(user.ToJSONObject());
+                    mySocket.sendConnectionRequest(userWaitingConfirmation.ToJSONObject());
 
                     ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CONNECTION_REQUEST);
                     progressTask.execute();
@@ -311,7 +318,7 @@ public class ConnectionActivity extends Activity {
                 if (errorCode == 0) {
                     SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(LOGIN_IN_PREFERENCES, userLoginWaitingConfirmation);
+                    editor.putString(LOGIN_IN_PREFERENCES, userWaitingConfirmation.getUserLogin());
                     editor.commit();
 
                     showToast(getString(R.string.connection_succeeded));

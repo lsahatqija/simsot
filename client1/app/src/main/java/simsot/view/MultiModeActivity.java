@@ -38,6 +38,8 @@ import simsot.socket.SocketConstants;
 public class MultiModeActivity extends Activity {
 
     private static final String ACTUAL_LAYOUT = "actualLayout";
+    private static final String ROOM_WAITING_CONFIRMATION = "roomWaitingConfirmation";
+
     private static final String LOGIN_IN_PREFERENCES = "login";
 
     private static final boolean IS_HOST = true;
@@ -68,7 +70,7 @@ public class MultiModeActivity extends Activity {
 
     private JSONArray jsonArrayReceived = null;
 
-    private volatile Room roomWaitingConfirmation = null;
+    private volatile Room roomWaitingConfirmation;
 
     private Room selectedRoom;
 
@@ -110,6 +112,10 @@ public class MultiModeActivity extends Activity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
 
+        if(roomWaitingConfirmation != null){
+            savedInstanceState.putSerializable(ROOM_WAITING_CONFIRMATION, roomWaitingConfirmation);
+        }
+
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -118,6 +124,10 @@ public class MultiModeActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
 
         actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
+
+        if(savedInstanceState.containsKey(ROOM_WAITING_CONFIRMATION)){
+            roomWaitingConfirmation = (Room) savedInstanceState.getSerializable(ROOM_WAITING_CONFIRMATION);
+        }
     }
 
     protected void initComponents() {
@@ -233,18 +243,16 @@ public class MultiModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
-                    Room room;
                     if (roomPasswordOffRadio.isChecked()) {
-                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
+                        roomWaitingConfirmation = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
                                 null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     } else {
-                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
+                        roomWaitingConfirmation = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
                                 null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     }
-                    mySocket.sendNewRoomRequest(room.ToJSONObject());
-                    roomWaitingConfirmation = room;
+                    mySocket.sendNewRoomRequest(roomWaitingConfirmation.ToJSONObject());
 
                     ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.NEW_ROOM_REQUEST);
                     progressTask.execute();

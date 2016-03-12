@@ -3,7 +3,9 @@ package simsot.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private static final String USERNAME = "pseudo";
     private static final String PASSWORD = "password";
@@ -15,6 +17,10 @@ public class User {
     public User(String userLogin, String userPassword) {
         this.userLogin = userLogin;
         this.userPassword = userPassword;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
     }
 
     public JSONObject ToJSONObject() throws JSONException {

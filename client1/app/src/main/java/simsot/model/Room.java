@@ -4,9 +4,10 @@ package simsot.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Room {
+public class Room implements Serializable {
 
     String roomName;
     String roomPassword;
