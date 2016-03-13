@@ -22,14 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="Join Room" />
+            android:text="@string/join_room_choice_button" />
 
         <Button
             android:id="@+id/buttonCreateChoice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:text="Create room" />
+            android:text="@string/create_room_choice_button" />
 
         <Button
             android:id="@+id/joinCreateRoomChoiceBackButton"
@@ -52,14 +52,14 @@
             android:id="@+id/roomNameCreationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Room name"
+            android:text="@string/room_name_creation_label"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
             android:id="@+id/roomNameCreation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="room name"
+            android:hint="@string/room_name_creation_hint"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <LinearLayout
@@ -71,7 +71,7 @@
                 android:id="@+id/roomPasswordCreationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password :"
+                android:text="@string/room_password_creation_label"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <RadioButton
@@ -79,13 +79,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Off" />
+                android:text="@string/room_password_off_radio" />
 
             <RadioButton
                 android:id="@+id/roomPasswordOnRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="On" />
+                android:text="@string/room_password_on_radio" />
         </LinearLayout>
 
         <EditText
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="true"
-            android:hint="password"
+            android:hint="@string/room_password_creation_hint"
             android:inputType="textPassword"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:visibility="invisible" />
@@ -154,7 +154,7 @@
             android:id="@+id/createRoomButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Room" />
+            android:text="@string/create_room_button" />
         <Button
             android:id="@+id/createRoomBackButton"
             android:layout_width="match_parent"

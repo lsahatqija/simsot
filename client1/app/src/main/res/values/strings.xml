@@ -45,5 +45,16 @@
     <string name="join_error">Join error</string>
     <string name="room_created">Room created</string>
     <string name="not_room_found">Not room found</string>
+    <string name="start_game_room_button">Start Game</string>
+    <string name="join_room_choice_button">Join Room</string>
+    <string name="refresh_room_player_list">Refresh player list</string>
+    <string name="create_room_choice_button">Create room</string>
+    <string name="room_name_creation_label">Room name</string>
+    <string name="room_name_creation_hint">room name</string>
+    <string name="room_password_creation_label">Password :</string>
+    <string name="room_password_off_radio">Off</string>
+    <string name="room_password_on_radio">On</string>
+    <string name="room_password_creation_hint">password</string>
+    <string name="create_room_button">Create Room</string>
 
 </resources>
