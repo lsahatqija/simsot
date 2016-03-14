@@ -577,11 +577,11 @@ public class MultiModeActivity extends Activity {
     protected void initGPSLocation() {
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showToast("GPS is disabled!");
             buildAlertMessageNoGps();
         }
         // corriger si GPS pas activé et en cours d'activation
 
+        showToast("Getting location");
         locationListener = new LocationListener() {
             Criteria criteria = new Criteria();
 
@@ -591,7 +591,7 @@ public class MultiModeActivity extends Activity {
                 showToast("Location detected");
                 double latitude = (double) (location.getLatitude());
                 double longitude = (double) (location.getLongitude());
-                showToast("Last position : " + latitude +" and " + longitude);
+                showToast("Position : " + latitude +" and " + longitude);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
