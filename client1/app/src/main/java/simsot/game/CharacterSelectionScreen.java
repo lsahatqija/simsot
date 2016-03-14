@@ -211,12 +211,14 @@ public class CharacterSelectionScreen extends Screen {
                 mySocket.sendCharacterChoice(PacManConstants.CLYDE, PacManConstants.CLYDE, roomName);
             }
 
-            if(isHost) {
-                mySocket.sendCharacterTimeoutEnded(roomName);
-            }
+            if(((SampleGame) game).isMultiMode()){
+                if(isHost) {
+                    mySocket.sendCharacterTimeoutEnded(roomName);
+                }
 
-            while(!((SampleGame) game).isGameCanStart());
-            ((SampleGame) game).setGameCanStart(false);
+                while(!((SampleGame) game).isGameCanStart());
+                ((SampleGame) game).setGameCanStart(false);
+            }
 
             game.setScreen(new GameScreen(game));
         }

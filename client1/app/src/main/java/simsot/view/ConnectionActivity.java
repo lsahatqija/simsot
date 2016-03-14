@@ -334,6 +334,7 @@ public class ConnectionActivity extends Activity {
                                 intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
                                 intent.putExtra(IntentParameters.IS_HOST, true);
                                 intent.putExtra(IntentParameters.ROOM_NAME, roomCreated);
+                                intent.putExtra(IntentParameters.IS_MULTI_MODE, false);
                                 startActivity(intent);
                             }
                         } catch (JSONException e) {
@@ -342,8 +343,6 @@ public class ConnectionActivity extends Activity {
                     } else {
                         Log.e("SocketError", "CreateSoloRoomResponse not a JSONObject");
                     }
-
-
                 }
             }
         });

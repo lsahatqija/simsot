@@ -32,6 +32,7 @@ public class SampleGame extends AndroidGame {
     private String playerName;
     private boolean isHost;
     private String roomName;
+    private boolean isMultiMode;
 
     private volatile List<JSONObject> receivedCharacterChoiceJSONList;
 
@@ -50,6 +51,7 @@ public class SampleGame extends AndroidGame {
         playerName = intent.getStringExtra(IntentParameters.USER_LOGIN);
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
+        isMultiMode = intent.getBooleanExtra(IntentParameters.IS_MULTI_MODE, false);
 
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
 
@@ -189,6 +191,10 @@ public class SampleGame extends AndroidGame {
 
     public boolean isHost() {
         return isHost;
+    }
+
+    public boolean isMultiMode() {
+        return isMultiMode;
     }
 
     public List<JSONObject> getReceivedCharacterChoiceJSONList() {

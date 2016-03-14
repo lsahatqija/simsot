@@ -144,6 +144,7 @@ public class RoomActivity extends Activity {
                 intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
                 intent.putExtra(IntentParameters.IS_HOST, isHost);
                 intent.putExtra(IntentParameters.ROOM_NAME, roomName);
+                intent.putExtra(IntentParameters.IS_MULTI_MODE, true);
                 startActivity(intent);
             }
         });
