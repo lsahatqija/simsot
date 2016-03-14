@@ -16,10 +16,12 @@ public class Assets {
     public static Image blinkyLeft1, blinkyLeft2, blinkyRight1, blinkyRight2;
     public static Image clydeLeft1, clydeLeft2, clydeRight1, clydeRight2;
     public static Image playerSelectionLocal, playerSelectionRemote;
+    public static Image powerModeGhost;
 
     public static Image pacmanSelection, inkySelection, pinkySelection, blinkySelection, clydeSelection;
 
     public static Image pelletSprite;
+    public static Image powerPelletSprite;
 
 	public static Image tileTree, tileGrass;
 

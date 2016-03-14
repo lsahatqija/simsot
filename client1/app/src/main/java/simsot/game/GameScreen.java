@@ -29,6 +29,8 @@ public class GameScreen extends Screen {
     private int score = 0;
 	private static Background bg1;
 	private static Player pacman, pinky, inky, blinky, clyde;
+    public static boolean isPowerMode = false;
+    private int PowerModeTimer = 0;
 
 	public static Image tileTree, tileGrass, background;
 	private Animation anim;
@@ -37,6 +39,8 @@ public class GameScreen extends Screen {
 	public static ArrayList<Enemy> enemyarray = new ArrayList<Enemy>();
     public static ArrayList<Pellet> pelletarray = new ArrayList<Pellet>();
     public static ArrayList<Player> playerarray = new ArrayList<Player>();
+
+    public int pelletCounter=0;
 
 	int livesLeft = 1;
 	Paint paint, paint2;
@@ -53,9 +57,7 @@ public class GameScreen extends Screen {
 		playerName = ((SampleGame) game).getPlayerName();
 
         score = 0;
-
 		// Initialize game objects here
-
 		bg1 = new Background(0, 0);
 		pacman = CharacterSelectionScreen.getPacman();
 		pinky = CharacterSelectionScreen.getPinky();
@@ -67,20 +69,6 @@ public class GameScreen extends Screen {
         playerarray.add(clyde);
         playerarray.add(pacman);
         playerarray.add(blinky);
-
-		// Image Setups
-
-		/*player.characterLeft1 = Assets.characterLeft1;
-		player.characterLeft2 = Assets.characterLeft2;
-		player.characterRight1 = Assets.characterRight1;
-		player.characterRight2 = Assets.characterRight2;
-        player.characterDown1 = Assets.characterDown1;
-        player.characterDown2 = Assets.characterDown2;
-        player.characterUp1 = Assets.characterUp1;
-        player.characterUp2 = Assets.characterUp2;
-		player.characterClosed = Assets.characterClosed;*/
-
-        //player.currentSprite = player.characterLeft1;
 
         inky.characterLeft1 = Assets.inkyLeft1;
         inky.characterLeft2 = Assets.inkyLeft2;
@@ -163,9 +151,16 @@ public class GameScreen extends Screen {
 						Tile t = new Tile(i, j, ch);
 						tilearray.add(t);
 					} else if (ch == 'p'){
-                        Pellet p = new Pellet(i, j);
-                        p.sprite = Assets.pelletSprite;
-                        pelletarray.add(p);
+                        if(pelletCounter%20 == 0){
+                            PowerPellet p = new PowerPellet(i, j);
+                            p.sprite = Assets.powerPelletSprite;
+                            pelletarray.add(p);
+                        } else {
+                            Pellet p = new Pellet(i, j);
+                            p.sprite = Assets.pelletSprite;
+                            pelletarray.add(p);
+                        }
+                        pelletCounter++;
                     }
 				}
 
@@ -227,25 +222,6 @@ public class GameScreen extends Screen {
             play.update(touchEvents, (SampleGame) game);
         }
 
-        for (int j = 0; j < playerarray.size(); j++) {
-			Player e = playerarray.get(j);
-
-			if (e.alive) {
-				if ((e.isMovingVer() || e.isMovingHor()) && e.getSpeedX() <= 0) {
-					if (e.walkCounter % 16 == 0) {
-						e.currentSprite = e.characterLeft1;
-					} else if (walkCounter % 16 == 8) {
-						e.currentSprite = e.characterLeft2;
-					}
-				} else if ((e.isMovingVer() || e.isMovingHor()) && e.getSpeedX() > 0) {
-					if (e.walkCounter % 16 == 0) {
-						e.currentSprite = e.characterRight1;
-					} else if (walkCounter % 16 == 8) {
-						e.currentSprite = e.characterRight2;
-					}
-				}
-			}
-		}
 		checkTileCollisions();
         checkPlayerCollision();
 		bg1.update();
@@ -271,7 +247,10 @@ public class GameScreen extends Screen {
             Player p = playerarray.get(i);
             if(!Pacman.class.isInstance(p))
                 if(Rect.intersects(p.rect, pacman.rect)){
-                    pacmanDeath();
+                    if(!isPowerMode)
+                        pacmanDeath();
+                    else
+                        ghostDeath(p);
                 }
         }
 
@@ -334,11 +313,20 @@ public class GameScreen extends Screen {
             Item p = (Item) pelletarray.get(i);
             p.update();
             if(p.touched){
+                if(PowerPellet.class.isInstance(p)){
+                    isPowerMode = true;
+                    PowerModeTimer = 600;
+                }
                 pelletarray.remove(i);
                 score++;
             }
         }
-
+        if(PowerModeTimer > 0){
+            PowerModeTimer--;
+        }
+        if (PowerModeTimer == 0) {
+            isPowerMode = false;
+        }
     }
 
 	@Override
@@ -444,7 +432,6 @@ public class GameScreen extends Screen {
 		g.drawImage(Assets.buttonPause, 0, 0);	//pause
 
         g.drawString("" + score, 50, 700, paint);
-        //g.drawString("Pacman lives:" + pacman.lives, 50, 750, paint);
         if(pacman.lives > 0)
             g.drawImage(Assets.characterRight1, 50, 750);
         if(pacman.lives > 1)
@@ -493,8 +480,12 @@ public class GameScreen extends Screen {
             blinky.setCenterY(500);
 
             //Clyde reset
-            clyde.setCenterX(100);
+            clyde.setCenterX(50);
             clyde.setCenterY(100);
+
+            Graphics g = game.getGraphics();
+            g.drawRect(0, 0, 1281, 801, Color.LTGRAY);
+            g.drawString("Pacman death", 240, 400, paint2);
 
             try {
                 Thread.sleep(500);
@@ -505,6 +496,13 @@ public class GameScreen extends Screen {
             state = GameState.Running;
 
         }
+    }
+
+    public void ghostDeath(Player p){
+        p.setCenterX(50);
+        p.setCenterY(100);
+        p.vulnerable = false;
+        p.alive = true;
     }
 
 	@Override

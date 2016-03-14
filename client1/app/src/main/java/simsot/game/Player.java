@@ -38,14 +38,13 @@ public class Player {
     public String collisionDirection;
     private double direction;
 
+    public boolean vulnerable=false;
+
     // 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
     private int isShooting = 0;
 
-    public Image characterLeft1, characterLeft2, characterRight1, characterRight2, characterUp1, characterUp2, characterDown1, characterDown2, characterClosed, currentSprite;
-
-	/*
-	private static Background bg1 = GameScreen.getBg1();
-	private static Background bg2 = GameScreen.getBg2();*/
+    public Image characterLeft1, characterLeft2, characterRight1, characterRight2, characterUp1,
+            characterUp2, characterDown1, characterDown2, characterClosed, currentSprite, vulnerableMode;
 
     private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
@@ -77,10 +76,18 @@ public class Player {
 
     public void update(List touchEvents, SampleGame game) {
 
+        animate();
+
         if (centerX > 510) {
             centerX = 0;
         } else if (centerX < 0) {
             centerX = 510;
+        }
+
+        if(GameScreen.isPowerMode){
+            this.vulnerable = true;
+        } else {
+            this.vulnerable = false;
         }
 
         // Collision
@@ -120,6 +127,27 @@ public class Player {
 
     public String getMode() {
         return mode;
+    }
+
+    public void animate(){
+        if(!vulnerable || Pacman.class.isInstance(this)){
+            if ((isMovingVer() || isMovingHor()) && getSpeedX() <= 0) {
+                if (walkCounter % 16 == 0) {
+                    currentSprite = characterLeft1;
+                } else if (walkCounter % 16 == 8) {
+                    currentSprite = characterLeft2;
+                }
+            } else if ((isMovingVer() || isMovingHor()) && getSpeedX() > 0) {
+                if (walkCounter % 16 == 0) {
+                    currentSprite = characterRight1;
+                } else if (walkCounter % 16 == 8) {
+                    currentSprite = characterRight2;
+                }
+            }
+        } else {
+            currentSprite = vulnerableMode;
+        }
+
     }
 
     public void callAI() {
@@ -306,6 +334,10 @@ public class Player {
 
     public int getCenterY() {
         return centerY;
+    }
+
+    public void setVulnerable(boolean vulnerable) {
+        this.vulnerable = vulnerable;
     }
 
     public int getHealth() {
