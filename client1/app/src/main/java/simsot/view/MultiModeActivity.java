@@ -57,7 +57,7 @@ public class MultiModeActivity extends Activity {
     private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, refreshRoomsButton, joinCreateRoomChoiceBackButton, createRoomBackButton, joinRoomBackButton;
 
     private RadioButton roomPasswordOffRadio, roomPasswordOnRadio;
-    private EditText roomNameCreation, roomPasswordCreation, roomNbPlayersCreation, roomDistanceMaxCreation;
+    private EditText roomNameCreation, roomPasswordCreation, roomDistanceMaxCreation;
 
     private MySocket mySocket;
 
@@ -164,7 +164,6 @@ public class MultiModeActivity extends Activity {
         roomPasswordOnRadio = (RadioButton) findViewById(R.id.roomPasswordOnRadio);
         roomNameCreation = (EditText) findViewById(R.id.roomNameCreation);
         roomPasswordCreation = (EditText) findViewById(R.id.roomPasswordCreation);
-        roomNbPlayersCreation = (EditText) findViewById(R.id.roomNbPlayersCreation);
         roomDistanceMaxCreation = (EditText) findViewById(R.id.roomDistanceMaxCreation);
         createRoomButton = (Button) findViewById(R.id.createRoomButton);
         createRoomBackButton = (Button) findViewById(R.id.createRoomBackButton);
@@ -248,12 +247,10 @@ public class MultiModeActivity extends Activity {
                     Room room;
                     if (roomPasswordOffRadio.isChecked()) {
                         room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
-                                Integer.valueOf(roomNbPlayersCreation.getText().toString()),
-                                null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     } else {
                         room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
-                                Integer.valueOf(roomNbPlayersCreation.getText().toString()),
-                                null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     }
                     mySocket.sendNewRoomRequest(room.ToJSONObject());
 
