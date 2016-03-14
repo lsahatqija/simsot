@@ -224,10 +224,18 @@ public class ConnectionActivity extends Activity {
         buttonSolo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
-                intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
-                intent.putExtra(IntentParameters.IS_HOST, true);
-                startActivity(intent);
+                try {
+                    JSONObject json = new JSONObject();
+                    json.put(SocketConstants.ERROR_CODE, 0);
+                    json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
+
+                    mySocket.sendSoloRoomCreation(json);
+
+                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CREATE_SOLO_ROOM);
+                    progressTask.execute();
+                } catch (JSONException e) {
+                    Log.e("JSONException", e.getMessage(), e);
+                }
             }
         });
 
@@ -304,6 +312,38 @@ public class ConnectionActivity extends Activity {
                     onRegistrationRequestResponse(args[0]);
                 } else {
                     Log.e("SocketError", SocketConstants.REGISTRATION_RESPONSE + " received and not asked");
+                }
+            }
+        });
+
+        mySocket.on(SocketConstants.CREATE_SOLO_ROOM_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if(mySocket.isSoloRoomCreationRequestSendingFlag()){
+                    mySocket.setSoloRoomCreationRequestSendingFlag(false);
+                    mySocket.setSoloRoomCreationRequestResponseFlag(true);
+
+                    if(args[0] instanceof JSONObject){
+                        JSONObject soloRoomCreationResponse = (JSONObject) args[0];
+                        try {
+                            int errorCode = soloRoomCreationResponse.getInt(SocketConstants.ERROR_CODE);
+                            if (errorCode == 0) {
+                                String roomCreated = soloRoomCreationResponse.getString(SocketConstants.ROOM_NAME);
+
+                                Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
+                                intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
+                                intent.putExtra(IntentParameters.IS_HOST, true);
+                                intent.putExtra(IntentParameters.ROOM_NAME, roomCreated);
+                                startActivity(intent);
+                            }
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.getMessage(), e);
+                        }
+                    } else {
+                        Log.e("SocketError", "CreateSoloRoomResponse not a JSONObject");
+                    }
+
+
                 }
             }
         });
@@ -445,6 +485,10 @@ public class ConnectionActivity extends Activity {
                         // TODO add timeout counter
                     }
                     break;
+                case CREATE_SOLO_ROOM:
+                    while(!mySocket.isSoloRoomCreationRequestResponseFlag()){
+                        // TODO add timeout counter
+                    }
                 default:
                     break;
             }
@@ -465,6 +509,8 @@ public class ConnectionActivity extends Activity {
                 case REGISTER_REQUEST:
                     mySocket.setRegisterRequestResponseFlag(false);
                     break;
+                case CREATE_SOLO_ROOM:
+                    mySocket.setSoloRoomCreationRequestResponseFlag(false);
                 default:
                     break;
             }

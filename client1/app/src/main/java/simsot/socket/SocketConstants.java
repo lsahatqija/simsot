@@ -10,6 +10,7 @@ public final class SocketConstants {
     public static final String CONNECTION_REQUEST = "connect_user";
     public static final String REGISTER_REQUEST = "subscribe";
     public static final String NEW_ROOM_REQUEST = "new_room";
+    public static final String CREATE_SOLO_ROOM_REQUEST = "create_solo_room";
     public static final String GET_LIST_ROOM = "get_list_room";
     public static final String JOIN_ROOM = "join";
     public static final String KICKED_FROM_ROOM = "kick";
@@ -24,10 +25,12 @@ public final class SocketConstants {
     public static final String LIST_ROOM = "list_room";
     public static final String JOIN_RESPONSE = "response_join";
     public static final String CREATE_RESPONSE = "response_create";
+    public static final String CREATE_SOLO_ROOM_RESPONSE = "create_solo_room_response";
     public static final String CHARACTER_CHOICE_RESPONSE = "character_choice_response";
     public static final String CHARACTER_POSITION_RESPONSE = "character_position_response";
     public static final String GAME_START_RESPONSE = "game_start_response";
     public static final String CHARACTER_TIMEOUT_ENDED_RESPONSE = "character_timeout_ended_response";
+
 
     public static final String ERROR_CODE = "error_code";
     public static final String PLAYER_NAME = "player_name";
@@ -44,6 +47,7 @@ public final class SocketConstants {
         REGISTER_REQUEST,
         NEW_ROOM_REQUEST,
         GET_LIST_ROOM,
-        JOIN_ROOM_REQUEST
+        JOIN_ROOM_REQUEST,
+        CREATE_SOLO_ROOM
     }
 }
