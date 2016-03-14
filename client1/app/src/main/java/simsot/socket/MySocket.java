@@ -22,12 +22,14 @@ public final class MySocket {
     private volatile boolean registerRequestSendingFlag;
     private volatile boolean getRoomListRequestSendingFlag;
     private volatile boolean roomCreationRequestSendingFlag;
+    private volatile boolean soloRoomCreationRequestSendingFlag;
     private volatile boolean joinRoomRequestSendingFlag;
 
     private volatile boolean connectionRequestResponseFlag;
     private volatile boolean registerRequestResponseFlag;
     private volatile boolean getRoomListRequestResponseFlag;
     private volatile boolean roomCreationRequestResponseFlag;
+    private volatile boolean soloRoomCreationRequestResponseFlag;
     private volatile boolean joinRoomRequestResponseFlag;
 
     private MySocket(String urlServer) {
@@ -74,6 +76,12 @@ public final class MySocket {
     public void sendNewRoomRequest(JSONObject data) {
         mSocket.emit(SocketConstants.NEW_ROOM_REQUEST, data);
         setRoomCreationRequestSendingFlag(true);
+    }
+
+    public void sendSoloRoomCreation(JSONObject data){
+        mSocket.emit(SocketConstants.CREATE_SOLO_ROOM_REQUEST, data);
+        setSoloRoomCreationRequestSendingFlag(true);
+
     }
 
     public void sendPositionUpdate(String playerName, String roomName, int x, int y) {
@@ -208,6 +216,22 @@ public final class MySocket {
 
     public void setRoomCreationRequestResponseFlag(boolean roomCreationRequestResponseFlag) {
         this.roomCreationRequestResponseFlag = roomCreationRequestResponseFlag;
+    }
+
+    public boolean isSoloRoomCreationRequestSendingFlag() {
+        return soloRoomCreationRequestSendingFlag;
+    }
+
+    public void setSoloRoomCreationRequestSendingFlag(boolean soloRoomCreationRequestSendingFlag) {
+        this.soloRoomCreationRequestSendingFlag = soloRoomCreationRequestSendingFlag;
+    }
+
+    public boolean isSoloRoomCreationRequestResponseFlag() {
+        return soloRoomCreationRequestResponseFlag;
+    }
+
+    public void setSoloRoomCreationRequestResponseFlag(boolean soloRoomCreationRequestResponseFlag) {
+        this.soloRoomCreationRequestResponseFlag = soloRoomCreationRequestResponseFlag;
     }
 
     public boolean isJoinRoomRequestSendingFlag() {
