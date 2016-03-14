@@ -34,9 +34,9 @@
     <string name="yes_response">Yes</string>
     <string name="no_response">No</string>
     <string name="room_deleted">The room you were in: %1$s, has been deleted"</string>
-    <string name="authentification_failed">Authentification failed !</string>
-    <string name="already_used_login">Already used login !</string>
-    <string name="field_empty">Field empty !</string>
+    <string name="username_or_password_incorrect">Username or password is incorrect.</string>
+    <string name="user_taken">Username taken.</string>
+    <string name="username_or_password_empty">Username or password is empty.</string>
     <string name="loading_message">Loading...</string>
     <string name="room_not_found">Room not found</string>
     <string name="room_full">Room full</string>
@@ -44,6 +44,7 @@
     <string name="join_failed">Join failed</string>
     <string name="join_error">Join error</string>
     <string name="room_created">Room created</string>
+    <string name="room_name_already_used">Room name already used.</string>
     <string name="not_room_found">Not room found</string>
     <string name="start_game_room_button">Start Game</string>
     <string name="join_room_choice_button">Join Room</string>
@@ -56,5 +57,6 @@
     <string name="room_password_on_radio">On</string>
     <string name="room_password_creation_hint">password</string>
     <string name="create_room_button">Create Room</string>
+
 
 </resources>

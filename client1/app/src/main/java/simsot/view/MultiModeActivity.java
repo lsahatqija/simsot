@@ -383,8 +383,7 @@ public class MultiModeActivity extends Activity {
 
                     startActivity(intent);
                 } else if (errorCode == 1) {
-                    // TODO message a preciser
-                    showToast("Creation fail");
+                    showToast(getString(R.string.room_name_already_used));
                 } else {
                     showToast("Creation failed");
                 }
