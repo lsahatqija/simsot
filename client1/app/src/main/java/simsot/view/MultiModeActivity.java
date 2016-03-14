@@ -290,8 +290,8 @@ public class MultiModeActivity extends Activity {
         mySocket.on(SocketConstants.LIST_ROOM, new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
-                if (mySocket.isGetRoomListRequestSendingFlag()) {
-                    mySocket.setGetRoomListRequestSendingFlag(false);
+                if (mySocket.getGetRoomListRequestFlags().isSendingFlag()) {
+                    mySocket.getGetRoomListRequestFlags().setSendingFlag(false);
 
                     if (args[0] instanceof JSONObject) {
                         try {
@@ -305,7 +305,7 @@ public class MultiModeActivity extends Activity {
                         jsonArrayReceived = null;
                     }
 
-                    mySocket.setGetRoomListRequestResponseFlag(true);
+                    mySocket.getGetRoomListRequestFlags().setResponseFlag(true);
                 }
             }
         });
@@ -313,9 +313,9 @@ public class MultiModeActivity extends Activity {
         mySocket.on(SocketConstants.JOIN_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
-                if (mySocket.isJoinRoomRequestSendingFlag()) {
-                    mySocket.setJoinRoomRequestSendingFlag(false);
-                    mySocket.setJoinRoomRequestResponseFlag(true);
+                if (mySocket.getJoinRoomRequestFlags().isSendingFlag()) {
+                    mySocket.getJoinRoomRequestFlags().setSendingFlag(false);
+                    mySocket.getJoinRoomRequestFlags().setResponseFlag(true);
 
                     onJoinResponse(args[0]);
                 }
@@ -325,9 +325,9 @@ public class MultiModeActivity extends Activity {
         mySocket.on(SocketConstants.CREATE_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
-                if (mySocket.isRoomCreationRequestSendingFlag()) {
-                    mySocket.setRoomCreationRequestSendingFlag(false);
-                    mySocket.setRoomCreationRequestResponseFlag(true);
+                if (mySocket.getRoomCreationRequestFlags().isSendingFlag()) {
+                    mySocket.getRoomCreationRequestFlags().setSendingFlag(false);
+                    mySocket.getRoomCreationRequestFlags().setResponseFlag(true);
 
                     onCreateResponse(args[0]);
                 }
@@ -482,8 +482,11 @@ public class MultiModeActivity extends Activity {
 
         private SocketConstants.SocketRequestType socketRequestType;
 
+        private boolean getListRoomReceived;
+
         public ProgressTask(SocketConstants.SocketRequestType socketRequestType) {
             this.socketRequestType = socketRequestType;
+            this.getListRoomReceived = false;
         }
 
         @Override
@@ -501,18 +504,58 @@ public class MultiModeActivity extends Activity {
 
             switch (socketRequestType) {
                 case GET_LIST_ROOM:
-                    while (!mySocket.isGetRoomListRequestResponseFlag()) {
-                        // TODO add timeout counter
+                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                        try {
+                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                        } catch (InterruptedException e) {
+                            Log.e("InterruptedException", e.getMessage(), e);
+                        }
+                        if (mySocket.getGetRoomListRequestFlags().isResponseFlag()) {
+                            break;
+                        }
+                    }
+                    if (mySocket.getGetRoomListRequestFlags().isResponseFlag()) {
+                        mySocket.getGetRoomListRequestFlags().setResponseFlag(false);
+                        getListRoomReceived = true;
+                    } else {
+                        mySocket.getGetRoomListRequestFlags().setSendingFlag(false);
+                        showToast("No server answer not received");
                     }
                     break;
                 case NEW_ROOM_REQUEST:
-                    while (!mySocket.isRoomCreationRequestResponseFlag()) {
-                        // TODO add timeout counter
+                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                        try {
+                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                        } catch (InterruptedException e) {
+                            Log.e("InterruptedException", e.getMessage(), e);
+                        }
+                        if (mySocket.getRoomCreationRequestFlags().isResponseFlag()) {
+                            break;
+                        }
+                    }
+                    if (mySocket.getRoomCreationRequestFlags().isResponseFlag()) {
+                        mySocket.getRoomCreationRequestFlags().setResponseFlag(false);
+                    } else {
+                        mySocket.getRoomCreationRequestFlags().setSendingFlag(false);
+                        showToast("No server answer not received");
                     }
                     break;
                 case JOIN_ROOM_REQUEST:
-                    while (!mySocket.isJoinRoomRequestResponseFlag()) {
-                        // TODO add timeout counter
+                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                        try {
+                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                        } catch (InterruptedException e) {
+                            Log.e("InterruptedException", e.getMessage(), e);
+                        }
+                        if (mySocket.getJoinRoomRequestFlags().isResponseFlag()) {
+                            break;
+                        }
+                    }
+                    if (mySocket.getJoinRoomRequestFlags().isResponseFlag()) {
+                        mySocket.getJoinRoomRequestFlags().setResponseFlag(false);
+                    } else {
+                        mySocket.getJoinRoomRequestFlags().setSendingFlag(false);
+                        showToast("No server answer not received");
                     }
                     break;
                 default:
@@ -528,38 +571,27 @@ public class MultiModeActivity extends Activity {
             progressDialog.hide();
             progressDialog.dismiss();
 
-            switch (socketRequestType) {
-                case GET_LIST_ROOM:
-                    mySocket.setGetRoomListRequestResponseFlag(false);
-                    foundRooms.clear();
-                    if (jsonArrayReceived != null) {
-                        for (int i = 0; i < jsonArrayReceived.length(); i++) {
-                            try {
-                                JSONObject jsonObject = (JSONObject) jsonArrayReceived.get(i);
+            if(SocketConstants.SocketRequestType.GET_LIST_ROOM.equals(socketRequestType) && getListRoomReceived) {
+                foundRooms.clear();
+                if (jsonArrayReceived != null) {
+                    for (int i = 0; i < jsonArrayReceived.length(); i++) {
+                        try {
+                            JSONObject jsonObject = (JSONObject) jsonArrayReceived.get(i);
 
-                                String roomName = jsonObject.getString(SocketConstants.ROOM_NAME);
-                                String host = jsonObject.getString(SocketConstants.HOST);
-                                int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
+                            String roomName = jsonObject.getString(SocketConstants.ROOM_NAME);
+                            String host = jsonObject.getString(SocketConstants.HOST);
+                            int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
 
-                                foundRooms.add(new Room(roomName, host, slot_empty));
+                            foundRooms.add(new Room(roomName, host, slot_empty));
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
+                }
 
-                    updateRoomsList();
-                    jsonArrayReceived = null;
-                    break;
-                case NEW_ROOM_REQUEST:
-                    mySocket.setRoomCreationRequestResponseFlag(false);
-                    break;
-                case JOIN_ROOM_REQUEST:
-                    mySocket.setJoinRoomRequestResponseFlag(false);
-                    break;
-                default:
-                    break;
+                updateRoomsList();
+                jsonArrayReceived = null;
             }
         }
 
