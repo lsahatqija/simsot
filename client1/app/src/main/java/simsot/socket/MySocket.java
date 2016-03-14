@@ -1,6 +1,8 @@
 package simsot.socket;
 
 
+import android.util.Log;
+
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -23,6 +25,26 @@ public final class MySocket {
         public SocketFlags(){
             this.sendingFlag = false;
             this.responseFlag = false;
+        }
+
+        public boolean waitResponse(){
+            for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                try {
+                    Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                } catch (InterruptedException e) {
+                    Log.e("InterruptedException", e.getMessage(), e);
+                }
+                if (isResponseFlag()) {
+                    break;
+                }
+            }
+            if (isResponseFlag()) {
+                setResponseFlag(false);
+                return true;
+            } else {
+                setSendingFlag(false);
+                return false;
+            }
         }
 
         public boolean isSendingFlag() {

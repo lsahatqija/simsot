@@ -462,59 +462,23 @@ public class ConnectionActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            boolean responseReceived;
             switch (socketRequestType) {
                 case CONNECTION_REQUEST:
-                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
-                        try {
-                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
-                        } catch (InterruptedException e) {
-                            Log.e("InterruptedException", e.getMessage(), e);
-                        }
-                        if (mySocket.getConnectionRequestFlags().isResponseFlag()) {
-                            break;
-                        }
-                    }
-                    if (mySocket.getConnectionRequestFlags().isResponseFlag()) {
-                        mySocket.getConnectionRequestFlags().setResponseFlag(false);
-                    } else {
-                        mySocket.getConnectionRequestFlags().setSendingFlag(false);
+                    responseReceived = mySocket.getConnectionRequestFlags().waitResponse();
+                    if(!responseReceived){
                         showToast("No server answer not received");
                     }
                     break;
                 case REGISTER_REQUEST:
-                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
-                        try {
-                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
-                        } catch (InterruptedException e) {
-                            Log.e("InterruptedException", e.getMessage(), e);
-                        }
-                        if (mySocket.getRegisterRequestFlags().isResponseFlag()) {
-                            break;
-                        }
-                    }
-                    if (mySocket.getRegisterRequestFlags().isResponseFlag()) {
-                        mySocket.getRegisterRequestFlags().setResponseFlag(false);
-                    } else {
-                        mySocket.getRegisterRequestFlags().setSendingFlag(false);
+                    responseReceived = mySocket.getRegisterRequestFlags().waitResponse();
+                    if(!responseReceived){
                         showToast("No server answer not received");
                     }
                     break;
                 case CREATE_SOLO_ROOM:
-                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
-                        try {
-                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
-                        } catch (InterruptedException e) {
-                            Log.e("InterruptedException", e.getMessage(), e);
-                        }
-                        if (mySocket.getSoloRoomCreationRequestFlags().isResponseFlag()) {
-                            break;
-                        }
-                    }
-                    if (mySocket.getSoloRoomCreationRequestFlags().isResponseFlag()) {
-                        mySocket.getSoloRoomCreationRequestFlags().setResponseFlag(false);
-                    } else {
-                        mySocket.getSoloRoomCreationRequestFlags().setSendingFlag(false);
+                    responseReceived = mySocket.getSoloRoomCreationRequestFlags().waitResponse();
+                    if(!responseReceived){
                         showToast("No server answer not received");
                     }
                     break;

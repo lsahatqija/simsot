@@ -482,11 +482,11 @@ public class MultiModeActivity extends Activity {
 
         private SocketConstants.SocketRequestType socketRequestType;
 
-        private boolean getListRoomReceived;
+        private boolean responseReceived;;
 
         public ProgressTask(SocketConstants.SocketRequestType socketRequestType) {
             this.socketRequestType = socketRequestType;
-            this.getListRoomReceived = false;
+            this.responseReceived = false;
         }
 
         @Override
@@ -504,57 +504,23 @@ public class MultiModeActivity extends Activity {
 
             switch (socketRequestType) {
                 case GET_LIST_ROOM:
-                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
-                        try {
-                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
-                        } catch (InterruptedException e) {
-                            Log.e("InterruptedException", e.getMessage(), e);
-                        }
-                        if (mySocket.getGetRoomListRequestFlags().isResponseFlag()) {
-                            break;
-                        }
-                    }
-                    if (mySocket.getGetRoomListRequestFlags().isResponseFlag()) {
-                        mySocket.getGetRoomListRequestFlags().setResponseFlag(false);
-                        getListRoomReceived = true;
-                    } else {
-                        mySocket.getGetRoomListRequestFlags().setSendingFlag(false);
+                    responseReceived = mySocket.getGetRoomListRequestFlags().waitResponse();
+                    if(responseReceived) {
+                        responseReceived = true;
+                    } else{
+                        responseReceived = false;
                         showToast("No server answer not received");
                     }
                     break;
                 case NEW_ROOM_REQUEST:
-                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
-                        try {
-                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
-                        } catch (InterruptedException e) {
-                            Log.e("InterruptedException", e.getMessage(), e);
-                        }
-                        if (mySocket.getRoomCreationRequestFlags().isResponseFlag()) {
-                            break;
-                        }
-                    }
-                    if (mySocket.getRoomCreationRequestFlags().isResponseFlag()) {
-                        mySocket.getRoomCreationRequestFlags().setResponseFlag(false);
-                    } else {
-                        mySocket.getRoomCreationRequestFlags().setSendingFlag(false);
+                    responseReceived = mySocket.getRoomCreationRequestFlags().waitResponse();
+                    if(!responseReceived){
                         showToast("No server answer not received");
                     }
                     break;
                 case JOIN_ROOM_REQUEST:
-                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
-                        try {
-                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
-                        } catch (InterruptedException e) {
-                            Log.e("InterruptedException", e.getMessage(), e);
-                        }
-                        if (mySocket.getJoinRoomRequestFlags().isResponseFlag()) {
-                            break;
-                        }
-                    }
-                    if (mySocket.getJoinRoomRequestFlags().isResponseFlag()) {
-                        mySocket.getJoinRoomRequestFlags().setResponseFlag(false);
-                    } else {
-                        mySocket.getJoinRoomRequestFlags().setSendingFlag(false);
+                    responseReceived = mySocket.getJoinRoomRequestFlags().waitResponse();
+                    if(!responseReceived){
                         showToast("No server answer not received");
                     }
                     break;
@@ -571,7 +537,7 @@ public class MultiModeActivity extends Activity {
             progressDialog.hide();
             progressDialog.dismiss();
 
-            if(SocketConstants.SocketRequestType.GET_LIST_ROOM.equals(socketRequestType) && getListRoomReceived) {
+            if(SocketConstants.SocketRequestType.GET_LIST_ROOM.equals(socketRequestType) && responseReceived) {
                 foundRooms.clear();
                 if (jsonArrayReceived != null) {
                     for (int i = 0; i < jsonArrayReceived.length(); i++) {
