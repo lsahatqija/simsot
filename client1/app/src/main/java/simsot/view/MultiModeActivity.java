@@ -1,9 +1,16 @@
 package simsot.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,6 +67,12 @@ public class MultiModeActivity extends Activity {
 
     private List<Room> foundRooms;
 
+    private Location location_GPS;
+    private Criteria criteria;
+    private LocationManager locationManager;
+    private String location_string;
+    private LocationListener locationListener;
+
     private enum MultiModeActivityActualLayout {
         JOINCREATEROOMCHOICE,
         JOINROOM,
@@ -82,6 +95,8 @@ public class MultiModeActivity extends Activity {
         initComponents();
         initComponentsEvents();
         initSocket();
+        initGPSVariables();
+        initGPSLocation();
 
         if (savedInstanceState != null) {
             actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
@@ -293,14 +308,14 @@ public class MultiModeActivity extends Activity {
                 if (mySocket.isGetRoomListRequestSendingFlag()) {
                     mySocket.setGetRoomListRequestSendingFlag(false);
 
-                    if(args[0] instanceof JSONObject){
+                    if (args[0] instanceof JSONObject) {
                         try {
                             jsonArrayReceived = ((JSONObject) args[0]).getJSONArray(SocketConstants.ROOMS);
                         } catch (JSONException e) {
                             Log.e("SocketError", "error getJSONArray(SocketConstants.ROOMS)");
                             jsonArrayReceived = null;
                         }
-                    } else{
+                    } else {
                         Log.e("SocketError", "ListRoomResponse not a JSONObject");
                         jsonArrayReceived = null;
                     }
@@ -563,4 +578,74 @@ public class MultiModeActivity extends Activity {
         }
 
     }
+
+
+    protected void initGPSVariables(){
+        criteria = new Criteria();
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        location_string = locationManager.getBestProvider(criteria, true);
+        location_GPS = locationManager.getLastKnownLocation(location_string);
+        //double latitude = (double) (location_GPS.getLatitude());
+        //double longitude = (double) (location_GPS.getLongitude());
+        //showToast("Last position : " + latitude +" and " + longitude);
+    }
+
+    protected void initGPSLocation() {
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showToast("GPS is disabled!");
+            buildAlertMessageNoGps();
+        }
+        // corriger si GPS pas activé et en cours d'activation
+
+        locationListener = new LocationListener() {
+            Criteria criteria = new Criteria();
+
+            public void onLocationChanged(Location location) {
+                set_location(location);
+                locationManager.removeUpdates(this);
+                showToast("Location detected");
+                double latitude = (double) (location.getLatitude());
+                double longitude = (double) (location.getLongitude());
+                showToast("Last position : " + latitude +" and " + longitude);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+                showToast("Location enabled");
+            }
+
+            public void onProviderDisabled(String provider) {
+                showToast("Location disabled");
+            }
+        };
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 0, locationListener);
+    }
+
+    private void set_location(Location location){
+        location_GPS=location;
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 }
+
+
