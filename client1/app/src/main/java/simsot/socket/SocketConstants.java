@@ -25,7 +25,7 @@ public final class SocketConstants {
     public static final String LIST_ROOM = "list_room";
     public static final String JOIN_RESPONSE = "response_join";
     public static final String CREATE_RESPONSE = "response_create";
-    public static final String CREATE_SOLO_ROOM_RESPONSE = "create_solo_room_request";
+    public static final String CREATE_SOLO_ROOM_RESPONSE = "create_solo_room_response";
     public static final String CHARACTER_CHOICE_RESPONSE = "character_choice_response";
     public static final String CHARACTER_POSITION_RESPONSE = "character_position_response";
     public static final String GAME_START_RESPONSE = "game_start_response";
