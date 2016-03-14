@@ -30,7 +30,6 @@ import simsot.socket.SocketConstants;
 public class ConnectionActivity extends Activity {
 
     private static final String ACTUAL_LAYOUT = "actualLayout";
-    private static final String USER_WAITING_CONFIRMATION = "userWaitingConfirmation";
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 

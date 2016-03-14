@@ -45,7 +45,6 @@ import simsot.socket.SocketConstants;
 public class MultiModeActivity extends Activity {
 
     private static final String ACTUAL_LAYOUT = "actualLayout";
-    private static final String ROOM_WAITING_CONFIRMATION = "roomWaitingConfirmation";
 
     private static final String LOGIN_IN_PREFERENCES = "login";
 
@@ -82,8 +81,6 @@ public class MultiModeActivity extends Activity {
     private MultiModeActivityActualLayout actualLayout;
 
     private JSONArray jsonArrayReceived = null;
-
-    private volatile Room roomWaitingConfirmation;
 
     private Room selectedRoom;
 
@@ -126,23 +123,13 @@ public class MultiModeActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
-
-        if(roomWaitingConfirmation != null){
-            savedInstanceState.putSerializable(ROOM_WAITING_CONFIRMATION, roomWaitingConfirmation);
-        }
-
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
         actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
-
-        if(savedInstanceState.containsKey(ROOM_WAITING_CONFIRMATION)){
-            roomWaitingConfirmation = (Room) savedInstanceState.getSerializable(ROOM_WAITING_CONFIRMATION);
-        }
     }
 
     protected void initComponents() {
@@ -258,16 +245,17 @@ public class MultiModeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
+                    Room room;
                     if (roomPasswordOffRadio.isChecked()) {
-                        roomWaitingConfirmation = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
+                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
                                 null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     } else {
-                        roomWaitingConfirmation = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
+                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
                                 Integer.valueOf(roomNbPlayersCreation.getText().toString()),
                                 null, Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                     }
-                    mySocket.sendNewRoomRequest(roomWaitingConfirmation.ToJSONObject());
+                    mySocket.sendNewRoomRequest(room.ToJSONObject());
 
                     ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.NEW_ROOM_REQUEST);
                     progressTask.execute();
@@ -386,15 +374,16 @@ public class MultiModeActivity extends Activity {
             try {
                 int errorCode = creationResponse.getInt(SocketConstants.ERROR_CODE);
                 if (errorCode == 0) {
+                    String roomName = creationResponse.getString(SocketConstants.ROOM_NAME);
+                    String host = creationResponse.getString(SocketConstants.HOST);
+
                     showToast(getString(R.string.room_created));
 
-                    // TODO to complete
                     Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
                     intent.putExtra(IntentParameters.IS_HOST, IS_HOST);
-                    intent.putExtra(IntentParameters.ROOM_NAME, roomWaitingConfirmation.getRoomName());
-                    intent.putExtra(IntentParameters.HOST, roomWaitingConfirmation.getHost());
+                    intent.putExtra(IntentParameters.ROOM_NAME, roomName);
+                    intent.putExtra(IntentParameters.HOST, host);
 
-                    roomWaitingConfirmation = null;
                     startActivity(intent);
                 } else if (errorCode == 1) {
                     // TODO message a preciser
