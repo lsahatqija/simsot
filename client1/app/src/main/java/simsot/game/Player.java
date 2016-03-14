@@ -29,8 +29,7 @@ public class Player {
     private boolean isMovingHor = false;
     public boolean isColliding = false;
     public boolean touched = false;
-    public Rect rectX = new Rect(0, 0, 0, 0);
-    public Rect rectY = new Rect(0, 0, 0, 0);
+    public Rect rect = new Rect(0, 0, 0, 0);
     public int commandType;
     public boolean alive = true;
     private String mode;
@@ -38,7 +37,6 @@ public class Player {
     public boolean colliding = false;
     public String collisionDirection;
     private double direction;
-    //private Firearm weapon;
 
     // 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
     private int isShooting = 0;
@@ -54,6 +52,7 @@ public class Player {
     private String playerName;
     private String roomName;
     private MySocket mySocket;
+    protected int lives;
 
     public Player(int x, int y, String mode, String playerName, String roomName, MySocket mySocket) {
         this.centerX = x;
@@ -62,6 +61,7 @@ public class Player {
         this.playerName = playerName;
         this.roomName = roomName;
         this.mySocket = mySocket;
+        lives = 1;
         characterLeft1 = Assets.characterLeft1;
         characterLeft2 = Assets.characterLeft2;
         characterRight1 = Assets.characterRight1;
@@ -77,59 +77,6 @@ public class Player {
 
     public void update(List touchEvents, SampleGame game) {
 
-        // Moves Character or Scrolls Background accordingly.
-		/*
-		if (speedY != 0) {
-			centerY += speedY;
-		}
-		*/
-        /*
-        if(rx > 0 && rx < 15){
-            centerX -= rx;
-        } else if (rx >= 15){
-            centerX += rx;
-        }
-        if(ry > 0 && ry < 15){
-            centerY -= ry;
-        } else if (ry >= 15){
-            centerY += ry;
-        }*/
-
-        // Updates X Position
-        //centerX += speedX;
-        //centerY += speedY;
-		
-		/*
-		if (speedY > 0 && centerY > 200) {
-			bg1.setSpeedY(0);
-			bg2.setSpeedY(0);
-		} else if (speedY == 0) {
-			bg1.setSpeedY(0);
-			bg2.setSpeedY(0);
-		} else if (speedY < 0 && centerY < 50) {
-			bg1.setSpeedY(0);
-			bg2.setSpeedY(0);
-			setSpeedY(0);
-			setCenterY(getCenterY() + 2);
-		}*/
-
-        // Prevents going beyond X coordinate of 0 or 800
-/*
-		if (centerX + speedX <= 35) {
-			centerX = 36;
-		} else if (centerX + speedX >= 495) {
-			centerX = 494;
-		}
-
-		// Prevents going beyond Y coordinate of 150 and 330
-		if (centerY + speedY <= 35) {
-			centerY = 36;
-			//scrollingSpeed = 2*speedY;
-		} else if (centerY + speedY >= 735) {
-			centerY = 734;
-			//scrollingSpeed = 2*speedY;
-		}
-*/
         if (centerX > 510) {
             centerX = 0;
         } else if (centerX < 0) {
@@ -137,15 +84,13 @@ public class Player {
         }
 
         // Collision
-        rectX.set(centerX - 15, centerY - 10, centerX + 15, centerY + 10);
-        rectY.set(centerX - 10, centerY - 15, centerX + 10, centerY + 15);
+        rect.set(centerX - 15, centerY - 15, centerX + 15, centerY + 15);
 
         //movement
         if (PacManConstants.LOCAL.equals(mode)) {
             movementControl(touchEvents);
             centerX += speedX;
             centerY += speedY;
-            //System.out.println("sending : {\"player_name\":\""+playerName+"\",\"y\":"+centerY+",\"room_name\":\""+roomName+"\",\"x\":"+centerX+"}");
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         } else if (PacManConstants.REMOTE.equals(mode)) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
