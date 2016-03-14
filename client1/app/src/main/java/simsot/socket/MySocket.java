@@ -1,8 +1,6 @@
 package simsot.socket;
 
 
-import android.util.Log;
-
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -18,29 +16,53 @@ public final class MySocket {
 
     private Socket mSocket;
 
-    private volatile boolean connectionRequestSendingFlag;
-    private volatile boolean registerRequestSendingFlag;
+    public class SocketFlags{
+        private volatile boolean sendingFlag;
+        private volatile boolean responseFlag;
+
+        public SocketFlags(){
+            this.sendingFlag = false;
+            this.responseFlag = false;
+        }
+
+        public boolean isSendingFlag() {
+            return sendingFlag;
+        }
+
+        public void setSendingFlag(boolean sendingFlag) {
+            this.sendingFlag = sendingFlag;
+        }
+
+        public boolean isResponseFlag() {
+            return responseFlag;
+        }
+
+        public void setResponseFlag(boolean responseFlag) {
+            this.responseFlag = responseFlag;
+        }
+    }
+
+    private volatile SocketFlags connectionRequestFlags;
+    private volatile SocketFlags registerRequestFlags;
     private volatile boolean getRoomListRequestSendingFlag;
     private volatile boolean roomCreationRequestSendingFlag;
-    private volatile boolean soloRoomCreationRequestSendingFlag;
+    private volatile SocketFlags soloRoomCreationRequestFlags;
     private volatile boolean joinRoomRequestSendingFlag;
 
-    private volatile boolean connectionRequestResponseFlag;
-    private volatile boolean registerRequestResponseFlag;
     private volatile boolean getRoomListRequestResponseFlag;
     private volatile boolean roomCreationRequestResponseFlag;
-    private volatile boolean soloRoomCreationRequestResponseFlag;
     private volatile boolean joinRoomRequestResponseFlag;
+
 
     private MySocket(String urlServer) {
         try {
             this.mSocket = IO.socket(urlServer);
 
-            this.connectionRequestSendingFlag = false;
-            this.connectionRequestResponseFlag = false;
+            this.connectionRequestFlags = new SocketFlags();
+            this.registerRequestFlags = new SocketFlags();
 
-            this.registerRequestSendingFlag = false;
-            this.registerRequestResponseFlag = false;
+            this.soloRoomCreationRequestFlags = new SocketFlags();
+
 
             connect();
         } catch (URISyntaxException e) {
@@ -65,12 +87,12 @@ public final class MySocket {
 
     public void sendConnectionRequest(JSONObject data) {
         mSocket.emit(SocketConstants.CONNECTION_REQUEST, data);
-        setConnectionRequestSendingFlag(true);
+        getConnectionRequestFlags().setSendingFlag(true);
     }
 
     public void sendRegistrationRequest(JSONObject data) {
         mSocket.emit(SocketConstants.REGISTER_REQUEST, data);
-        setRegisterRequestSendingFlag(true);
+        getRegisterRequestFlags().setSendingFlag(true);
     }
 
     public void sendNewRoomRequest(JSONObject data) {
@@ -80,8 +102,7 @@ public final class MySocket {
 
     public void sendSoloRoomCreation(JSONObject data){
         mSocket.emit(SocketConstants.CREATE_SOLO_ROOM_REQUEST, data);
-        setSoloRoomCreationRequestSendingFlag(true);
-
+        getSoloRoomCreationRequestFlags().setSendingFlag(true);
     }
 
     public void sendPositionUpdate(String playerName, String roomName, int x, int y) {
@@ -154,36 +175,13 @@ public final class MySocket {
     /***
      * FLAGS
      ***/
-    public boolean isConnectionRequestSendingFlag() {
-        return connectionRequestSendingFlag;
+
+    public SocketFlags getConnectionRequestFlags() {
+        return connectionRequestFlags;
     }
 
-    public void setConnectionRequestSendingFlag(boolean connectionRequestSendingFlag) {
-        this.connectionRequestSendingFlag = connectionRequestSendingFlag;
-    }
-
-    public boolean isRegisterRequestSendingFlag() {
-        return registerRequestSendingFlag;
-    }
-
-    public void setRegisterRequestSendingFlag(boolean registerRequestSendingFlag) {
-        this.registerRequestSendingFlag = registerRequestSendingFlag;
-    }
-
-    public boolean isConnectionRequestResponseFlag() {
-        return connectionRequestResponseFlag;
-    }
-
-    public void setConnectionRequestResponseFlag(boolean connectionRequestResponseFlag) {
-        this.connectionRequestResponseFlag = connectionRequestResponseFlag;
-    }
-
-    public boolean isRegisterRequestResponseFlag() {
-        return registerRequestResponseFlag;
-    }
-
-    public void setRegisterRequestResponseFlag(boolean registerRequestResponseFlag) {
-        this.registerRequestResponseFlag = registerRequestResponseFlag;
+    public SocketFlags getRegisterRequestFlags() {
+        return registerRequestFlags;
     }
 
     public boolean isGetRoomListRequestSendingFlag() {
@@ -218,20 +216,8 @@ public final class MySocket {
         this.roomCreationRequestResponseFlag = roomCreationRequestResponseFlag;
     }
 
-    public boolean isSoloRoomCreationRequestSendingFlag() {
-        return soloRoomCreationRequestSendingFlag;
-    }
-
-    public void setSoloRoomCreationRequestSendingFlag(boolean soloRoomCreationRequestSendingFlag) {
-        this.soloRoomCreationRequestSendingFlag = soloRoomCreationRequestSendingFlag;
-    }
-
-    public boolean isSoloRoomCreationRequestResponseFlag() {
-        return soloRoomCreationRequestResponseFlag;
-    }
-
-    public void setSoloRoomCreationRequestResponseFlag(boolean soloRoomCreationRequestResponseFlag) {
-        this.soloRoomCreationRequestResponseFlag = soloRoomCreationRequestResponseFlag;
+    public SocketFlags getSoloRoomCreationRequestFlags() {
+        return soloRoomCreationRequestFlags;
     }
 
     public boolean isJoinRoomRequestSendingFlag() {
@@ -249,4 +235,5 @@ public final class MySocket {
     public void setJoinRoomRequestResponseFlag(boolean joinRoomRequestResponseFlag) {
         this.joinRoomRequestResponseFlag = joinRoomRequestResponseFlag;
     }
+
 }

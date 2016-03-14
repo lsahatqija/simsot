@@ -5,6 +5,9 @@ public final class SocketConstants {
 
     public static final String SERVER_URL = "https://simsot-server.herokuapp.com";
 
+    public static final long REQUEST_TIMEOUT = 10*1000;
+    public static final long RESPONSE_CHECK_TIME = 100;
+
     public static final String LIST_PLAYER = "list_player";
 
     public static final String CONNECTION_REQUEST = "connect_user";

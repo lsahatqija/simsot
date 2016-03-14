@@ -280,9 +280,9 @@ public class ConnectionActivity extends Activity {
         mySocket.on(SocketConstants.CONNECTION_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
-                if (mySocket.isConnectionRequestSendingFlag()) {
-                    mySocket.setConnectionRequestSendingFlag(false);
-                    mySocket.setConnectionRequestResponseFlag(true);
+                if (mySocket.getConnectionRequestFlags().isSendingFlag()) {
+                    mySocket.getConnectionRequestFlags().setSendingFlag(false);
+                    mySocket.getConnectionRequestFlags().setResponseFlag(true);
 
                     onConnectionRequestResponse(args[0]);
                 } else {
@@ -294,9 +294,9 @@ public class ConnectionActivity extends Activity {
         mySocket.on(SocketConstants.REGISTRATION_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
-                if (mySocket.isRegisterRequestSendingFlag()) {
-                    mySocket.setRegisterRequestSendingFlag(false);
-                    mySocket.setRegisterRequestResponseFlag(true);
+                if (mySocket.getRegisterRequestFlags().isSendingFlag()) {
+                    mySocket.getRegisterRequestFlags().setSendingFlag(false);
+                    mySocket.getRegisterRequestFlags().setResponseFlag(true);
 
                     onRegistrationRequestResponse(args[0]);
                 } else {
@@ -308,11 +308,11 @@ public class ConnectionActivity extends Activity {
         mySocket.on(SocketConstants.CREATE_SOLO_ROOM_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                if(mySocket.isSoloRoomCreationRequestSendingFlag()){
-                    mySocket.setSoloRoomCreationRequestSendingFlag(false);
-                    mySocket.setSoloRoomCreationRequestResponseFlag(true);
+                if (mySocket.getSoloRoomCreationRequestFlags().isSendingFlag()) {
+                    mySocket.getSoloRoomCreationRequestFlags().setSendingFlag(false);
+                    mySocket.getSoloRoomCreationRequestFlags().setResponseFlag(true);
 
-                    if(args[0] instanceof JSONObject){
+                    if (args[0] instanceof JSONObject) {
                         JSONObject soloRoomCreationResponse = (JSONObject) args[0];
                         try {
                             int errorCode = soloRoomCreationResponse.getInt(SocketConstants.ERROR_CODE);
@@ -465,19 +465,59 @@ public class ConnectionActivity extends Activity {
 
             switch (socketRequestType) {
                 case CONNECTION_REQUEST:
-                    while (!mySocket.isConnectionRequestResponseFlag()) {
-                        // TODO add timeout counter
+                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                        try {
+                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                        } catch (InterruptedException e) {
+                            Log.e("InterruptedException", e.getMessage(), e);
+                        }
+                        if (mySocket.getConnectionRequestFlags().isResponseFlag()) {
+                            break;
+                        }
+                    }
+                    if (mySocket.getConnectionRequestFlags().isResponseFlag()) {
+                        mySocket.getConnectionRequestFlags().setResponseFlag(false);
+                    } else {
+                        mySocket.getConnectionRequestFlags().setSendingFlag(false);
+                        showToast("No server answer not received");
                     }
                     break;
                 case REGISTER_REQUEST:
-                    while (!mySocket.isRegisterRequestResponseFlag()) {
-                        // TODO add timeout counter
+                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                        try {
+                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                        } catch (InterruptedException e) {
+                            Log.e("InterruptedException", e.getMessage(), e);
+                        }
+                        if (mySocket.getRegisterRequestFlags().isResponseFlag()) {
+                            break;
+                        }
+                    }
+                    if (mySocket.getRegisterRequestFlags().isResponseFlag()) {
+                        mySocket.getRegisterRequestFlags().setResponseFlag(false);
+                    } else {
+                        mySocket.getRegisterRequestFlags().setSendingFlag(false);
+                        showToast("No server answer not received");
                     }
                     break;
                 case CREATE_SOLO_ROOM:
-                    while(!mySocket.isSoloRoomCreationRequestResponseFlag()){
-                        // TODO add timeout counter
+                    for (long i = 0; i < SocketConstants.REQUEST_TIMEOUT; i += SocketConstants.RESPONSE_CHECK_TIME) {
+                        try {
+                            Thread.sleep(SocketConstants.RESPONSE_CHECK_TIME);
+                        } catch (InterruptedException e) {
+                            Log.e("InterruptedException", e.getMessage(), e);
+                        }
+                        if (mySocket.getSoloRoomCreationRequestFlags().isResponseFlag()) {
+                            break;
+                        }
                     }
+                    if (mySocket.getSoloRoomCreationRequestFlags().isResponseFlag()) {
+                        mySocket.getSoloRoomCreationRequestFlags().setResponseFlag(false);
+                    } else {
+                        mySocket.getSoloRoomCreationRequestFlags().setSendingFlag(false);
+                        showToast("No server answer not received");
+                    }
+                    break;
                 default:
                     break;
             }
@@ -490,19 +530,6 @@ public class ConnectionActivity extends Activity {
             super.onPostExecute(result);
             progressDialog.hide();
             progressDialog.dismiss();
-
-            switch (socketRequestType) {
-                case CONNECTION_REQUEST:
-                    mySocket.setConnectionRequestResponseFlag(false);
-                    break;
-                case REGISTER_REQUEST:
-                    mySocket.setRegisterRequestResponseFlag(false);
-                    break;
-                case CREATE_SOLO_ROOM:
-                    mySocket.setSoloRoomCreationRequestResponseFlag(false);
-                default:
-                    break;
-            }
         }
 
     }
