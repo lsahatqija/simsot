@@ -29,7 +29,7 @@ public class Item {
     }
 
     public void checkCollision(Player pacman){
-        if (Rect.intersects(pacman.rectX, r)) {
+        if (Rect.intersects(pacman.rect, r)) {
             touched = true;
         }
     }

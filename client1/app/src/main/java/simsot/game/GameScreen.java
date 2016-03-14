@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import simsot.framework.Game;
 import simsot.framework.Graphics;
@@ -213,41 +214,6 @@ public class GameScreen extends Screen {
 
 		// 1. All touch input is handled here:
 		int len = touchEvents.size();
-        /*
-		for (int i = 0; i < len; i++) {
-			TouchEvent event = (TouchEvent) touchEvents.get(i);
-			if (event.type == TouchEvent.TOUCH_DOWN) {
-				if (inBounds(event, 215, 645, 50, 50)) {
-					player.moveUp();
-				}
-				else if (inBounds(event, 215, 715, 50, 50)) {
-					player.moveDown();
-				}
-				if (inBounds(event, 165, 675, 50, 50)) {
-					player.moveLeft();
-				}
-				else if (inBounds(event, 265, 675, 50, 50)) {
-					player.moveRight();
-				}
-			}
-
-			if (event.type == TouchEvent.TOUCH_UP) {
-				if (inBounds(event, 215, 645, 50, 50)) {
-					player.stopVer();
-				} else if (inBounds(event, 215, 715, 50, 50)){
-					player.stopVer();
-				}			
-				if (inBounds(event, 165, 675, 50, 50)) {
-					player.stopHor();
-				}			
-				else if (inBounds(event, 265, 675, 50, 50)) {
-					player.stopHor();
-				}
-				if (inBounds(event, 0, 0, 35, 35)) {
-					pause();
-				}
-			}
-		}*/
         for (int i = 0; i < len; i++) {
             TouchEvent event = (TouchEvent) touchEvents.get(i);
             if (inBounds(event, 0, 0, 35, 35)) {
@@ -256,55 +222,8 @@ public class GameScreen extends Screen {
             }
         }
 
-
-		// Animation
-
         for(int i = 0; i < playerarray.size(); i++){
             Player play = playerarray.get(i);
-            //play.currentSprite = play.characterLeft1;
-            /*
-            if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() < 0 && player.getSpeedY() == 0){
-                if (walkCounter % 16 == 0) {
-                    player.currentSprite = player.characterLeft2;
-                } else if (walkCounter % 16 == 4) {
-                    player.currentSprite = player.characterLeft1;
-                } else if (walkCounter % 16 == 8) {
-                    player.currentSprite = player.characterLeft2;
-                } else if (walkCounter % 16 == 12) {
-                    player.currentSprite = player.characterClosed;
-                }
-            } else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedX() > 0  && player.getSpeedY() == 0){
-                if (walkCounter % 16 == 0) {
-                    player.currentSprite = player.characterRight2;
-                } else if (walkCounter % 16 == 4) {
-                    player.currentSprite = player.characterRight1;
-                } else if (walkCounter % 16 == 8) {
-                    player.currentSprite = player.characterRight2;
-                } else if (walkCounter % 16 == 12) {
-                    player.currentSprite = player.characterClosed;
-                }
-            } else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedY() > 0  && player.getSpeedX() == 0){
-                if (walkCounter % 16 == 0) {
-                    player.currentSprite = player.characterDown2;
-                } else if (walkCounter % 16 == 4) {
-                    player.currentSprite = player.characterDown1;
-                } else if (walkCounter % 16 == 8) {
-                    player.currentSprite = player.characterDown2;
-                } else if (walkCounter % 16 == 12) {
-                    player.currentSprite = player.characterClosed;
-                }
-            } else if ((player.isMovingHor() == true || player.isMovingVer() == true) && player.getSpeedY() < 0  && player.getSpeedX() == 0){
-                if (walkCounter % 16 == 0) {
-                    player.currentSprite = player.characterUp2;
-                } else if (walkCounter % 16 == 4) {
-                    player.currentSprite = player.characterUp1;
-                } else if (walkCounter % 16 == 8) {
-                    player.currentSprite = player.characterUp2;
-                } else if (walkCounter % 16 == 12) {
-                    player.currentSprite = player.characterClosed;
-                }
-            }*/
-
             play.update(touchEvents, (SampleGame) game);
         }
 
@@ -324,52 +243,18 @@ public class GameScreen extends Screen {
 					} else if (walkCounter % 16 == 8) {
 						e.currentSprite = e.characterRight2;
 					}
-				} /*else if (!e.isMovingVer() || !e.isMovingHor()) {
-					e.currentSprite = e.characterLeft1;
-				}*/
+				}
 			}
 		}
-
-
-
-
-        //blinky.update();
-        //blinky.movementControl(touchEvents);
-
-
-		callEnemiesAIs();
 		checkTileCollisions();
-		checkEnemiesCollision();
-		updateEnemies();
-
+        checkPlayerCollision();
 		bg1.update();
-		//animate();
 		updateTiles();
         updateItems();
-		// repaint(); // this calls paint
 		if (walkCounter > 1000) {
 			walkCounter = 0;
 		}
 		walkCounter++;
-	}
-
-	private void updateEnemies() {
-		for (int j = 0; j < getEnemyarray().size(); j++) {
-			Enemy e = getEnemyarray().get(j);
-			e.update();
-		}
-	}
-
-	private void callEnemiesAIs() {
-		for (Enemy e : getEnemyarray()) {
-			e.callAI();
-		}
-	}
-
-	private void checkEnemiesCollision() {
-		for (Enemy e : getEnemyarray()) {
-			e.checkEnemyCollisions();
-		}
 	}
 
 	private void checkTileCollisions() {
@@ -380,6 +265,17 @@ public class GameScreen extends Screen {
 			}
 		}
 	}
+
+    private void checkPlayerCollision(){
+        for (int i = 0; i < playerarray.size(); i++){
+            Player p = playerarray.get(i);
+            if(!Pacman.class.isInstance(p))
+                if(Rect.intersects(p.rect, pacman.rect)){
+                    pacmanDeath();
+                }
+        }
+
+    }
 
 	private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {
 		if (event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1)
@@ -535,7 +431,7 @@ public class GameScreen extends Screen {
 
 		g.drawARGB(155, 0, 0, 0);
         g.drawString("Start in...", 240, 400, paint);
-		g.drawString(""+(countDown/60 + 1), 240, 550, paint);
+		g.drawString("" + (countDown / 60 + 1), 240, 550, paint);
 
 	}
 
@@ -547,7 +443,14 @@ public class GameScreen extends Screen {
 		g.drawImage(Assets.buttonRight, 265, 675);	//right
 		g.drawImage(Assets.buttonPause, 0, 0);	//pause
 
-        g.drawString(""+score, 50, 700, paint);
+        g.drawString("" + score, 50, 700, paint);
+        //g.drawString("Pacman lives:" + pacman.lives, 50, 750, paint);
+        if(pacman.lives > 0)
+            g.drawImage(Assets.characterRight1, 50, 750);
+        if(pacman.lives > 1)
+            g.drawImage(Assets.characterRight1, 85, 750);
+        if(pacman.lives > 2)
+            g.drawImage(Assets.characterRight1, 120, 750);
 	}
 
 	private void drawPausedUI() {
@@ -555,7 +458,7 @@ public class GameScreen extends Screen {
 		// Darken the entire screen so you can display the Paused screen.
 		g.drawARGB(155, 0, 0, 0);
 		g.drawString("Resume", 240, 365, paint2);
-		g.drawString("Menu", 240, 560, paint2);
+        g.drawString("Menu", 240, 560, paint2);
 
 	}
 
@@ -564,8 +467,45 @@ public class GameScreen extends Screen {
 		g.drawRect(0, 0, 1281, 801, Color.BLACK);
 		g.drawString("GAME OVER.", 240, 400, paint2);
 		g.drawString("Tap to return.", 240, 450, paint);
-
 	}
+
+    public void pacmanDeath(){
+        pacman.lives--;
+        if(pacman.lives == 0){
+            state = GameState.GameOver;
+        } else{
+            state = GameState.Paused;
+
+            //Pacman reset
+            pacman.setCenterX(100);
+            pacman.setCenterY(200);
+
+            //Inky reset
+            inky.setCenterX(100);
+            inky.setCenterY(500);
+
+            //Pinky reset
+            pinky.setCenterX(300);
+            pinky.setCenterY(100);
+
+            //Blinky reset
+            blinky.setCenterX(300);
+            blinky.setCenterY(500);
+
+            //Clyde reset
+            clyde.setCenterX(100);
+            clyde.setCenterY(100);
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            state = GameState.Running;
+
+        }
+    }
 
 	@Override
 	public void pause() {
@@ -575,7 +515,7 @@ public class GameScreen extends Screen {
 	}
 
 	@Override
-	public void resume() {
+    public void resume() {
 		if (state == GameState.Paused)
 			state = GameState.Running;
 	}

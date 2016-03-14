@@ -54,14 +54,6 @@ public abstract class Projectile {
 		}
 		return false;
 	}
-	
-	boolean checkCollision(Player p) {
-		if(Rect.intersects(rectP, p.rectX) || Rect.intersects(rectP, p.rectY)){
-			visible = false;
-			return true;
-		}
-		return false;
-	}
 
 	public int getSpeedX() {
 		return speedX;
