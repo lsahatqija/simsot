@@ -36,8 +36,6 @@ public class ConnectionActivity extends Activity {
 
     private MySocket mySocket;
 
-    private volatile User userWaitingConfirmation;
-
     private int logoCounter = 0;
 
     private Button registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
@@ -100,10 +98,6 @@ public class ConnectionActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
-
-        if(userWaitingConfirmation != null) {
-            savedInstanceState.putSerializable(USER_WAITING_CONFIRMATION, userWaitingConfirmation);
-        }
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -111,10 +105,6 @@ public class ConnectionActivity extends Activity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         actualLayout = (ConnectionActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
-
-        if(savedInstanceState.containsKey(USER_WAITING_CONFIRMATION)){
-            userWaitingConfirmation = (User) savedInstanceState.getSerializable(USER_WAITING_CONFIRMATION);
-        }
     }
 
     protected void initComponents() {
@@ -172,10 +162,10 @@ public class ConnectionActivity extends Activity {
                 String userPseudo = userPseudoConnection.getText().toString();
                 String userPassword = userPasswordConnection.getText().toString();
 
-                userWaitingConfirmation = new User(userPseudo, userPassword);
+                User newUser = new User(userPseudo, userPassword);
 
                 try {
-                    mySocket.sendConnectionRequest(userWaitingConfirmation.ToJSONObject());
+                    mySocket.sendConnectionRequest(newUser.ToJSONObject());
 
                     ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CONNECTION_REQUEST);
                     progressTask.execute();
@@ -355,9 +345,10 @@ public class ConnectionActivity extends Activity {
                 int errorCode = connectionResponse.getInt(SocketConstants.ERROR_CODE);
 
                 if (errorCode == 0) {
+                    String newUserName = connectionResponse.getString(SocketConstants.PLAYER_NAME);
                     SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(LOGIN_IN_PREFERENCES, userWaitingConfirmation.getUserLogin());
+                    editor.putString(LOGIN_IN_PREFERENCES, newUserName);
                     editor.commit();
 
                     showToast(getString(R.string.connection_succeeded));
