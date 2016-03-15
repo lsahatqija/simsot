@@ -119,11 +119,10 @@
                 android:text="50"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <EditText
+            <TextView
                 android:id="@+id/distanceUnit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="unit"
                 android:text="m"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
