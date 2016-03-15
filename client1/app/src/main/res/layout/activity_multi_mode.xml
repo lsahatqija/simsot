@@ -165,10 +165,10 @@
             android:text="@string/back_button" />
 
         <TextView
-            android:id="@+id/notRoomFoundText"
+            android:id="@+id/noRoomFoundText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/not_room_found"
+            android:text="@string/no_room_found"
             android:visibility="invisible"/>
 
         <ListView

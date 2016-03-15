@@ -62,7 +62,7 @@ public class MultiModeActivity extends Activity {
     private MySocket mySocket;
 
     private ListView roomList;
-    private TextView notRoomFoundText;
+    private TextView noRoomFoundText;
 
     private List<Room> foundRooms;
 
@@ -154,7 +154,7 @@ public class MultiModeActivity extends Activity {
         refreshRoomsButton = (Button) findViewById(R.id.refreshRoomsButton);
         joinRoomBackButton = (Button) findViewById(R.id.joinRoomBackButton);
 
-        notRoomFoundText = (TextView) findViewById(R.id.notRoomFoundText);
+        noRoomFoundText = (TextView) findViewById(R.id.noRoomFoundText);
 
         foundRooms = new ArrayList<Room>();
     }
@@ -406,7 +406,7 @@ public class MultiModeActivity extends Activity {
 
     protected void updateRoomsList() {
         if(foundRooms.isEmpty()){
-            notRoomFoundText.setVisibility(View.VISIBLE);
+            noRoomFoundText.setVisibility(View.VISIBLE);
             roomList.setVisibility(View.INVISIBLE);
         } else {
             List<HashMap<String, String>> liste = new ArrayList<HashMap<String, String>>();
@@ -425,7 +425,7 @@ public class MultiModeActivity extends Activity {
                     new String[]{"title", "subtitle"},
                     new int[]{android.R.id.text1, android.R.id.text2});
             roomList.setAdapter(adapter);
-            notRoomFoundText.setVisibility(View.INVISIBLE);
+            noRoomFoundText.setVisibility(View.INVISIBLE);
             roomList.setVisibility(View.VISIBLE);
         }
     }
@@ -482,7 +482,7 @@ public class MultiModeActivity extends Activity {
 
         private SocketConstants.SocketRequestType socketRequestType;
 
-        private boolean responseReceived;;
+        private boolean responseReceived;
 
         public ProgressTask(SocketConstants.SocketRequestType socketRequestType) {
             this.socketRequestType = socketRequestType;
@@ -583,14 +583,13 @@ public class MultiModeActivity extends Activity {
 
         showToast("Getting location");
         locationListener = new LocationListener() {
-            Criteria criteria = new Criteria();
 
             public void onLocationChanged(Location location) {
                 set_location(location);
                 locationManager.removeUpdates(this);
                 showToast("Location detected");
-                double latitude = (double) (location.getLatitude());
-                double longitude = (double) (location.getLongitude());
+                double latitude = (location.getLatitude());
+                double longitude = (location.getLongitude());
                 showToast("Position : " + latitude +" and " + longitude);
             }
 
