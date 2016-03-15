@@ -44,6 +44,8 @@ public final class SocketConstants {
     public static final String HOST = "host";
     public static final String SLOT_EMPTY = "slot_empty";
     public static final String ROOMS = "rooms";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
 
     public enum SocketRequestType {
         CONNECTION_REQUEST,

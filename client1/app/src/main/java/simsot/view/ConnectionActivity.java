@@ -1,9 +1,15 @@
 package simsot.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +57,8 @@ public class ConnectionActivity extends Activity {
     }
 
     private ConnectionActivityActualLayout actualLayout;
+
+    private Location locationGPS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,18 +211,32 @@ public class ConnectionActivity extends Activity {
         buttonSolo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    JSONObject json = new JSONObject();
-                    json.put(SocketConstants.ERROR_CODE, 0);
-                    json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
+                AlertDialog.Builder builder = new AlertDialog.Builder(ConnectionActivity.this);
+                builder.setTitle("Custom Map");
+                builder.setMessage("Want a custom map ?");
+                builder.setPositiveButton(R.string.yes_response, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getCustomMapForSoloMode();
+                    }
+                });
+                builder.setNegativeButton(R.string.no_response, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            JSONObject json = new JSONObject();
+                            json.put(SocketConstants.ERROR_CODE, 0);
+                            json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
+                            sendSoloRoomCreation(json);
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.getMessage(), e);
+                        }
 
-                    mySocket.sendSoloRoomCreation(json);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
 
-                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CREATE_SOLO_ROOM);
-                    progressTask.execute();
-                } catch (JSONException e) {
-                    Log.e("JSONException", e.getMessage(), e);
-                }
             }
         });
 
@@ -327,6 +349,13 @@ public class ConnectionActivity extends Activity {
         });
     }
 
+    protected void sendSoloRoomCreation(JSONObject json) {
+        mySocket.sendSoloRoomCreation(json);
+
+        ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.CREATE_SOLO_ROOM);
+        progressTask.execute();
+    }
+
     protected void onConnectionRequestResponse(Object response) {
         if (response instanceof JSONObject) {
             JSONObject connectionResponse = (JSONObject) response;
@@ -383,7 +412,7 @@ public class ConnectionActivity extends Activity {
         }
     }
 
-    protected void displayMenuLayoutIfItIsPossible(){
+    protected void displayMenuLayoutIfItIsPossible() {
         if (getSharedPreferencesUserLogin() == null) {
             displayConnectionLayout();
         } else {
@@ -464,19 +493,19 @@ public class ConnectionActivity extends Activity {
             switch (socketRequestType) {
                 case CONNECTION_REQUEST:
                     responseReceived = mySocket.getConnectionRequestFlags().waitResponse();
-                    if(!responseReceived){
+                    if (!responseReceived) {
                         showToast("No server answer not received");
                     }
                     break;
                 case REGISTER_REQUEST:
                     responseReceived = mySocket.getRegisterRequestFlags().waitResponse();
-                    if(!responseReceived){
+                    if (!responseReceived) {
                         showToast("No server answer not received");
                     }
                     break;
                 case CREATE_SOLO_ROOM:
                     responseReceived = mySocket.getSoloRoomCreationRequestFlags().waitResponse();
-                    if(!responseReceived){
+                    if (!responseReceived) {
                         showToast("No server answer not received");
                     }
                     break;
@@ -494,6 +523,58 @@ public class ConnectionActivity extends Activity {
             progressDialog.dismiss();
         }
 
+    }
+
+    protected void getCustomMapForSoloMode() {
+        final LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    sendGetMapSoloMode(location);
+                    locationManager.removeUpdates(this);
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                }
+
+                public void onProviderEnabled(String provider) {
+                }
+
+                public void onProviderDisabled(String provider) {
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.F, locationListener);
+        } else {
+            buildAlertMessageNoGps();
+        }
+    }
+
+    private void sendGetMapSoloMode(Location location) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(SocketConstants.ERROR_CODE, 0);
+            json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
+            json.put(SocketConstants.LATITUDE, location.getLatitude());
+            json.put(SocketConstants.LONGITUDE, location.getLongitude());
+            sendSoloRoomCreation(json);
+        } catch (JSONException e) {
+            Log.e("JSONException", e.getMessage(), e);
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS is disabled, you must enable it")
+                .setCancelable(false)
+                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }

@@ -23,6 +23,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,7 @@ public class MultiModeActivity extends Activity {
 
     private RadioButton roomPasswordOffRadio, roomPasswordOnRadio;
     private EditText roomNameCreation, roomPasswordCreation, roomDistanceMaxCreation;
+    private Switch roomCustomMapSwitch;
 
     private MySocket mySocket;
 
@@ -66,11 +68,7 @@ public class MultiModeActivity extends Activity {
 
     private List<Room> foundRooms;
 
-    private Location location_GPS;
-    private Criteria criteria;
-    private LocationManager locationManager;
-    private String location_string;
-    private LocationListener locationListener;
+    private Location locationGPS;
 
     private enum MultiModeActivityActualLayout {
         JOINCREATEROOMCHOICE,
@@ -92,7 +90,6 @@ public class MultiModeActivity extends Activity {
         initComponents();
         initComponentsEvents();
         initSocket();
-        initGPSVariables();
         initGPSLocation();
 
         if (savedInstanceState != null) {
@@ -165,6 +162,7 @@ public class MultiModeActivity extends Activity {
         roomNameCreation = (EditText) findViewById(R.id.roomNameCreation);
         roomPasswordCreation = (EditText) findViewById(R.id.roomPasswordCreation);
         roomDistanceMaxCreation = (EditText) findViewById(R.id.roomDistanceMaxCreation);
+        roomCustomMapSwitch = (Switch) findViewById(R.id.roomCustomMapSwitch);
         createRoomButton = (Button) findViewById(R.id.createRoomButton);
         createRoomBackButton = (Button) findViewById(R.id.createRoomBackButton);
     }
@@ -562,29 +560,18 @@ public class MultiModeActivity extends Activity {
 
     }
 
-
-    protected void initGPSVariables(){
-        criteria = new Criteria();
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        location_string = locationManager.getBestProvider(criteria, true);
-        location_GPS = locationManager.getLastKnownLocation(location_string);
-        //double latitude = (double) (location_GPS.getLatitude());
-        //double longitude = (double) (location_GPS.getLongitude());
-        //showToast("Last position : " + latitude +" and " + longitude);
-    }
-
     protected void initGPSLocation() {
+        final LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
         }
-        // corriger si GPS pas activé et en cours d'activation
 
         showToast("Getting location");
-        locationListener = new LocationListener() {
-
+        LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                set_location(location);
+                setLocation(location);
                 locationManager.removeUpdates(this);
                 showToast("Location detected");
                 double latitude = (location.getLatitude());
@@ -596,18 +583,16 @@ public class MultiModeActivity extends Activity {
             }
 
             public void onProviderEnabled(String provider) {
-                showToast("Location enabled");
             }
 
             public void onProviderDisabled(String provider) {
-                showToast("Location disabled");
             }
         };
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) 1000, (float) 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.F, locationListener);
     }
 
-    private void set_location(Location location){
-        location_GPS=location;
+    private void setLocation(Location location){
+        locationGPS=location;
     }
 
     private void buildAlertMessageNoGps() {
