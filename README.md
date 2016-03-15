@@ -1,9 +1,11 @@
 # OT SIMS : Pac-Man sur Open Street Map
 5IF Option Transversale Socio-Interactive MobileS
 
-Ceci est une application Android où l'on pourra jouer à Pac-Man sur notre emplacement sur une carte.
+Ce projet est une application Android grâce à laquelle il est possible de jouer à Pac-Man en multijoueurs sur la carte GPS centrée sur notre position.
 
-Le but est de pouvoir y jouer soit seul avec les IA fantômes, soit en multijoueurs avec des joueurs faisant les fantômes.
+On peut y jouer soit un niveau normal soit sur une carte GPS, on peut choisir PacMan ou un fantôme, on peut y jouer avec d'autres joueurs et/ou avec des IA.
+
+Le serveur associé à cette application Android se trouve à ce lien : https://github.com/remyrd/simsot-server
 
 ## Architecture
 Client : Android Java
