@@ -264,22 +264,26 @@ public class MultiModeActivity extends Activity {
         createRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Room room;
-                if (roomPasswordOffRadio.isChecked()) {
-                    room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                if ((roomNameCreation.getText().toString()).isEmpty()) {
+                    showToast("Error: room name is empty.");
                 } else {
-                    room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()), true);
-                }
+                    Room room;
+                    if (roomPasswordOffRadio.isChecked()) {
+                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                    } else {
+                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()), true);
+                    }
 
-                if (roomCustomMapYes.isChecked()) {
-                    getCustomMapForMultiMode(room);
-                } else {
-                    try {
-                        sendMultiModeRoomCreation(room.ToJSONObject());
-                    } catch (JSONException e) {
-                        Log.e("JSONException", e.getMessage(), e);
+                    if (roomCustomMapYes.isChecked()) {
+                        getCustomMapForMultiMode(room);
+                    } else {
+                        try {
+                            sendMultiModeRoomCreation(room.ToJSONObject());
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.getMessage(), e);
+                        }
                     }
                 }
             }
