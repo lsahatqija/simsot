@@ -22,14 +22,14 @@ public class Room implements Serializable {
     String map;
 
     public Room(String roomName, String host, int empty_slot, boolean isPassword, String map) {
-        this(roomName, null, host, null, null, 100, isPassword);
+        this(roomName, "", host, null, null, 100, isPassword);
         this.empty_slot = empty_slot;
         this.isPassword = isPassword;
         this.map = map;
     }
 
     public Room(String roomName, String host, Double latitude, Double longitude, int distanceMin) {
-        this(roomName, null, host, latitude, longitude, distanceMin, false);
+        this(roomName, "", host, latitude, longitude, distanceMin, false);
     }
 
     public Room(String roomName, String roomPassword, String host, Double latitude, Double longitude, int distanceMin, boolean isPassword) {
