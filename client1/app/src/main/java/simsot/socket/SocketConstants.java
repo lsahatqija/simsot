@@ -33,6 +33,7 @@ public final class SocketConstants {
     public static final String CHARACTER_POSITION_RESPONSE = "character_position_response";
     public static final String GAME_START_RESPONSE = "game_start_response";
     public static final String CHARACTER_TIMEOUT_ENDED_RESPONSE = "character_timeout_ended_response";
+    public static final String IS_PASSWORD = "is_password";
 
 
     public static final String ERROR_CODE = "error_code";
