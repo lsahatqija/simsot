@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -212,19 +213,12 @@ public class MultiModeActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedRoom = foundRooms.get(position);
-                String roomName = selectedRoom.getRoomName();
 
-                JSONObject json = new JSONObject();
-                try {
-                    json.put(SocketConstants.ROOM_NAME, roomName);
-                    json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (selectedRoom.isPassword()) {
+                    buildPasswordRequest(selectedRoom);
+                } else {
+                    connectToRoom(selectedRoom);
                 }
-                mySocket.sendJoinRoomRequest(json);
-
-                ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.JOIN_ROOM_REQUEST);
-                progressTask.execute();
             }
         });
 
@@ -235,6 +229,36 @@ public class MultiModeActivity extends Activity {
             }
         });
 
+    }
+
+    protected void connectToRoom(Room selectedRoom){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(SocketConstants.ROOM_NAME, selectedRoom.getRoomName());
+            json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
+            json.put(SocketConstants.ROOM_PASSWORD, "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mySocket.sendJoinRoomRequest(json);
+
+        ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.JOIN_ROOM_REQUEST);
+        progressTask.execute();
+    }
+
+    protected void connectToRoom(Room selectedRoom, String passwordInput){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(SocketConstants.ROOM_NAME, selectedRoom.getRoomName());
+            json.put(SocketConstants.PLAYER_NAME, getSharedPreferencesUserLogin());
+            json.put(SocketConstants.ROOM_PASSWORD, passwordInput);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mySocket.sendJoinRoomRequest(json);
+
+        ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.JOIN_ROOM_REQUEST);
+        progressTask.execute();
     }
 
     protected void initCreateRoomLayoutComponentsEvents() {
@@ -577,7 +601,7 @@ public class MultiModeActivity extends Activity {
                             String host = jsonObject.getString(SocketConstants.HOST);
                             int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
                             boolean isPassword = jsonObject.getBoolean(SocketConstants.IS_PASSWORD);
-                            
+
                             foundRooms.add(new Room(roomName, host, slot_empty,isPassword));
 
                         } catch (Exception e) {
@@ -602,6 +626,31 @@ public class MultiModeActivity extends Activity {
         } else {
             buildAlertMessageNoGps();
         }
+    }
+
+    public void buildPasswordRequest(final Room selectedRoom) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View w = inflater.inflate(R.layout.password_dialog, null);
+        builder.setView(w)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        EditText passwordInput = (EditText) w.findViewById(R.id.passwordInput);
+                        connectToRoom(selectedRoom,passwordInput.getText().toString());
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void buildAlertMessageNoGps() {
