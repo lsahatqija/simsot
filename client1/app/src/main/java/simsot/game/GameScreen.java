@@ -17,7 +17,7 @@ import simsot.socket.MySocket;
 
 public class GameScreen extends Screen {
 	enum GameState {
-		Ready, Running, Paused, GameOver, Win
+		Ready, Running, Paused, GameOver, Win, Round
 	}
 
 	GameState state = GameState.Ready;
@@ -26,6 +26,7 @@ public class GameScreen extends Screen {
 
 	private int walkCounter = 1;
     private int countDown = 180;
+    private int roundCountDown = 180;
     private int score = 0;
     private int maxScore;
 	private static Background bg1;
@@ -154,7 +155,7 @@ public class GameScreen extends Screen {
 						Tile t = new Tile(i, j, ch);
 						tilearray.add(t);
 					} else if (ch == 'p'){
-                        if(pelletCounter%22 == 0){
+                        if(pelletCounter%22 == 6){
                             PowerPellet p = new PowerPellet(i, j);
                             p.sprite = Assets.powerPelletSprite;
                             pelletarray.add(p);
@@ -190,7 +191,9 @@ public class GameScreen extends Screen {
 		if (state == GameState.GameOver)
 			updateGameOver(touchEvents);
         if (state == GameState.Win)
-            updateWin(touchEvents, 300);
+            updateWin(touchEvents);
+        if (state == GameState.Round)
+            updateRound();
 	}
 
 	private void updateReady(List touchEvents) {
@@ -320,7 +323,7 @@ public class GameScreen extends Screen {
             if(p.touched){
                 if(PowerPellet.class.isInstance(p)){
                     isPowerMode = true;
-                    PowerModeTimer = 600;
+                    PowerModeTimer = 300;
                 }
                 pelletarray.remove(i);
                 score++;
@@ -384,6 +387,8 @@ public class GameScreen extends Screen {
 			drawGameOverUI();
         if (state == GameState.Win)
             drawPacmanWinUI();
+        if (state == GameState.Round)
+            drawRestartingUI();
 
 	}
 
@@ -419,6 +424,14 @@ public class GameScreen extends Screen {
         while(playerarray.size() > 0){
             int i = playerarray.size()-1;
             playerarray.remove(i);
+        }
+        while(pelletarray.size() > 0){
+            int i = pelletarray.size()-1;
+            pelletarray.remove(i);
+        }
+        while(tilearray.size() > 0){
+            int i = tilearray.size()-1;
+            tilearray.remove(i);
         }
 
 		// Call garbage collector to clean up memory.
@@ -463,17 +476,17 @@ public class GameScreen extends Screen {
 
 	private void drawGameOverUI() {
         Graphics g = game.getGraphics();
-        g.drawRect(0, 0, 1281, 801, Color.BLACK);
-        g.drawString("Ghosts Win", 240, 400, paint);
+        g.drawRect(0, 300, 480, 200, Color.BLACK);
+        g.drawString("Ghosts Win", 200, 400, paint);
     }
 
     private void drawRestartingUI() {
         Graphics g = game.getGraphics();
-        g.drawARGB(155, 0, 0, 0);
-        g.drawString("Next round...", 240, 400, paint);
+        g.drawRect(0, 300, 480, 200, Color.BLACK);
+        g.drawString("Next round in "+(int)(roundCountDown/60), 220, 400, paint);
     }
 
-    private void updateWin(List touchEvents, int winTimer){
+    private void updateWin(List touchEvents){
         drawPacmanWinUI();
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
@@ -486,17 +499,20 @@ public class GameScreen extends Screen {
                 }
             }
         }
-/*
-        winTimer--;
-        if(winTimer == 0){
-            state = GameState.GameOver;
-        }*/
-
     }
+
+    private void updateRound(){
+        roundCountDown--;
+        if(roundCountDown == 0){
+            state = GameState.Running;
+            roundCountDown = 180;
+        }
+    }
+
     private void drawPacmanWinUI() {
         Graphics g = game.getGraphics();
         g.drawRect(0, 300, 480, 200, Color.BLACK);
-        g.drawString("Pacman Wins", 200, 400, paint);
+        g.drawString("Pacman Wins", 220, 400, paint);
     }
 
     public void pacmanDeath(){
@@ -504,7 +520,7 @@ public class GameScreen extends Screen {
         if(pacman.lives == 0){
             state = GameState.GameOver;
         } else{
-            state = GameState.Paused;
+            state = GameState.Round;
 
             //Pacman reset
             pacman.setCenterX(100);
@@ -526,22 +542,14 @@ public class GameScreen extends Screen {
             clyde.setCenterX(50);
             clyde.setCenterY(100);
 
-            drawRestartingUI();
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            state = GameState.Running;
+            //state = GameState.Running;
 
         }
     }
 
     public void ghostDeath(Player p){
-        p.setCenterX(50);
-        p.setCenterY(100);
+        p.setCenterX(270);
+        p.setCenterY(270);
         p.vulnerable = false;
         p.alive = true;
     }
