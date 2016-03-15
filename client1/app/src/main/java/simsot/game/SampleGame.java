@@ -42,6 +42,8 @@ public class SampleGame extends AndroidGame {
 
     private MySocket mySocket;
 
+    private volatile String customMap;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +54,7 @@ public class SampleGame extends AndroidGame {
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
         isMultiMode = intent.getBooleanExtra(IntentParameters.IS_MULTI_MODE, false);
+        customMap = intent.getStringExtra(IntentParameters.MAP);
 
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
 
