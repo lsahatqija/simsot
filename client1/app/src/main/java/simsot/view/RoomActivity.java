@@ -42,6 +42,8 @@ public class RoomActivity extends Activity {
 
     private String roomName;
 
+    private String map;
+
     private volatile JSONArray jsonArrayReceived;
 
     @Override
@@ -53,6 +55,7 @@ public class RoomActivity extends Activity {
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
         String host = intent.getStringExtra(IntentParameters.HOST);
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
+        map = intent.getStringExtra(IntentParameters.MAP);
 
         initComponents();
         initComponentsEvents();
@@ -145,6 +148,7 @@ public class RoomActivity extends Activity {
                 intent.putExtra(IntentParameters.IS_HOST, isHost);
                 intent.putExtra(IntentParameters.ROOM_NAME, roomName);
                 intent.putExtra(IntentParameters.IS_MULTI_MODE, true);
+                intent.putExtra(IntentParameters.MAP, map);
                 startActivity(intent);
             }
         });

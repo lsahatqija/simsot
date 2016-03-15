@@ -332,11 +332,17 @@ public class ConnectionActivity extends Activity {
                             if (errorCode == 0) {
                                 String roomCreated = soloRoomCreationResponse.getString(SocketConstants.ROOM_NAME);
 
+                                String map = IntentParameters.NO_MAP;
+                                if(soloRoomCreationResponse.has(SocketConstants.MAP)){
+                                    map = soloRoomCreationResponse.getString(SocketConstants.MAP);
+                                }
+
                                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);
                                 intent.putExtra(IntentParameters.USER_LOGIN, getSharedPreferencesUserLogin());
                                 intent.putExtra(IntentParameters.IS_HOST, true);
                                 intent.putExtra(IntentParameters.ROOM_NAME, roomCreated);
                                 intent.putExtra(IntentParameters.IS_MULTI_MODE, false);
+                                intent.putExtra(IntentParameters.MAP, map);
                                 startActivity(intent);
                             }
                         } catch (JSONException e) {

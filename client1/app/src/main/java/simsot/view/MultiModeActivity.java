@@ -355,10 +355,13 @@ public class MultiModeActivity extends Activity {
             try {
                 int errorCode = joinResponse.getInt(SocketConstants.ERROR_CODE);
                 if (errorCode == 0) {
+
                     Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
                     intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
                     intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
                     intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
+                    //TODO to modify with selectedRoom.getMap()
+                    intent.putExtra(IntentParameters.MAP, IntentParameters.NO_MAP);
                     startActivity(intent);
                 } else if (errorCode == 1) {
                     showToast(getString(R.string.room_not_found));
@@ -388,12 +391,18 @@ public class MultiModeActivity extends Activity {
                     String roomName = creationResponse.getString(SocketConstants.ROOM_NAME);
                     String host = creationResponse.getString(SocketConstants.HOST);
 
+                    String map = IntentParameters.NO_MAP;
+                    if(creationResponse.has(SocketConstants.MAP)){
+                        map = creationResponse.getString(SocketConstants.MAP);
+                    }
+
                     showToast(getString(R.string.room_created));
 
                     Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
-                    intent.putExtra(IntentParameters.IS_HOST, IS_HOST);
                     intent.putExtra(IntentParameters.ROOM_NAME, roomName);
+                    intent.putExtra(IntentParameters.IS_HOST, IS_HOST);
                     intent.putExtra(IntentParameters.HOST, host);
+                    intent.putExtra(IntentParameters.MAP, map);
 
                     startActivity(intent);
                 } else if (errorCode == 1) {
