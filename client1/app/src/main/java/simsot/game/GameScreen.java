@@ -128,7 +128,8 @@ public class GameScreen extends Screen {
 		int width = 0;
 		int height = 0;
 
-		Scanner scanner = new Scanner(SampleGame.map);
+
+		Scanner scanner = new Scanner(((SampleGame)game).getMap());
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 

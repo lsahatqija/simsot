@@ -215,4 +215,12 @@ public class SampleGame extends AndroidGame {
     public void setGameCanStart(boolean gameCanStart) {
         this.gameCanStart = gameCanStart;
     }
+
+    public String getMap(){
+        if(customMap!=null && !IntentParameters.NO_MAP.equals(customMap)){
+            return customMap;
+        }else{
+            return map;
+        }
+    }
 }
