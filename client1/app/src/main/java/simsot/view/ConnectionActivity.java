@@ -256,14 +256,14 @@ public class ConnectionActivity extends Activity {
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+                showToast("Not implemented yet !");
             }
         });
 
         buttonHow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ConnectionActivity.this, "Not implemented yet !", Toast.LENGTH_SHORT).show();
+                showToast("Not implemented yet !");
             }
         });
 
@@ -272,7 +272,7 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
                 logoCounter++;
                 if (logoCounter == 42) {
-                    Toast.makeText(ConnectionActivity.this, "Nice, you find the answer", Toast.LENGTH_LONG).show();
+                    showToast("Nice, you find the answer");
                     logoCounter = 0;
                 }
             }
@@ -575,12 +575,10 @@ public class ConnectionActivity extends Activity {
         alert.show();
     }
 
-
-    protected class GPSAsyncTask extends AsyncTask<LocationManager, Void, Void> implements LocationListener{
+    protected class GPSAsyncTask extends AsyncTask<LocationManager, Void, Void> implements LocationListener {
 
         private ProgressDialog progressDialog;
         private Location location = null;
-
 
         @Override
         protected void onPreExecute() {
@@ -634,6 +632,4 @@ public class ConnectionActivity extends Activity {
 
         }
     }
-
-
 }
