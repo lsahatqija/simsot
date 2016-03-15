@@ -86,8 +86,8 @@ public class Player {
 
         if (centerY > 630) {
             centerY = 0;
-        } else if (centerX < 0) {
-            centerX = 630;
+        } else if (centerY < 0) {
+            centerY = 630;
         }
 
         if(GameScreen.isPowerMode){

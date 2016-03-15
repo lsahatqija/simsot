@@ -49,7 +49,6 @@ public class SampleGame extends AndroidGame {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        // TODO manage when there are null
         playerName = intent.getStringExtra(IntentParameters.USER_LOGIN);
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
@@ -71,8 +70,7 @@ public class SampleGame extends AndroidGame {
                     //System.out.println("receiving  : " + ((JSONObject) args[0]).toString());
                     receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
                 } else {
-                    //TODO manage this error
-                    System.out.println(SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
+                    Log.e("SocketError", SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
@@ -92,8 +90,7 @@ public class SampleGame extends AndroidGame {
                         e.printStackTrace();
                     }
                 } else {
-                    //TODO manage this error
-                    System.out.println(SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
+                    Log.e("SocketError", SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
@@ -108,14 +105,13 @@ public class SampleGame extends AndroidGame {
                         if (errorCode == 0) {
                             gameCanStart = true;
                         } else {
-                            // TODO manage else
+                            Log.e("SocketError", SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE+ "errorCode isn't 0");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    //TODO manage this error
-                    System.out.println(SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + " args[0]  not instanceof JSONObject");
+                    Log.e("SocketError", SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
