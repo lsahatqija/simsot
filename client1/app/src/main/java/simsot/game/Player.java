@@ -84,6 +84,12 @@ public class Player {
             centerX = 510;
         }
 
+        if (centerY > 630) {
+            centerY = 0;
+        } else if (centerX < 0) {
+            centerX = 630;
+        }
+
         if(GameScreen.isPowerMode){
             this.vulnerable = true;
         } else {
