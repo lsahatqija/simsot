@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -525,26 +526,13 @@ public class ConnectionActivity extends Activity {
 
     }
 
+
     protected void getCustomMapForSoloMode() {
         final LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            LocationListener locationListener = new LocationListener() {
-                public void onLocationChanged(Location location) {
-                    sendGetMapSoloMode(location);
-                    locationManager.removeUpdates(this);
-                }
-
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-                }
-
-                public void onProviderEnabled(String provider) {
-                }
-
-                public void onProviderDisabled(String provider) {
-                }
-            };
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.F, locationListener);
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            GPSAsyncTask gpsAsyncTask = new GPSAsyncTask();
+            gpsAsyncTask.execute(locationManager);
         } else {
             buildAlertMessageNoGps();
         }
@@ -576,5 +564,66 @@ public class ConnectionActivity extends Activity {
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
+
+    protected class GPSAsyncTask extends AsyncTask<LocationManager, Void, Void> implements LocationListener{
+
+        private ProgressDialog progressDialog;
+        private Location location = null;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(ConnectionActivity.this);
+            progressDialog.setMessage("Search location ...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(LocationManager... params) {
+            LocationManager locationManager = params[0];
+
+            Looper.prepare();
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+            Looper.loop();
+
+            return null;
+        }
+
+
+        @Override
+        public void onLocationChanged(Location location) {
+            this.location = location;
+            Looper.myLooper().quit();
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+            sendGetMapSoloMode(location);
+        }
+
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
+
 
 }
