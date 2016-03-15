@@ -336,7 +336,13 @@ public class MultiModeActivity extends Activity {
 
                     if (args[0] instanceof JSONObject) {
                         try {
-                            jsonArrayReceived = ((JSONObject) args[0]).getJSONArray(SocketConstants.ROOMS);
+                            int errorCode = ((JSONObject) args[0]).getInt(SocketConstants.ERROR_CODE);
+                            if (errorCode == 0) {
+                                jsonArrayReceived = ((JSONObject) args[0]).getJSONArray(SocketConstants.ROOMS);
+                            } else {
+                                showToast(getString(R.string.get_room_list_error));
+                            }
+
                         } catch (JSONException e) {
                             Log.e("SocketError", "error getJSONArray(SocketConstants.ROOMS)");
                             jsonArrayReceived = null;
