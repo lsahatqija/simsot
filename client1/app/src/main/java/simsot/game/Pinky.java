@@ -10,6 +10,8 @@ public class Pinky extends Player {
         characterLeft2 = Assets.pinkyLeft2;
         characterRight1 = Assets.pinkyRight1;
         characterRight2 = Assets.pinkyRight2;
+        vulnerable = false;
+        vulnerableMode = Assets.powerModeGhost;
         //currentSprite = characterLeft1;
     }
 

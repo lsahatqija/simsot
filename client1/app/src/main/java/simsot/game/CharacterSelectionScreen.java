@@ -163,7 +163,7 @@ public class CharacterSelectionScreen extends Screen {
                 }
                 if (inBounds(event, 322, 335, 75, 75)) {
                     if (!clydeTaken && !playerSelect) {
-                        clyde = new Clyde(100, 100, PacManConstants.LOCAL, playerName, roomName, mySocket);
+                        clyde = new Clyde(50, 100, PacManConstants.LOCAL, playerName, roomName, mySocket);
                         mySocket.sendCharacterChoice(PacManConstants.CLYDE, playerName, roomName);
                         clydeTaken = true;
                         clydeTakenLocal = true;

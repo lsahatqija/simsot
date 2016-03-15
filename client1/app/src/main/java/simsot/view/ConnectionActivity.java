@@ -66,12 +66,7 @@ public class ConnectionActivity extends Activity {
         }
 
         if (actualLayout == null) {
-            // TODO remove the duplicate code #55
-            if (getSharedPreferencesUserLogin() == null) {
-                displayConnectionLayout();
-            } else {
-                displayMenuLayout();
-            }
+            displayMenuLayoutIfItIsPossible();
         } else {
             switch (actualLayout) {
                 case LAYOUTCONNECTION:
@@ -81,12 +76,7 @@ public class ConnectionActivity extends Activity {
                     displayRegistrationLayout();
                     break;
                 case LAYOUTMENU:
-                    // TODO remove the duplicate code #55
-                    if (getSharedPreferencesUserLogin() == null) {
-                        displayConnectionLayout();
-                    } else {
-                        displayMenuLayout();
-                    }
+                    displayMenuLayoutIfItIsPossible();
                     break;
                 default:
                     break;
@@ -354,7 +344,7 @@ public class ConnectionActivity extends Activity {
 
                     displayMenuLayout();
                 } else if (errorCode == 1) {
-                    showToast(getString(R.string.authentification_failed));
+                    showToast(getString(R.string.username_or_password_incorrect));
                 } else {
                     showToast(getString(R.string.connection_failed));
                 }
@@ -377,9 +367,9 @@ public class ConnectionActivity extends Activity {
 
                     displayConnectionLayout();
                 } else if (errorCode == 1) {
-                    showToast(getString(R.string.already_used_login));
+                    showToast(getString(R.string.user_taken));
                 } else if (errorCode == 2) {
-                    showToast(getString(R.string.field_empty));
+                    showToast(getString(R.string.username_or_password_empty));
                 } else {
                     showToast(getString(R.string.registration_failed));
                 }
@@ -390,6 +380,14 @@ public class ConnectionActivity extends Activity {
         } else {
             showToast(getString(R.string.registration_error));
             Log.e("SocketError", "RegistrationRequestResponse not a JSONObject");
+        }
+    }
+
+    protected void displayMenuLayoutIfItIsPossible(){
+        if (getSharedPreferencesUserLogin() == null) {
+            displayConnectionLayout();
+        } else {
+            displayMenuLayout();
         }
     }
 

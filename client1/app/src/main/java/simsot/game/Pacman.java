@@ -10,6 +10,8 @@ public class Pacman extends Player {
         characterLeft2 = Assets.characterLeft2;
         characterRight1 = Assets.characterRight1;
         characterRight2 = Assets.characterRight2;
+        vulnerableMode = Assets.powerModeGhost;
+        vulnerable = false;
         lives = 3;
         //currentSprite = characterLeft1;
     }

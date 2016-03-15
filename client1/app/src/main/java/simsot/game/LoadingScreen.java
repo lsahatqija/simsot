@@ -48,6 +48,7 @@ public class LoadingScreen extends Screen {
         Assets.clydeLeft2 = g.newImage("clydeLeft2.png", ImageFormat.RGB565);
         Assets.clydeRight1 = g.newImage("clydeRight1.png", ImageFormat.RGB565);
         Assets.clydeRight2 = g.newImage("clydeRight2.png", ImageFormat.RGB565);
+        Assets.powerModeGhost = g.newImage("powermodeghost.png", ImageFormat.RGB565);
 
         Assets.pacmanSelection = g.newImage("pacmanSelection.png", ImageFormat.RGB565);
         Assets.inkySelection = g.newImage("inkySelection.png", ImageFormat.RGB565);
@@ -57,6 +58,7 @@ public class LoadingScreen extends Screen {
         Assets.playerSelectionLocal = g.newImage("playerSelectionlocal.png", ImageFormat.RGB565);
         Assets.playerSelectionRemote = g.newImage("playerSelectionremote.png", ImageFormat.RGB565);
 
+
 		Assets.buttonUp = g.newImage("buttonUp.png", ImageFormat.RGB565);
 		Assets.buttonDown = g.newImage("buttonDown.png", ImageFormat.RGB565);
 		Assets.buttonLeft = g.newImage("buttonLeft.png", ImageFormat.RGB565);
@@ -65,6 +67,7 @@ public class LoadingScreen extends Screen {
 
         Assets.tileTree = g.newImage("tree.png", ImageFormat.RGB565);
         Assets.pelletSprite = g.newImage("pellet.png", ImageFormat.RGB565);
+        Assets.powerPelletSprite = g.newImage("powerpellet.png", ImageFormat.RGB565);
 
         //This is how you would load a sound if you had one.
         //Assets.click = game.getAudio().createSound("explode.ogg");
