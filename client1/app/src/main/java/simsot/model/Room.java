@@ -19,11 +19,13 @@ public class Room implements Serializable {
     Double longitude;
     int distanceMin;
     boolean isPassword;
+    String map;
 
-    public Room(String roomName, String host, int empty_slot,boolean isPassword){
+    public Room(String roomName, String host, int empty_slot, boolean isPassword, String map) {
         this(roomName, null, host, null, null, 100, isPassword);
         this.empty_slot = empty_slot;
         this.isPassword = isPassword;
+        this.map = map;
     }
 
     public Room(String roomName, String host, Double latitude, Double longitude, int distanceMin) {
@@ -44,7 +46,7 @@ public class Room implements Serializable {
         JSONObject json = new JSONObject();
 
         json.put(SocketConstants.ROOM_NAME, roomName);
-        if (isPassword  == false) {
+        if (isPassword == false) {
             json.put("room_password", null);
             json.put("is_password", false);
         } else {
@@ -82,5 +84,9 @@ public class Room implements Serializable {
 
     public boolean isPassword() {
         return isPassword;
+    }
+
+    public String getMap() {
+        return map;
     }
 }

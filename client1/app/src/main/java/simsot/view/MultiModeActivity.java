@@ -200,7 +200,6 @@ public class MultiModeActivity extends Activity {
     }
 
     protected void initJoinRoomLayoutComponentsEvents() {
-
         refreshRoomsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,7 +230,7 @@ public class MultiModeActivity extends Activity {
 
     }
 
-    protected void connectToRoom(Room selectedRoom){
+    protected void connectToRoom(Room selectedRoom) {
         JSONObject json = new JSONObject();
         try {
             json.put(SocketConstants.ROOM_NAME, selectedRoom.getRoomName());
@@ -246,7 +245,7 @@ public class MultiModeActivity extends Activity {
         progressTask.execute();
     }
 
-    protected void connectToRoom(Room selectedRoom, String passwordInput){
+    protected void connectToRoom(Room selectedRoom, String passwordInput) {
         JSONObject json = new JSONObject();
         try {
             json.put(SocketConstants.ROOM_NAME, selectedRoom.getRoomName());
@@ -271,7 +270,7 @@ public class MultiModeActivity extends Activity {
                             Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                 } else {
                     room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()),true);
+                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()), true);
                 }
 
                 if (roomCustomMapYes.isChecked()) {
@@ -379,13 +378,11 @@ public class MultiModeActivity extends Activity {
             try {
                 int errorCode = joinResponse.getInt(SocketConstants.ERROR_CODE);
                 if (errorCode == 0) {
-
                     Intent intent = new Intent(MultiModeActivity.this, RoomActivity.class);
                     intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
                     intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
                     intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
-                    //TODO to modify with selectedRoom.getMap()
-                    intent.putExtra(IntentParameters.MAP, IntentParameters.NO_MAP);
+                    intent.putExtra(IntentParameters.MAP, selectedRoom.getMap());
                     startActivity(intent);
                 } else if (errorCode == 1) {
                     showToast(getString(R.string.room_not_found));
@@ -416,7 +413,7 @@ public class MultiModeActivity extends Activity {
                     String host = creationResponse.getString(SocketConstants.HOST);
 
                     String map = IntentParameters.NO_MAP;
-                    if(creationResponse.has(SocketConstants.MAP)){
+                    if (creationResponse.has(SocketConstants.MAP)) {
                         map = creationResponse.getString(SocketConstants.MAP);
                     }
 
@@ -602,7 +599,12 @@ public class MultiModeActivity extends Activity {
                             int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
                             boolean isPassword = jsonObject.getBoolean(SocketConstants.IS_PASSWORD);
 
-                            foundRooms.add(new Room(roomName, host, slot_empty,isPassword));
+                            String map = IntentParameters.NO_MAP;
+                            if(jsonObject.has(SocketConstants.MAP)){
+                                map = jsonObject.getString(SocketConstants.MAP);
+                            }
+
+                            foundRooms.add(new Room(roomName, host, slot_empty, isPassword, map));
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -639,7 +641,7 @@ public class MultiModeActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         EditText passwordInput = (EditText) w.findViewById(R.id.passwordInput);
-                        connectToRoom(selectedRoom,passwordInput.getText().toString());
+                        connectToRoom(selectedRoom, passwordInput.getText().toString());
                         dialog.cancel();
                     }
                 })
