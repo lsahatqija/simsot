@@ -183,7 +183,13 @@ public class ConnectionActivity extends Activity {
                 String userPassword = userPasswordRegistration.getText().toString();
                 String userPassword2 = userPassword2Registration.getText().toString();
 
-                if (userPassword.equals(userPassword2)) {
+                if (userPseudo.isEmpty()) {
+                    showToast("Username must not be empty.");
+                } else if (userPassword.isEmpty()) {
+                    showToast("Password must not be empty.");
+                } else if (!userPassword.equals(userPassword2)) {
+                    showToast(getString(R.string.password_not_match));
+                } else {
                     User user = new User(userPseudo, userPassword);
 
                     try {
@@ -194,8 +200,6 @@ public class ConnectionActivity extends Activity {
                     } catch (JSONException e) {
                         Log.e("JSONException", e.getMessage(), e);
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.password_not_match, Toast.LENGTH_SHORT).show();
                 }
             }
         });
