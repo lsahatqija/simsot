@@ -337,8 +337,11 @@ public class ConnectionActivity extends Activity {
                                 String roomCreated = soloRoomCreationResponse.getString(SocketConstants.ROOM_NAME);
 
                                 String map = IntentParameters.NO_MAP;
-                                if(soloRoomCreationResponse.has(SocketConstants.MAP)){
+                                if (soloRoomCreationResponse.has(SocketConstants.MAP)) {
                                     map = soloRoomCreationResponse.getString(SocketConstants.MAP);
+                                    if (map == null) {
+                                        map = IntentParameters.NO_MAP;
+                                    }
                                 }
 
                                 Intent intent = new Intent(ConnectionActivity.this, SampleGame.class);

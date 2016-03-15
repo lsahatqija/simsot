@@ -392,7 +392,11 @@ public class MultiModeActivity extends Activity {
                     intent.putExtra(IntentParameters.IS_HOST, IS_NOT_HOST);
                     intent.putExtra(IntentParameters.ROOM_NAME, selectedRoom.getRoomName());
                     intent.putExtra(IntentParameters.HOST, selectedRoom.getHost());
-                    intent.putExtra(IntentParameters.MAP, selectedRoom.getMap());
+                    String map = selectedRoom.getMap();
+                    if (map == null) {
+                        map = IntentParameters.NO_MAP;
+                    }
+                    intent.putExtra(IntentParameters.MAP, map);
                     startActivity(intent);
                 } else if (errorCode == 1) {
                     showToast(getString(R.string.room_not_found));
@@ -425,6 +429,9 @@ public class MultiModeActivity extends Activity {
                     String map = IntentParameters.NO_MAP;
                     if (creationResponse.has(SocketConstants.MAP)) {
                         map = creationResponse.getString(SocketConstants.MAP);
+                        if (map == null) {
+                            map = IntentParameters.NO_MAP;
+                        }
                     }
 
                     showToast(getString(R.string.room_created));
@@ -610,7 +617,7 @@ public class MultiModeActivity extends Activity {
                             boolean isPassword = jsonObject.getBoolean(SocketConstants.IS_PASSWORD);
 
                             String map = IntentParameters.NO_MAP;
-                            if(jsonObject.has(SocketConstants.MAP)){
+                            if (jsonObject.has(SocketConstants.MAP)) {
                                 map = jsonObject.getString(SocketConstants.MAP);
                             }
 

@@ -82,11 +82,11 @@ public class SampleGame extends AndroidGame {
             public void call(Object... args) {
                 if (args[0] instanceof JSONObject) {
                     try {
-                       // System.out.println("receiving  : "+((JSONObject) args[0]).toString());
+                        // System.out.println("receiving  : "+((JSONObject) args[0]).toString());
                         String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
 
-                        if(!playerName.equals(name)){
-                            receivedCharacterPositionJSONMap.put(name,(JSONObject)args[0]);
+                        if (!playerName.equals(name)) {
+                            receivedCharacterPositionJSONMap.put(name, (JSONObject) args[0]);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -105,9 +105,9 @@ public class SampleGame extends AndroidGame {
                     try {
                         int errorCode = ((JSONObject) args[0]).getInt(SocketConstants.ERROR_CODE);
 
-                        if(errorCode == 0){
+                        if (errorCode == 0) {
                             gameCanStart = true;
-                        } else{
+                        } else {
                             // TODO manage else
                         }
                     } catch (JSONException e) {
@@ -204,7 +204,7 @@ public class SampleGame extends AndroidGame {
         return receivedCharacterChoiceJSONList;
     }
 
-    public Map<String,JSONObject> getReceivedCharacterPositionJSONMap() {
+    public Map<String, JSONObject> getReceivedCharacterPositionJSONMap() {
         return receivedCharacterPositionJSONMap;
     }
 
@@ -216,10 +216,10 @@ public class SampleGame extends AndroidGame {
         this.gameCanStart = gameCanStart;
     }
 
-    public String getMap(){
-        if(customMap!=null && !IntentParameters.NO_MAP.equals(customMap)){
+    public String getMap() {
+        if (customMap != null && !IntentParameters.NO_MAP.equals(customMap)) {
             return customMap;
-        }else{
+        } else {
             return map;
         }
     }
