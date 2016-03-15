@@ -18,33 +18,38 @@ public class Room implements Serializable {
     Double latitude;
     Double longitude;
     int distanceMin;
+    boolean isPassword;
 
-    public Room(String roomName, String host, int empty_slot){
-        this(roomName, null, host, null, null, 100);
+    public Room(String roomName, String host, int empty_slot,boolean isPassword){
+        this(roomName, null, host, null, null, 100, isPassword);
         this.empty_slot = empty_slot;
+        this.isPassword = isPassword;
     }
 
     public Room(String roomName, String host, Double latitude, Double longitude, int distanceMin) {
-        this(roomName, null, host, latitude, longitude, distanceMin);
+        this(roomName, null, host, latitude, longitude, distanceMin, false);
     }
 
-    public Room(String roomName, String roomPassword, String host, Double latitude, Double longitude, int distanceMin) {
+    public Room(String roomName, String roomPassword, String host, Double latitude, Double longitude, int distanceMin, boolean isPassword) {
         this.roomName = roomName;
         this.roomPassword = roomPassword;
         this.host = host;
         this.latitude = latitude;
         this.longitude = longitude;
         this.distanceMin = distanceMin;
+        this.isPassword = isPassword;
     }
 
     public JSONObject ToJSONObject() throws JSONException {
         JSONObject json = new JSONObject();
 
         json.put(SocketConstants.ROOM_NAME, roomName);
-        if (roomPassword  == null) {
+        if (isPassword  == false) {
             json.put("room_password", null);
+            json.put("is_password", false);
         } else {
             json.put("room_password", roomPassword);
+            json.put("is_password", true);
         }
 
         json.put(SocketConstants.HOST, host);
@@ -73,5 +78,9 @@ public class Room implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public boolean isPassword() {
+        return isPassword;
     }
 }

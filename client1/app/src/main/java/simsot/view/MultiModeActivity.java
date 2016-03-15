@@ -247,7 +247,7 @@ public class MultiModeActivity extends Activity {
                             Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
                 } else {
                     room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()),true);
                 }
 
                 if (roomCustomMapYes.isChecked()) {
@@ -576,8 +576,9 @@ public class MultiModeActivity extends Activity {
                             String roomName = jsonObject.getString(SocketConstants.ROOM_NAME);
                             String host = jsonObject.getString(SocketConstants.HOST);
                             int slot_empty = jsonObject.getInt(SocketConstants.SLOT_EMPTY);
-
-                            foundRooms.add(new Room(roomName, host, slot_empty));
+                            boolean isPassword = jsonObject.getBoolean(SocketConstants.IS_PASSWORD);
+                            
+                            foundRooms.add(new Room(roomName, host, slot_empty,isPassword));
 
                         } catch (Exception e) {
                             e.printStackTrace();
