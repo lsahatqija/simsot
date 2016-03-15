@@ -154,7 +154,7 @@ public class GameScreen extends Screen {
 						Tile t = new Tile(i, j, ch);
 						tilearray.add(t);
 					} else if (ch == 'p'){
-                        if(pelletCounter%20 == 0){
+                        if(pelletCounter%22 == 0){
                             PowerPellet p = new PowerPellet(i, j);
                             p.sprite = Assets.powerPelletSprite;
                             pelletarray.add(p);

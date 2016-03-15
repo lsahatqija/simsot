@@ -19,12 +19,12 @@ public class Item {
         centerX = (x * 30) + 15;
         centerY = (y * 30) + 15;
 
-        r = new Rect(getCenterX(),getCenterY(),getCenterX()+20,getCenterY()+20);
+        r = new Rect(getCenterX(),getCenterY(),getCenterX()+10,getCenterY()+10);
 
     }
 
     public void update() {
-        r.set(getCenterX() - 13, getCenterY() - 13, getCenterX() + 13, getCenterY() + 13);
+        r.set(getCenterX() - 6, getCenterY() - 6, getCenterX() + 6, getCenterY() + 6);
         checkCollision(pacman);
     }
 
