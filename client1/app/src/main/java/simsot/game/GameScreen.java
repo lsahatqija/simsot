@@ -17,7 +17,7 @@ import simsot.socket.MySocket;
 
 public class GameScreen extends Screen {
 	enum GameState {
-		Ready, Running, Paused, GameOver
+		Ready, Running, Paused, GameOver, Win
 	}
 
 	GameState state = GameState.Ready;
@@ -27,6 +27,7 @@ public class GameScreen extends Screen {
 	private int walkCounter = 1;
     private int countDown = 180;
     private int score = 0;
+    private int maxScore;
 	private static Background bg1;
 	private static Player pacman, pinky, inky, blinky, clyde;
     public static boolean isPowerMode = false;
@@ -99,6 +100,8 @@ public class GameScreen extends Screen {
 		tileGrass = Assets.tileGrass;
 
 		loadMap();
+        maxScore = pelletarray.size();
+        System.out.println(maxScore);
 
 		// Defining a paint object
 		paint = new Paint();
@@ -186,6 +189,8 @@ public class GameScreen extends Screen {
 			updatePaused(touchEvents);
 		if (state == GameState.GameOver)
 			updateGameOver(touchEvents);
+        if (state == GameState.Win)
+            updateWin(touchEvents, 300);
 	}
 
 	private void updateReady(List touchEvents) {
@@ -327,6 +332,11 @@ public class GameScreen extends Screen {
         if (PowerModeTimer == 0) {
             isPowerMode = false;
         }
+
+        if(score == maxScore){
+            state = GameState.Win;
+        }
+
     }
 
 	@Override
@@ -372,6 +382,8 @@ public class GameScreen extends Screen {
 			drawPausedUI();
 		if (state == GameState.GameOver)
 			drawGameOverUI();
+        if (state == GameState.Win)
+            drawPacmanWinUI();
 
 	}
 
@@ -450,11 +462,42 @@ public class GameScreen extends Screen {
 	}
 
 	private void drawGameOverUI() {
-		Graphics g = game.getGraphics();
-		g.drawRect(0, 0, 1281, 801, Color.BLACK);
-		g.drawString("GAME OVER.", 240, 400, paint2);
-		g.drawString("Tap to return.", 240, 450, paint);
-	}
+        Graphics g = game.getGraphics();
+        g.drawRect(0, 0, 1281, 801, Color.BLACK);
+        g.drawString("Ghosts Win", 240, 400, paint);
+    }
+
+    private void drawRestartingUI() {
+        Graphics g = game.getGraphics();
+        g.drawARGB(155, 0, 0, 0);
+        g.drawString("Next round...", 240, 400, paint);
+    }
+
+    private void updateWin(List touchEvents, int winTimer){
+        drawPacmanWinUI();
+        int len = touchEvents.size();
+        for (int i = 0; i < len; i++) {
+            TouchEvent event = (TouchEvent) touchEvents.get(i);
+            if (event.type == TouchEvent.TOUCH_DOWN) {
+                if (inBounds(event, 0, 0, 480, 800)) {
+                    nullify();
+                    game.setScreen(new MainMenuScreen(game));
+                    return;
+                }
+            }
+        }
+/*
+        winTimer--;
+        if(winTimer == 0){
+            state = GameState.GameOver;
+        }*/
+
+    }
+    private void drawPacmanWinUI() {
+        Graphics g = game.getGraphics();
+        g.drawRect(0, 300, 480, 200, Color.BLACK);
+        g.drawString("Pacman Wins", 200, 400, paint);
+    }
 
     public void pacmanDeath(){
         pacman.lives--;
@@ -483,9 +526,7 @@ public class GameScreen extends Screen {
             clyde.setCenterX(50);
             clyde.setCenterY(100);
 
-            Graphics g = game.getGraphics();
-            g.drawRect(0, 0, 1281, 801, Color.LTGRAY);
-            g.drawString("Pacman death", 240, 400, paint2);
+            drawRestartingUI();
 
             try {
                 Thread.sleep(500);
