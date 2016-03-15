@@ -7,44 +7,49 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.List;
 
+import simsot.socket.SocketConstants;
+
 public class Room implements Serializable {
 
     String roomName;
     String roomPassword;
     String host;
     int empty_slot = 0;
-    String GPS;
+    Double latitude;
+    Double longitude;
     int distanceMin;
 
     public Room(String roomName, String host, int empty_slot){
-        this(roomName, null, host, null, 100);
+        this(roomName, null, host, null, null, 100);
         this.empty_slot = empty_slot;
     }
 
-    public Room(String roomName, String host, String GPS, int distanceMin) {
-        this(roomName, null, host, GPS, distanceMin);
+    public Room(String roomName, String host, Double latitude, Double longitude, int distanceMin) {
+        this(roomName, null, host, latitude, longitude, distanceMin);
     }
 
-    public Room(String roomName, String roomPassword, String host, String GPS, int distanceMin) {
+    public Room(String roomName, String roomPassword, String host, Double latitude, Double longitude, int distanceMin) {
         this.roomName = roomName;
         this.roomPassword = roomPassword;
         this.host = host;
-        this.GPS = GPS;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.distanceMin = distanceMin;
     }
 
     public JSONObject ToJSONObject() throws JSONException {
         JSONObject json = new JSONObject();
 
-        json.put("room_name", roomName);
+        json.put(SocketConstants.ROOM_NAME, roomName);
         if (roomPassword  == null) {
             json.put("room_password", null);
         } else {
             json.put("room_password", roomPassword);
         }
 
-        json.put("host", host);
-        json.put("GPS", GPS);
+        json.put(SocketConstants.HOST, host);
+        json.put(SocketConstants.LATITUDE, latitude);
+        json.put(SocketConstants.LONGITUDE, longitude);
         json.put("distance_min", distanceMin);
 
         return json;
@@ -60,5 +65,13 @@ public class Room implements Serializable {
 
     public int getSlotEmpty() {
         return empty_slot;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

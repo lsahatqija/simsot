@@ -140,10 +140,19 @@
                 android:text="Custom Map :"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <Switch
-                android:id="@+id/roomCustomMapSwitch"
+            <RadioButton
+                android:id="@+id/roomCustomMapNo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="No" />
+
+            <RadioButton
+                android:id="@+id/roomCustomMapYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes" />
+
         </LinearLayout>
 
 

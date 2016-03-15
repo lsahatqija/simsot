@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -57,9 +58,8 @@ public class MultiModeActivity extends Activity {
     private LinearLayout joinCreateRoomChoiceLayout, createRoomLayout, joinRoomLayout;
     private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, refreshRoomsButton, joinCreateRoomChoiceBackButton, createRoomBackButton, joinRoomBackButton;
 
-    private RadioButton roomPasswordOffRadio, roomPasswordOnRadio;
+    private RadioButton roomPasswordOffRadio, roomPasswordOnRadio, roomCustomMapNo, roomCustomMapYes;
     private EditText roomNameCreation, roomPasswordCreation, roomDistanceMaxCreation;
-    private Switch roomCustomMapSwitch;
 
     private MySocket mySocket;
 
@@ -90,7 +90,6 @@ public class MultiModeActivity extends Activity {
         initComponents();
         initComponentsEvents();
         initSocket();
-        initGPSLocation();
 
         if (savedInstanceState != null) {
             actualLayout = (MultiModeActivityActualLayout) savedInstanceState.getSerializable(ACTUAL_LAYOUT);
@@ -162,7 +161,8 @@ public class MultiModeActivity extends Activity {
         roomNameCreation = (EditText) findViewById(R.id.roomNameCreation);
         roomPasswordCreation = (EditText) findViewById(R.id.roomPasswordCreation);
         roomDistanceMaxCreation = (EditText) findViewById(R.id.roomDistanceMaxCreation);
-        roomCustomMapSwitch = (Switch) findViewById(R.id.roomCustomMapSwitch);
+        roomCustomMapNo = (RadioButton) findViewById(R.id.roomCustomMapNo);
+        roomCustomMapYes = (RadioButton) findViewById(R.id.roomCustomMapYes);
         createRoomButton = (Button) findViewById(R.id.createRoomButton);
         createRoomBackButton = (Button) findViewById(R.id.createRoomBackButton);
     }
@@ -241,21 +241,23 @@ public class MultiModeActivity extends Activity {
         createRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Room room;
-                    if (roomPasswordOffRadio.isChecked()) {
-                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
-                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
-                    } else {
-                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null,
-                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
-                    }
-                    mySocket.sendNewRoomRequest(room.ToJSONObject());
+                Room room;
+                if (roomPasswordOffRadio.isChecked()) {
+                    room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                } else {
+                    room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
+                            Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                }
 
-                    ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.NEW_ROOM_REQUEST);
-                    progressTask.execute();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (roomCustomMapYes.isChecked()) {
+                    getCustomMapForMultiMode(room);
+                } else {
+                    try {
+                        sendMultiModeRoomCreation(room.ToJSONObject());
+                    } catch (JSONException e) {
+                        Log.e("JSONException", e.getMessage(), e);
+                    }
                 }
             }
         });
@@ -271,6 +273,20 @@ public class MultiModeActivity extends Activity {
             public void onClick(View v) {
                 roomPasswordCreation.setVisibility(v.VISIBLE);
                 roomPasswordOffRadio.setChecked(false);
+            }
+        });
+
+        roomCustomMapNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roomCustomMapYes.setChecked(false);
+            }
+        });
+
+        roomCustomMapYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roomCustomMapNo.setChecked(false);
             }
         });
 
@@ -394,15 +410,22 @@ public class MultiModeActivity extends Activity {
         }
     }
 
-    protected void sendGetListRoomRequest(){
+    protected void sendGetListRoomRequest() {
         mySocket.sendGetListRoomRequest();
 
         ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.GET_LIST_ROOM);
         progressTask.execute();
     }
 
+    protected void sendMultiModeRoomCreation(JSONObject json) {
+        mySocket.sendNewRoomRequest(json);
+
+        ProgressTask progressTask = new ProgressTask(SocketConstants.SocketRequestType.NEW_ROOM_REQUEST);
+        progressTask.execute();
+    }
+
     protected void updateRoomsList() {
-        if(foundRooms.isEmpty()){
+        if (foundRooms.isEmpty()) {
             noRoomFoundText.setVisibility(View.VISIBLE);
             roomList.setVisibility(View.INVISIBLE);
         } else {
@@ -502,22 +525,22 @@ public class MultiModeActivity extends Activity {
             switch (socketRequestType) {
                 case GET_LIST_ROOM:
                     responseReceived = mySocket.getGetRoomListRequestFlags().waitResponse();
-                    if(responseReceived) {
+                    if (responseReceived) {
                         responseReceived = true;
-                    } else{
+                    } else {
                         responseReceived = false;
                         showToast("No server answer not received");
                     }
                     break;
                 case NEW_ROOM_REQUEST:
                     responseReceived = mySocket.getRoomCreationRequestFlags().waitResponse();
-                    if(!responseReceived){
+                    if (!responseReceived) {
                         showToast("No server answer not received");
                     }
                     break;
                 case JOIN_ROOM_REQUEST:
                     responseReceived = mySocket.getJoinRoomRequestFlags().waitResponse();
-                    if(!responseReceived){
+                    if (!responseReceived) {
                         showToast("No server answer not received");
                     }
                     break;
@@ -534,7 +557,7 @@ public class MultiModeActivity extends Activity {
             progressDialog.hide();
             progressDialog.dismiss();
 
-            if(SocketConstants.SocketRequestType.GET_LIST_ROOM.equals(socketRequestType) && responseReceived) {
+            if (SocketConstants.SocketRequestType.GET_LIST_ROOM.equals(socketRequestType) && responseReceived) {
                 foundRooms.clear();
                 if (jsonArrayReceived != null) {
                     for (int i = 0; i < jsonArrayReceived.length(); i++) {
@@ -560,57 +583,99 @@ public class MultiModeActivity extends Activity {
 
     }
 
-    protected void initGPSLocation() {
-        final LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    protected void getCustomMapForMultiMode(final Room room) {
+        final LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            GPSAsyncTask gpsAsyncTask = new GPSAsyncTask(room);
+            gpsAsyncTask.execute(locationManager);
+        } else {
             buildAlertMessageNoGps();
         }
-
-        showToast("Getting location");
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                setLocation(location);
-                locationManager.removeUpdates(this);
-                showToast("Location detected");
-                double latitude = (location.getLatitude());
-                double longitude = (location.getLongitude());
-                showToast("Position : " + latitude +" and " + longitude);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-        };
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0.F, locationListener);
-    }
-
-    private void setLocation(Location location){
-        locationGPS=location;
     }
 
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        builder.setMessage("Your GPS is disabled, you must enable it")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+
+    protected class GPSAsyncTask extends AsyncTask<LocationManager, Void, Void> implements LocationListener {
+        private ProgressDialog progressDialog;
+        private Location location = null;
+        private Room room;
+
+        public GPSAsyncTask(final Room room) {
+            this.room = room;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MultiModeActivity.this);
+            progressDialog.setMessage("Search location ...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(LocationManager... params) {
+            LocationManager locationManager = params[0];
+
+            Looper.prepare();
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+            Looper.loop();
+
+            return null;
+        }
+
+
+        @Override
+        public void onLocationChanged(Location location) {
+            this.location = location;
+            Looper.myLooper().quit();
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            progressDialog.hide();
+            progressDialog.dismiss();
+
+            try {
+                room.setLatitude(location.getLatitude());
+                room.setLongitude(location.getLongitude());
+                sendMultiModeRoomCreation(room.ToJSONObject());
+            } catch (JSONException e) {
+                Log.e("JSONException", e.getMessage(), e);
+            }
+        }
+
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
     }
 
 }
