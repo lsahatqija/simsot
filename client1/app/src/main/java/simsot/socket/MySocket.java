@@ -184,6 +184,16 @@ public final class MySocket {
         }
     }
 
+    public void sendLeaveSoloRoom(String roomName){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(SocketConstants.ROOM_NAME, roomName);
+            mSocket.emit(SocketConstants.LEAVE_SOLO_ROOM, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /***
      * CONNECT
      ***/
