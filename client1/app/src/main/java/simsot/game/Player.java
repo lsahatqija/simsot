@@ -76,8 +76,6 @@ public class Player {
 
     public void update(List touchEvents, SampleGame game) {
 
-        animate();
-
         if (centerX > 510) {
             centerX = 0;
         } else if (centerX < 0) {
@@ -104,6 +102,7 @@ public class Player {
             movementControl(touchEvents);
             centerX += speedX;
             centerY += speedY;
+            animate();
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         } else if (PacManConstants.REMOTE.equals(mode)) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
@@ -112,6 +111,7 @@ public class Player {
                     JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
                     centerX = json.getInt(SocketConstants.X);
                     centerY = json.getInt(SocketConstants.Y);
+                    animate();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -121,6 +121,7 @@ public class Player {
             callAI();
             centerX += speedX;
             centerY += speedY;
+            animate();
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         }
 
@@ -128,7 +129,6 @@ public class Player {
             walkCounter = 0;
         }
         walkCounter++;
-
     }
 
     public String getMode() {
@@ -137,33 +137,45 @@ public class Player {
 
     public void animate(){
         if (Pacman.class.isInstance(this)) {
-            if ((isMovingHor()) && getSpeedX() <= 0) {
-                if (walkCounter % 16 == 0) {
+            if ((isMovingHor()) && getSpeedX() < 0) {
+                if (currentSprite != characterLeft1 && currentSprite != characterLeft2) {
+                    currentSprite = characterLeft1;
+                    walkCounter = 0;
+                } else if (walkCounter % 16 == 0) {
                     currentSprite = characterLeft1;
                 } else if (walkCounter % 16 == 8) {
                     currentSprite = characterLeft2;
                 }
             } else if ((isMovingHor()) && getSpeedX() > 0) {
-                if (walkCounter % 16 == 0) {
+                if (currentSprite != characterRight1 && currentSprite != characterRight2) {
+                    currentSprite = characterRight1;
+                    walkCounter = 0;
+                } else if (walkCounter % 16 == 0) {
                     currentSprite = characterRight1;
                 } else if (walkCounter % 16 == 8) {
                     currentSprite = characterRight2;
                 }
-            } else if ((isMovingVer()) && getSpeedY() <= 0) {
-                if (walkCounter % 16 == 0) {
+            } else if ((isMovingVer()) && getSpeedY() < 0) {
+                if (currentSprite != characterUp1 && currentSprite != characterUp2) {
+                    currentSprite = characterUp1;
+                    walkCounter = 0;
+                } else if (walkCounter % 16 == 0) {
                     currentSprite = characterUp1;
                 } else if (walkCounter % 16 == 8) {
                     currentSprite = characterUp2;
                 }
             } else if ((isMovingVer()) && getSpeedY() > 0) {
-                if (walkCounter % 16 == 0) {
+                if (currentSprite != characterDown1 && currentSprite != characterDown2) {
+                    currentSprite = characterDown1;
+                    walkCounter = 0;
+                } else if (walkCounter % 16 == 0) {
                     currentSprite = characterDown1;
                 } else if (walkCounter % 16 == 8) {
                     currentSprite = characterDown2;
                 }
             }
         } else if (!vulnerable) {
-            if ((isMovingVer() || isMovingHor()) && getSpeedX() <= 0) {
+            if ((isMovingVer() || isMovingHor()) && getSpeedX() < 0) {
                 if (walkCounter % 16 == 0) {
                     currentSprite = characterLeft1;
                 } else if (walkCounter % 16 == 8) {
@@ -175,11 +187,13 @@ public class Player {
                 } else if (walkCounter % 16 == 8) {
                     currentSprite = characterRight2;
                 }
+            } else // in case ghost isn't moving or is colliding
+            {
+                currentSprite = characterLeft1;
             }
         } else {
             currentSprite = vulnerableMode;
         }
-
     }
 
     public void callAI() {
@@ -211,7 +225,6 @@ public class Player {
                 else if (direction < 1.00 && direction >= 0.75)
                     moveDown();
             }
-
         }
     }
 
