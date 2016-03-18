@@ -299,7 +299,7 @@ public class Player {
         rx = centerX % 30;
         if (rx < 15)
             centerX += rx - 15;
-        else if (ry >= 15)
+        else if (rx >= 15)
             centerX -= rx - 15;
         speedX = 0;
         setMovingHor(false);
