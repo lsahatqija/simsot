@@ -1,13 +1,13 @@
 package simsot.game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import android.graphics.Rect;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import simsot.framework.Image;
 import simsot.framework.Input;
@@ -136,7 +136,33 @@ public class Player {
     }
 
     public void animate(){
-        if(!vulnerable || Pacman.class.isInstance(this)){
+        if (Pacman.class.isInstance(this)) {
+            if ((isMovingHor()) && getSpeedX() <= 0) {
+                if (walkCounter % 16 == 0) {
+                    currentSprite = characterLeft1;
+                } else if (walkCounter % 16 == 8) {
+                    currentSprite = characterLeft2;
+                }
+            } else if ((isMovingHor()) && getSpeedX() > 0) {
+                if (walkCounter % 16 == 0) {
+                    currentSprite = characterRight1;
+                } else if (walkCounter % 16 == 8) {
+                    currentSprite = characterRight2;
+                }
+            } else if ((isMovingVer()) && getSpeedY() <= 0) {
+                if (walkCounter % 16 == 0) {
+                    currentSprite = characterUp1;
+                } else if (walkCounter % 16 == 8) {
+                    currentSprite = characterUp2;
+                }
+            } else if ((isMovingVer()) && getSpeedY() > 0) {
+                if (walkCounter % 16 == 0) {
+                    currentSprite = characterDown1;
+                } else if (walkCounter % 16 == 8) {
+                    currentSprite = characterDown2;
+                }
+            }
+        } else if (!vulnerable) {
             if ((isMovingVer() || isMovingHor()) && getSpeedX() <= 0) {
                 if (walkCounter % 16 == 0) {
                     currentSprite = characterLeft1;
