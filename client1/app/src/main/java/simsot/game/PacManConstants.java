@@ -12,4 +12,10 @@ public final class PacManConstants {
     public static final String AI = "AI";
     public static final String LOCAL = "local";
     public static final String REMOTE = "remote";
+
+    public static final int PACMAN_START_X = 105;
+    public static final int PACMAN_START_Y = 195;
+
+    public static final int NB_PIXELS_IN_CELL = 30;
+    public static final int HALF_NB_PIXELS_IN_CELL = NB_PIXELS_IN_CELL / 2;
 }

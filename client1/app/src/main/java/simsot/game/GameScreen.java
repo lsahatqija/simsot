@@ -24,6 +24,9 @@ public class GameScreen extends Screen {
 
 	// Variable Setup
 
+	private static final int PACMAN_START_X = PacManConstants.PACMAN_START_X;
+	private static final int PACMAN_START_Y = PacManConstants.PACMAN_START_Y;
+
 	private int walkCounter = 1;
     private int countDown = 180;
     private int roundCountDown = 180;
@@ -37,7 +40,7 @@ public class GameScreen extends Screen {
 	public static Image tileTree, tileGrass, background;
 	private Animation anim;
 
-	private ArrayList<Tile> tilearray = new ArrayList<Tile>();
+	public static ArrayList<Tile> tilearray = new ArrayList<Tile>();
 	public static ArrayList<Enemy> enemyarray = new ArrayList<Enemy>();
     public static ArrayList<Pellet> pelletarray = new ArrayList<Pellet>();
     public static ArrayList<Player> playerarray = new ArrayList<Player>();
@@ -171,7 +174,6 @@ public class GameScreen extends Screen {
 
 			}
 		}
-
 	}
 
 	@Override
@@ -222,7 +224,6 @@ public class GameScreen extends Screen {
             TouchEvent event = (TouchEvent) touchEvents.get(i);
             if (inBounds(event, 0, 0, 35, 35)) {
                 pause();
-
             }
         }
 
@@ -231,7 +232,6 @@ public class GameScreen extends Screen {
             play.update(touchEvents, (SampleGame) game);
         }
 
-		checkTileCollisions();
         checkPlayerCollision();
 		bg1.update();
 		updateTiles();
@@ -242,27 +242,18 @@ public class GameScreen extends Screen {
 		walkCounter++;
 	}
 
-	private void checkTileCollisions() {
-		for (int i = 0; i < tilearray.size(); i++) {
-			Tile t = tilearray.get(i);
-			if(t.getType() != '0'){
-				t.checkCollisions();
-			}
-		}
-	}
-
     private void checkPlayerCollision(){
         for (int i = 0; i < playerarray.size(); i++){
             Player p = playerarray.get(i);
-            if(!Pacman.class.isInstance(p))
-                if(Rect.intersects(p.rect, pacman.rect)){
-                    if(!isPowerMode)
-                        pacmanDeath();
-                    else
-                        ghostDeath(p);
-                }
+			if(!Pacman.class.isInstance(p)) {
+				if (Rect.intersects(p.rect, pacman.rect)) {
+					if (!isPowerMode)
+						pacmanDeath();
+					else
+						ghostDeath(p);
+				}
+			}
         }
-
     }
 
 	private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {
@@ -278,12 +269,10 @@ public class GameScreen extends Screen {
 			TouchEvent event = (TouchEvent) touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
 				if (inBounds(event, 0, 0, 480, 400)) {
-
 					if (!inBounds(event, 0, 0, 35, 35)) {
 						resume();
 					}
 				}
-
 				if (inBounds(event, 0, 400, 480, 800)) {
 					nullify();
 					goToMenu();
@@ -304,20 +293,16 @@ public class GameScreen extends Screen {
 				}
 			}
 		}
-
 	}
 
 	private void updateTiles() {
-
 		for (int i = 0; i < tilearray.size(); i++) {
 			Tile t = (Tile) tilearray.get(i);
 			t.update();
 		}
-
 	}
 
     private void updateItems() {
-
         for (int i = 0; i < pelletarray.size(); i++) {
             Item p = (Item) pelletarray.get(i);
             p.update();
@@ -340,7 +325,6 @@ public class GameScreen extends Screen {
         if(score == maxScore){
             state = GameState.Win;
         }
-
     }
 
 	@Override
@@ -524,11 +508,11 @@ public class GameScreen extends Screen {
             state = GameState.Round;
 
             //Pacman reset
-            pacman.setCenterX(100);
-            pacman.setCenterY(200);
+            pacman.setCenterX(PACMAN_START_X);
+            pacman.setCenterY(PACMAN_START_Y);
 
             //Inky reset
-            inky.setCenterX(100);
+            inky.setCenterX(PACMAN_START_X);
             inky.setCenterY(500);
 
             //Pinky reset
@@ -559,7 +543,6 @@ public class GameScreen extends Screen {
 	public void pause() {
 		if (state == GameState.Running)
 			state = GameState.Paused;
-
 	}
 
 	@Override
@@ -580,7 +563,6 @@ public class GameScreen extends Screen {
 
 	private void goToMenu() {
 		game.setScreen(new MainMenuScreen(game));
-
 	}
 
 	public static Background getBg1() {

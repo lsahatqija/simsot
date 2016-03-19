@@ -17,14 +17,20 @@ import simsot.socket.SocketConstants;
 public class Player {
 
     final int MOVESPEED = 4;
+    private final int NB_PIXELS_IN_CELL = PacManConstants.NB_PIXELS_IN_CELL;
+    private final int HALF_NB_PIXELS_IN_CELL = PacManConstants.HALF_NB_PIXELS_IN_CELL;
+
+    private final int WALK_COUNTER_LOOP = NB_PIXELS_IN_CELL / MOVESPEED;
+    private final int HALF_WALK_COUNTER_LOOP = WALK_COUNTER_LOOP / 2;
 
     private int centerX = 100;
     private int centerY = 100;
-    private int rx, ry;
     private int speedX = 0;
     private int speedY = 0;
     private int scrollingSpeed = 0;
     private int health = 10;
+    private String forceMove = "no";
+    private String lastButtonPressed = "left";
     private boolean isMovingVer = false;
     private boolean isMovingHor = false;
     public boolean isColliding = false;
@@ -75,6 +81,7 @@ public class Player {
     }
 
     public void update(List touchEvents, SampleGame game) {
+        ArrayList<Tile> tilearray = GameScreen.tilearray;
 
         if (centerX > 510) {
             centerX = 0;
@@ -95,13 +102,25 @@ public class Player {
         }
 
         // Collision
-        rect.set(centerX - 15, centerY - 15, centerX + 15, centerY + 15);
+        rect.set(centerX - HALF_NB_PIXELS_IN_CELL,
+                centerY - HALF_NB_PIXELS_IN_CELL,
+                centerX + HALF_NB_PIXELS_IN_CELL,
+                centerY + HALF_NB_PIXELS_IN_CELL);
 
         //movement
         if (PacManConstants.LOCAL.equals(mode)) {
-            movementControl(touchEvents);
-            centerX += speedX;
-            centerY += speedY;
+            if ("no".equals(forceMove)) {
+                movementControl(touchEvents);
+                checkTileCollisions(tilearray);
+            } else if ("up".equals(forceMove)) {
+                stopUp();
+            } else if ("down".equals(forceMove)) {
+                stopDown();
+            } else if ("left".equals(forceMove)) {
+                stopLeft();
+            } else if ("right".equals(forceMove)) {
+                stopRight();
+            }
             animate();
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         } else if (PacManConstants.REMOTE.equals(mode)) {
@@ -117,10 +136,19 @@ public class Player {
                 }
             }
         } else if (PacManConstants.AI.equals(mode)) {
-            direction = Math.random();
-            callAI();
-            centerX += speedX;
-            centerY += speedY;
+            if ("no".equals(forceMove)) {
+                direction = Math.random();
+                callAI();
+                checkTileCollisions(tilearray);
+            } else if ("up".equals(forceMove)) {
+                stopUp();
+            } else if ("down".equals(forceMove)) {
+                stopDown();
+            } else if ("left".equals(forceMove)) {
+                stopLeft();
+            } else if ("right".equals(forceMove)) {
+                stopRight();
+            }
             animate();
             mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
         }
@@ -131,132 +159,75 @@ public class Player {
         walkCounter++;
     }
 
-    public String getMode() {
-        return mode;
-    }
-
-    public void animate(){
-        if (Pacman.class.isInstance(this)) {
-            if ((isMovingHor()) && getSpeedX() < 0) {
-                if (currentSprite != characterLeft1 && currentSprite != characterLeft2) {
-                    currentSprite = characterLeft1;
-                    walkCounter = 0;
-                } else if (walkCounter % 16 == 0) {
-                    currentSprite = characterLeft1;
-                } else if (walkCounter % 16 == 8) {
-                    currentSprite = characterLeft2;
-                }
-            } else if ((isMovingHor()) && getSpeedX() > 0) {
-                if (currentSprite != characterRight1 && currentSprite != characterRight2) {
-                    currentSprite = characterRight1;
-                    walkCounter = 0;
-                } else if (walkCounter % 16 == 0) {
-                    currentSprite = characterRight1;
-                } else if (walkCounter % 16 == 8) {
-                    currentSprite = characterRight2;
-                }
-            } else if ((isMovingVer()) && getSpeedY() < 0) {
-                if (currentSprite != characterUp1 && currentSprite != characterUp2) {
-                    currentSprite = characterUp1;
-                    walkCounter = 0;
-                } else if (walkCounter % 16 == 0) {
-                    currentSprite = characterUp1;
-                } else if (walkCounter % 16 == 8) {
-                    currentSprite = characterUp2;
-                }
-            } else if ((isMovingVer()) && getSpeedY() > 0) {
-                if (currentSprite != characterDown1 && currentSprite != characterDown2) {
-                    currentSprite = characterDown1;
-                    walkCounter = 0;
-                } else if (walkCounter % 16 == 0) {
-                    currentSprite = characterDown1;
-                } else if (walkCounter % 16 == 8) {
-                    currentSprite = characterDown2;
-                }
-            }
-        } else if (!vulnerable) {
-            if ((isMovingVer() || isMovingHor()) && getSpeedX() < 0) {
-                if (walkCounter % 16 == 0) {
-                    currentSprite = characterLeft1;
-                } else if (walkCounter % 16 == 8) {
-                    currentSprite = characterLeft2;
-                }
-            } else if ((isMovingVer() || isMovingHor()) && getSpeedX() > 0) {
-                if (walkCounter % 16 == 0) {
-                    currentSprite = characterRight1;
-                } else if (walkCounter % 16 == 8) {
-                    currentSprite = characterRight2;
-                }
-            } else // in case ghost isn't moving or is colliding
-            {
-                currentSprite = characterLeft1;
-            }
-        } else {
-            currentSprite = vulnerableMode;
-        }
-    }
-
-    public void callAI() {
-        if (alive == true) {
-            if (!colliding) {
-                if (walkCounter % 50 == 1) {
-                    if (direction < 0.25)
-                        moveRight();
-                    else if (direction < 0.55 && direction >= 0.25)
-                        moveLeft();
-                    else if (direction < 0.75 && direction >= 0.55)
-                        moveUp();
-                    else if (direction < 1.00 && direction >= 0.75)
-                        moveDown();
-                } /*else if (walkCounter % 200 == 51) {
-                    moveDown();
-                } else if (walkCounter % 200 == 101) {
-                    moveLeft();
-                } else if (walkCounter % 200 == 151) {
-                    moveUp();
-                }*/
-            } else {
-                if (direction < 0.25)
-                    moveRight();
-                else if (direction < 0.55 && direction >= 0.25)
-                    moveLeft();
-                else if (direction < 0.75 && direction >= 0.55)
-                    moveUp();
-                else if (direction < 1.00 && direction >= 0.75)
-                    moveDown();
-            }
-        }
-    }
-
     public void movementControl(List touchEvents) {
         int len = touchEvents.size();
-        for (int i = 0; i < len; i++) {
-            Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
-            if (event.type == Input.TouchEvent.TOUCH_DOWN) {
-                if (inBounds(event, 215, 645, 50, 50)) {
-                    moveUp();
-                } else if (inBounds(event, 215, 715, 50, 50)) {
-                    moveDown();
+        if ("no".equals(forceMove)) {
+            for (int i = 0; i < len; i++) {
+                Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
+                if (event.type == Input.TouchEvent.TOUCH_DOWN) {
+                    if (inBounds(event, 215, 645, 50, 50)) {
+                        lastButtonPressed = "up";
+                        moveUp();
+                    } else if (inBounds(event, 215, 715, 50, 50)) {
+                        lastButtonPressed = "down";
+                        moveDown();
+                    } else if (inBounds(event, 165, 675, 50, 50)) {
+                        lastButtonPressed = "left";
+                        moveLeft();
+                    } else if (inBounds(event, 265, 675, 50, 50)) {
+                        lastButtonPressed = "right";
+                        moveRight();
+                    }
                 }
-                if (inBounds(event, 165, 675, 50, 50)) {
-                    moveLeft();
-                } else if (inBounds(event, 265, 675, 50, 50)) {
-                    moveRight();
-                }
-            }
 
-            if (event.type == Input.TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 215, 645, 50, 50)) {
-                    stopVer();
-                } else if (inBounds(event, 215, 715, 50, 50)) {
-                    stopVer();
-                }
-                if (inBounds(event, 165, 675, 50, 50)) {
-                    stopHor();
-                } else if (inBounds(event, 265, 675, 50, 50)) {
-                    stopHor();
+                if (event.type == Input.TouchEvent.TOUCH_UP) {
+                    if (inBounds(event, 215, 645, 50, 50)) {
+                        stopUp();
+                    } else if (inBounds(event, 215, 715, 50, 50)) {
+                        stopDown();
+                    } else if (inBounds(event, 165, 675, 50, 50)) {
+                        stopLeft();
+                    } else if (inBounds(event, 265, 675, 50, 50)) {
+                        stopRight();
+                    }
                 }
             }
+        } else {
+            for (int i = 0; i < len; i++) {
+                Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
+                if (event.type == Input.TouchEvent.TOUCH_DOWN) {
+                    if (inBounds(event, 215, 645, 50, 50)) {
+                        lastButtonPressed = "up";
+                    } else if (inBounds(event, 215, 715, 50, 50)) {
+                        lastButtonPressed = "down";
+                    } else if (inBounds(event, 165, 675, 50, 50)) {
+                        lastButtonPressed = "left";
+                    } else if (inBounds(event, 265, 675, 50, 50)) {
+                        lastButtonPressed = "right";
+                    }
+                }
+            }
+        }
+    }
+
+    private void checkTileCollisions(ArrayList<Tile> tilearray) {
+        for (int i = 0; i < tilearray.size(); i++) {
+            Tile t = tilearray.get(i);
+            if (t.getType() != '0') {
+                if (speedX > 0) {
+                    t.checkRightCollision(this);
+                } else if (speedX < 0) {
+                    t.checkLeftCollision(this);
+                } else if (speedY > 0) {
+                    t.checkDownCollision(this);
+                } else if (speedY < 0) {
+                    t.checkUpCollision(this);
+                }
+            }
+        }
+        if (!colliding) {
+            setCenterX(getCenterX() + getSpeedX());
+            setCenterY(getCenterY() + getSpeedY());
         }
     }
 
@@ -267,16 +238,30 @@ public class Player {
             return false;
     }
 
-    public int isShooting() {
-        return isShooting;
-    }
-
-    public void setShooting(int isShooting) {
-        this.isShooting = isShooting;
-    }
-
-    public ArrayList<Projectile> getProjectiles() {
-        return projectiles;
+    public void callAI() {
+        if (alive) {
+            if (!colliding) {
+                if (walkCounter % 50 == 1) {
+                    if (direction < 0.25)
+                        moveRight();
+                    else if (direction < 0.50)
+                        moveLeft();
+                    else if (direction < 0.75)
+                        moveUp();
+                    else if (direction < 1.00)
+                        moveDown();
+                }
+            } else {
+                if (direction < 0.25)
+                    moveRight();
+                else if (direction < 0.50)
+                    moveLeft();
+                else if (direction < 0.75)
+                    moveUp();
+                else if (direction < 1.00)
+                    moveDown();
+            }
+        }
     }
 
     public void moveRight() {
@@ -295,38 +280,133 @@ public class Player {
 
     public void moveUp() {
         if (!isColliding) {
-            this.setSpeedY(-MOVESPEED);
+            speedY = -MOVESPEED;
             setMovingVer(true);
         }
     }
 
     public void moveDown() {
         if (!isColliding) {
-            this.setSpeedY(MOVESPEED);
+            speedY = MOVESPEED;
             setMovingVer(true);
         }
     }
 
-    public void stopHor() {
-        //Gridding
-        rx = centerX % 30;
-        if (rx < 15)
-            centerX += rx - 15;
-        else if (rx >= 15)
-            centerX -= rx - 15;
+    public void stopLeft() {
+        // Keep going until center of next cell is reached
+        int distanceToCenter = (centerX + HALF_NB_PIXELS_IN_CELL) % NB_PIXELS_IN_CELL;
+        if (distanceToCenter <= MOVESPEED) {
+            centerX -= distanceToCenter;
+            setMovingHor(false);
+            forceMove = "no";
+        } else {
+            centerX -= MOVESPEED;
+            forceMove = "left";
+        }
         speedX = 0;
-        setMovingHor(false);
     }
 
-    public void stopVer() {
-        //Gridding
-        ry = centerY % 30;
-        if (ry < 15)
-            centerY += ry - 15;
-        else if (ry >= 15)
-            centerY -= ry - 15;
+    public void stopRight() {
+        // Keep going until center of next cell is reached
+        int distanceToCenter = (900 + HALF_NB_PIXELS_IN_CELL - centerX) % NB_PIXELS_IN_CELL;
+        if (distanceToCenter <= MOVESPEED) {
+            centerX += distanceToCenter;
+            setMovingHor(false);
+            forceMove = "no";
+        } else {
+            centerX += MOVESPEED;
+            forceMove = "right";
+        }
+        speedX = 0;
+    }
+
+    public void stopUp() {
+        // Keep going until center of next cell is reached
+        int distanceToCenter = (centerY - HALF_NB_PIXELS_IN_CELL) % NB_PIXELS_IN_CELL;
+        if (distanceToCenter <= MOVESPEED) {
+            centerY -= distanceToCenter;
+            setMovingVer(false);
+            forceMove = "no";
+        } else {
+            centerY -= MOVESPEED;
+            forceMove = "up";
+        }
         speedY = 0;
-        setMovingVer(false);
+    }
+
+    public void stopDown() {
+        // Keep going until center of next cell is reached
+        int distanceToCenter = (900 + HALF_NB_PIXELS_IN_CELL - centerY) % NB_PIXELS_IN_CELL;
+        if (distanceToCenter <= MOVESPEED) {
+            centerY += distanceToCenter;
+            setMovingVer(false);
+            forceMove = "no";
+        } else {
+            centerY += MOVESPEED;
+            forceMove = "down";
+        }
+        speedY = 0;
+    }
+
+    public void animate() {
+        if (Pacman.class.isInstance(this)) {
+            if ("left".equals(lastButtonPressed)) {
+                if (getSpeedX() == 0) {
+                    currentSprite = characterLeft1;
+                    walkCounter = 0;
+                } else if (walkCounter % WALK_COUNTER_LOOP == 0) {
+                    currentSprite = characterLeft1;
+                } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
+                    currentSprite = characterLeft2;
+                }
+            } else if ("right".equals(lastButtonPressed)) {
+                if (getSpeedX() == 0) {
+                    currentSprite = characterRight1;
+                    walkCounter = 0;
+                } else if (walkCounter % WALK_COUNTER_LOOP == 0) {
+                    currentSprite = characterRight1;
+                } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
+                    currentSprite = characterRight2;
+                }
+            } else if ("up".equals(lastButtonPressed)) {
+                if (getSpeedY() == 0) {
+                    currentSprite = characterUp1;
+                    walkCounter = 0;
+                } else if (walkCounter % WALK_COUNTER_LOOP == 0) {
+                    currentSprite = characterUp1;
+                } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
+                    currentSprite = characterUp2;
+                }
+            } else if ("down".equals(lastButtonPressed)) {
+                if (getSpeedY() == 0) {
+                    currentSprite = characterDown1;
+                    walkCounter = 0;
+                } else if (walkCounter % WALK_COUNTER_LOOP == 0) {
+                    currentSprite = characterDown1;
+                } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
+                    currentSprite = characterDown2;
+                }
+            }
+        } else if (!vulnerable) {
+            if ((isMovingVer() || isMovingHor()) && getSpeedX() < 0) {
+                if (walkCounter % WALK_COUNTER_LOOP == 0) {
+                    currentSprite = characterLeft1;
+                } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
+                    currentSprite = characterLeft2;
+                }
+            } else if ((isMovingVer() || isMovingHor()) && getSpeedX() > 0) {
+                if (walkCounter % WALK_COUNTER_LOOP == 0) {
+                    currentSprite = characterRight1;
+                } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
+                    currentSprite = characterRight2;
+                }
+            } else // in case ghost isn't moving or is colliding
+            {
+                currentSprite = characterLeft1;
+            }
+        } else {
+            currentSprite = vulnerableMode;
+        }
     }
 
     public boolean isMovingVer() {

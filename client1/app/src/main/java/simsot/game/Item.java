@@ -19,12 +19,11 @@ public class Item {
         centerX = (x * 30) + 15;
         centerY = (y * 30) + 15;
 
-        r = new Rect(getCenterX(),getCenterY(),getCenterX()+10,getCenterY()+10);
-
+        r = new Rect(getCenterX(), getCenterY(), getCenterX() + 10, getCenterY() + 10);
     }
 
     public void update() {
-        r.set(getCenterX() - 6, getCenterY() - 6, getCenterX() + 6, getCenterY() + 6);
+        r.set(getCenterX() - 5, getCenterY() - 5, getCenterX() + 5, getCenterY() + 5);
         checkCollision(pacman);
     }
 
@@ -32,6 +31,14 @@ public class Item {
         if (Rect.intersects(pacman.rect, r)) {
             touched = true;
         }
+    }
+
+    public int getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(int centerX) {
+        this.centerX = centerX;
     }
 
     public int getCenterY() {
@@ -48,15 +55,6 @@ public class Item {
 
     public void setR(Rect r) {
         this.r = r;
-    }
-
-    public int getCenterX() {
-
-        return centerX;
-    }
-
-    public void setCenterX(int centerX) {
-        this.centerX = centerX;
     }
 
 }

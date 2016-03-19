@@ -8,6 +8,9 @@ import simsot.framework.Image;
 
 public class Tile {
 
+	private final int NB_PIXELS_IN_CELL = PacManConstants.NB_PIXELS_IN_CELL;
+	private final int HALF_NB_PIXELS_IN_CELL = PacManConstants.HALF_NB_PIXELS_IN_CELL;
+
 	private int speedX = 0;
 	private int speedY = 0;
 	private int centerX;
@@ -30,11 +33,14 @@ public class Tile {
 	}
 	
 	public Tile(int x, int y, char typeInt) {
-		centerX = (x * 30) + 15;
-		centerY = (y * 30) + 15;
+		centerX = (x * NB_PIXELS_IN_CELL) + HALF_NB_PIXELS_IN_CELL;
+		centerY = (y * NB_PIXELS_IN_CELL) + HALF_NB_PIXELS_IN_CELL;
 		type = typeInt;
 
-		r = new Rect(getCenterX(),getCenterY(),getCenterX()+20,getCenterY()+20);
+		r = new Rect(getCenterX() - HALF_NB_PIXELS_IN_CELL,
+				getCenterY() - HALF_NB_PIXELS_IN_CELL,
+				getCenterX() + HALF_NB_PIXELS_IN_CELL,
+				getCenterY() + HALF_NB_PIXELS_IN_CELL);
 		
 		if (type == 't') {
 			tileImage = GameScreen.tileTree;
@@ -43,54 +49,64 @@ public class Tile {
 		}
 	}
 
-	public void checkHorizontalCollision(Player player) {
-		if (Rect.intersects(player.rect, r)) {
-			if (player.getCenterX() < this.getCenterX()) {
-				player.setCenterX(player.getCenterX() - 2);
-                player.setSpeedX(0);
-                player.colliding = true;
-                player.collisionDirection = "left";
-			} else if (player.getCenterX() > this.getCenterX()) {
-                player.setCenterX(player.getCenterX() + 2);
-                player.setSpeedX(0);
-                player.colliding = true;
-                player.collisionDirection = "right";
-			}
+	public void checkRightCollision(Player player) {
+		if (r.contains(player.getCenterX() + player.getSpeedX() + HALF_NB_PIXELS_IN_CELL + 1,
+				player.getCenterY())) {
+
+			player.setCenterX(centerX - NB_PIXELS_IN_CELL);
+			player.setSpeedX(0);
+			player.colliding = true;
+			player.collisionDirection = "left";
 		} else {
-            player.colliding = false;
-            player.collisionDirection = "none";
-        }
+			player.colliding = false;
+			player.collisionDirection = "none";
+		}
 	}
 
-	public void checkVerticalCollision(Player player) {
-		if (Rect.intersects(player.rect, r)) {
-			if (player.getCenterY() < this.getCenterY()) {
-                player.setCenterY(player.getCenterY() - 2);
-                player.setSpeedY(0);
-                player.colliding = true;
-                player.collisionDirection = "up";
-			} else if (player.getCenterY() > this.getCenterY()) {
-                player.setCenterY(player.getCenterY() + 2);
-                player.setSpeedY(0);
-                player.colliding = true;
-                player.collisionDirection = "down";
-			}
+	public void checkLeftCollision(Player player) {
+		if (r.contains(player.getCenterX() + player.getSpeedX() - HALF_NB_PIXELS_IN_CELL,
+				player.getCenterY())) {
+
+			player.setCenterX(centerX + NB_PIXELS_IN_CELL);
+			player.setSpeedX(0);
+			player.colliding = true;
+			player.collisionDirection = "left";
 		} else {
-            player.colliding = false;
-            player.collisionDirection = "none";
-        }
+			player.colliding = false;
+			player.collisionDirection = "none";
+		}
 	}
-	
-	public void checkCollisions() {
-        for(int j = 0; j < playerarray.size(); j++){
-            Player player = playerarray.get(j);
-            checkHorizontalCollision(player);
-            checkVerticalCollision(player);
-        }
+
+	public void checkDownCollision(Player player) {
+		if (r.contains(player.getCenterX(),
+				player.getCenterY() + player.getSpeedY() + HALF_NB_PIXELS_IN_CELL + 1)) {
+
+			player.setCenterY(centerY - NB_PIXELS_IN_CELL);
+			player.setSpeedY(0);
+			player.colliding = true;
+			player.collisionDirection = "left";
+		} else {
+			player.colliding = false;
+			player.collisionDirection = "none";
+		}
+	}
+
+	public void checkUpCollision(Player player) {
+		if (r.contains(player.getCenterX(),
+				player.getCenterY() + player.getSpeedY() - HALF_NB_PIXELS_IN_CELL)) {
+
+			player.setCenterY(centerY + NB_PIXELS_IN_CELL);
+			player.setSpeedY(0);
+			player.colliding = true;
+			player.collisionDirection = "left";
+		} else {
+			player.colliding = false;
+			player.collisionDirection = "none";
+		}
 	}
 
 	public void update() {
-		r.set(getCenterX()-13, getCenterY()-13, getCenterX()+13, getCenterY()+13);
+		r.set(getCenterX() - 15, getCenterY() - 15, getCenterX() + 15, getCenterY() + 15);
 	}
 
 	public int getSpeedX() {
