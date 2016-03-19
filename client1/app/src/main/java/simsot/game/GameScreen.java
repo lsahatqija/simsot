@@ -105,7 +105,7 @@ public class GameScreen extends Screen {
 
 		loadMap();
         maxScore = pelletarray.size();
-        System.out.println(maxScore);
+        repositionCharacters();
 
 		// Defining a paint object
 		paint = new Paint();
@@ -126,11 +126,20 @@ public class GameScreen extends Screen {
 
 	}
 
+    private void repositionCharacters(){
+        float j=1;
+        for(int i=1; i < 6; i++){
+            j = pelletarray.size()*i/5;
+            Player e = playerarray.get(i-1);
+            e.setCenterX(pelletarray.get((int)j-1).getCenterX());
+            e.setCenterY(pelletarray.get((int)j-1).getCenterY());
+        }
+    }
+
 	private void loadMap() {
 		ArrayList lines = new ArrayList();
 		int width = 0;
 		int height = 0;
-
 
 		Scanner scanner = new Scanner(((SampleGame)game).getMap());
 		while (scanner.hasNextLine()) {
@@ -171,10 +180,9 @@ public class GameScreen extends Screen {
                         pelletCounter++;
                     }
 				}
-
-			}
-		}
-	}
+		    }
+	    }
+    }
 
 	@Override
 	public void update(float deltaTime) {
@@ -488,6 +496,7 @@ public class GameScreen extends Screen {
 
     private void updateRound(){
         roundCountDown--;
+        repositionCharacters();
         if(roundCountDown == 0){
             state = GameState.Running;
             roundCountDown = 180;
@@ -533,8 +542,10 @@ public class GameScreen extends Screen {
     }
 
     public void ghostDeath(Player p){
-        p.setCenterX(270);
-        p.setCenterY(270);
+        int q = (int) (Math.random()*5);
+        System.out.println((int) (pelletarray.size() * q / 5));
+        p.setCenterX(pelletarray.get((int) (pelletarray.size() * q / 5)).getCenterX());
+        p.setCenterY(pelletarray.get((int) (pelletarray.size() * q / 5)).getCenterY());
         p.vulnerable = false;
         p.alive = true;
     }
