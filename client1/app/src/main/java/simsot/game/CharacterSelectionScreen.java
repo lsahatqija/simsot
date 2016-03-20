@@ -80,35 +80,35 @@ public class CharacterSelectionScreen extends Screen {
                 switch (character) {
                     case PacManConstants.PACMAN:
                         if (!pacmanTakenLocal) {
-                            pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                            pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, PacManConstants.REMOTE, playerNameReceived);
                             pacmanName = playerNameReceived;
                             pacmanTaken = true;
                         }
                         break;
                     case PacManConstants.INKY:
                         if (!inkyTakenLocal) {
-                            inky = new Inky(PACMAN_START_X, 500, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                            inky = new Inky(PACMAN_START_X, 500, PacManConstants.REMOTE, playerNameReceived);
                             inkyName = playerNameReceived;
                             inkyTaken = true;
                         }
                         break;
                     case PacManConstants.PINKY:
                         if (!pinkyTakenLocal) {
-                            pinky = new Pinky(300, 100, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                            pinky = new Pinky(300, 100, PacManConstants.REMOTE, playerNameReceived);
                             pinkyName = playerNameReceived;
                             pinkyTaken = true;
                         }
                         break;
                     case PacManConstants.BLINKY:
                         if (!blinkyTakenLocal) {
-                            blinky = new Blinky(300, 500, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                            blinky = new Blinky(300, 500, PacManConstants.REMOTE, playerNameReceived);
                             blinkyName = playerNameReceived;
                             blinkyTaken = true;
                         }
                         break;
                     case PacManConstants.CLYDE:
                         if (!clydeTakenLocal) {
-                            clyde = new Clyde(PACMAN_START_X, 100, PacManConstants.REMOTE, playerNameReceived, roomName, mySocket);
+                            clyde = new Clyde(PACMAN_START_X, 100, PacManConstants.REMOTE, playerNameReceived);
                             clydeName = playerNameReceived;
                             clydeTaken = true;
                         }
@@ -130,7 +130,7 @@ public class CharacterSelectionScreen extends Screen {
             if (event.type == Input.TouchEvent.TOUCH_UP) {
                 if (inBounds(event, 203, 185, 75, 75)) {
                     if (!pacmanTaken && !playerSelect) {
-                        pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, PacManConstants.LOCAL, playerName, roomName, mySocket);
+                        pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, PacManConstants.LOCAL, playerName);
                         mySocket.sendCharacterChoice(PacManConstants.PACMAN, playerName, roomName);
                         pacmanTaken = true;
                         pacmanTakenLocal = true;
@@ -139,7 +139,7 @@ public class CharacterSelectionScreen extends Screen {
                 }
                 if (inBounds(event, 96, 335, 75, 75)) {
                     if (!inkyTaken && !playerSelect) {
-                        inky = new Inky(PACMAN_START_X, 500, PacManConstants.LOCAL, playerName, roomName, mySocket);
+                        inky = new Inky(PACMAN_START_X, 500, PacManConstants.LOCAL, playerName);
                         mySocket.sendCharacterChoice(PacManConstants.INKY, playerName, roomName);
                         inkyTaken = true;
                         inkyTakenLocal = true;
@@ -148,7 +148,7 @@ public class CharacterSelectionScreen extends Screen {
                 }
                 if (inBounds(event, 171, 335, 75, 75)) {
                     if (!pinkyTaken && !playerSelect) {
-                        pinky = new Pinky(300, 100, PacManConstants.LOCAL, playerName, roomName, mySocket);
+                        pinky = new Pinky(300, 100, PacManConstants.LOCAL, playerName);
                         mySocket.sendCharacterChoice(PacManConstants.PINKY, playerName, roomName);
                         pinkyTaken = true;
                         pinkyTakenLocal = true;
@@ -157,7 +157,7 @@ public class CharacterSelectionScreen extends Screen {
                 }
                 if (inBounds(event, 247, 335, 75, 75)) {
                     if (!blinkyTaken && !playerSelect) {
-                        blinky = new Blinky(300, 500, PacManConstants.LOCAL, playerName, roomName, mySocket);
+                        blinky = new Blinky(300, 500, PacManConstants.LOCAL, playerName);
                         mySocket.sendCharacterChoice(PacManConstants.BLINKY, playerName, roomName);
                         blinkyTaken = true;
                         blinkyTakenLocal = true;
@@ -166,7 +166,7 @@ public class CharacterSelectionScreen extends Screen {
                 }
                 if (inBounds(event, 322, 335, 75, 75)) {
                     if (!clydeTaken && !playerSelect) {
-                        clyde = new Clyde(50, 100, PacManConstants.LOCAL, playerName, roomName, mySocket);
+                        clyde = new Clyde(50, 100, PacManConstants.LOCAL, playerName);
                         mySocket.sendCharacterChoice(PacManConstants.CLYDE, playerName, roomName);
                         clydeTaken = true;
                         clydeTakenLocal = true;
@@ -194,23 +194,23 @@ public class CharacterSelectionScreen extends Screen {
             }
 
             if (!pacmanTaken) {
-                pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, characterMode, PacManConstants.PACMAN, roomName, mySocket);
+                pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, characterMode, PacManConstants.PACMAN);
                 mySocket.sendCharacterChoice(PacManConstants.PACMAN, PacManConstants.PACMAN, roomName);
             }
             if (!inkyTaken) {
-                inky = new Inky(PACMAN_START_X, 500, characterMode, PacManConstants.INKY, roomName, mySocket);
+                inky = new Inky(PACMAN_START_X, 500, characterMode, PacManConstants.INKY);
                 mySocket.sendCharacterChoice(PacManConstants.INKY, PacManConstants.INKY, roomName);
             }
             if (!pinkyTaken) {
-                pinky = new Pinky(300, 100, characterMode, PacManConstants.PINKY, roomName, mySocket);
+                pinky = new Pinky(300, 100, characterMode, PacManConstants.PINKY);
                 mySocket.sendCharacterChoice(PacManConstants.PINKY, PacManConstants.PINKY, roomName);
             }
             if (!blinkyTaken) {
-                blinky = new Blinky(300, 500, characterMode, PacManConstants.BLINKY, roomName, mySocket);
+                blinky = new Blinky(300, 500, characterMode, PacManConstants.BLINKY);
                 mySocket.sendCharacterChoice(PacManConstants.BLINKY, PacManConstants.BLINKY, roomName);
             }
             if (!clydeTaken) {
-                clyde = new Clyde(PACMAN_START_X, 100, characterMode, PacManConstants.CLYDE, roomName, mySocket);
+                clyde = new Clyde(PACMAN_START_X, 100, characterMode, PacManConstants.CLYDE);
                 mySocket.sendCharacterChoice(PacManConstants.CLYDE, PacManConstants.CLYDE, roomName);
             }
 

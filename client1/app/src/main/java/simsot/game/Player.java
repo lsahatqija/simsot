@@ -59,17 +59,13 @@ public class Player {
     private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
     private String playerName;
-    private String roomName;
-    private MySocket mySocket;
     protected int lives;
 
-    public Player(int x, int y, String mode, String playerName, String roomName, MySocket mySocket) {
+    public Player(int x, int y, String mode, String playerName) {
         this.centerX = x;
         this.centerY = y;
         this.mode = mode;
         this.playerName = playerName;
-        this.roomName = roomName;
-        this.mySocket = mySocket;
         lives = 1;
         characterLeft1 = Assets.characterLeft1;
         characterLeft2 = Assets.characterLeft2;
@@ -464,10 +460,6 @@ public class Player {
 
     public String getPlayerName() {
         return playerName;
-    }
-
-    public String getRoomName() {
-        return roomName;
     }
 
     public String getCharacter() {

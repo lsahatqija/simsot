@@ -257,21 +257,23 @@ public class GameScreen extends Screen {
         }
         walkCounter++;
 
-        for (int i = 0; i < playerarray.size(); i++) {
-            Player play = playerarray.get(i);
-            if(play.isLocal() || play.isAI()){
-                if(Pacman.class.isInstance(play)){
-                    try {
-                        JSONObject gameState = new JSONObject();
-                        gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
-                        gameState.put(SocketConstants.MAX_SCORE, maxScore);
-                        gameState.put(SocketConstants.SCORE, score);
-                        mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
-                    } catch (JSONException e) {
-                        Log.e("JSONException", e.getMessage(), e);
+        if(((SampleGame) game).isMultiMode()){
+            for (int i = 0; i < playerarray.size(); i++) {
+                Player play = playerarray.get(i);
+                if(play.isLocal() || play.isAI()){
+                    if(Pacman.class.isInstance(play)){
+                        try {
+                            JSONObject gameState = new JSONObject();
+                            gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
+                            gameState.put(SocketConstants.MAX_SCORE, maxScore);
+                            gameState.put(SocketConstants.SCORE, score);
+                            mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.getMessage(), e);
+                        }
+                    } else{
+                        mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), null);
                     }
-                } else{
-                    mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), null);
                 }
             }
         }
