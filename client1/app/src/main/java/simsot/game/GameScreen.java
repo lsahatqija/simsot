@@ -8,12 +8,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import simsot.framework.Game;
 import simsot.framework.Graphics;
 import simsot.framework.Image;
 import simsot.framework.Input.TouchEvent;
 import simsot.framework.Screen;
 import simsot.socket.MySocket;
+import simsot.socket.SocketConstants;
 
 public class GameScreen extends Screen {
     enum GameState {
@@ -573,6 +578,30 @@ public class GameScreen extends Screen {
 
     private void leaveGame() {
         ((SampleGame) game).leaveGame();
+    }
+
+    private void setPelletarray(JSONArray pelletJSONArray) throws JSONException {
+        pelletarray = new ArrayList<>();
+
+        for(int i = 0; i < pelletJSONArray.length(); ++i){
+            JSONObject pelletJSONObject = pelletJSONArray.getJSONObject(0);
+            String pelletType = pelletJSONObject.getString(SocketConstants.PELLET_TYPE);
+            if(PacManConstants.PELLET_TYPE_NORMAL.equals(pelletType)){
+                pelletarray.add(new Pellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
+            } else if(PacManConstants.PELLET_TYPE_POWER.equals(pelletType)){
+                pelletarray.add(new PowerPellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
+            }
+        }
+    }
+
+    private JSONArray convertPelletArrayToJSONArray() throws JSONException {
+        JSONArray jsonArray = new JSONArray();
+
+        for(int i = 0; i < pelletarray.size(); ++i){
+            jsonArray.put(pelletarray.get(i).toJSONObject());
+        }
+
+        return jsonArray;
     }
 
     public static Background getBg1() {

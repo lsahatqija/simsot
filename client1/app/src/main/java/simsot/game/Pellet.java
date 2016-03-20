@@ -11,7 +11,7 @@ public class Pellet extends Item {
         super(centerX, centerY);
     }
 
-    public JSONObject ToJSONObject() throws JSONException {
+    public JSONObject toJSONObject() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(SocketConstants.PELLET_CENTER_X, getCenterX());
         json.put(SocketConstants.PELLET_CENTER_Y, getCenterY());
