@@ -221,16 +221,14 @@ public class SampleGame extends AndroidGame {
     }
 
     public void leaveGame() {
-        //TODO to remplace by the comments
-        setScreen(new MainMenuScreen(this));
-
-        /*if (isMultiMode()) {
+        if (isMultiMode()) {
             mySocket.sendLeaveMultiRoom(roomName, playerName);
-            finish();
+
         } else {
             mySocket.sendLeaveSoloRoom(roomName);
-            finish();
-        }*/
+        }
+
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
 
