@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,7 +24,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -304,14 +302,14 @@ public class MultiModeActivity extends Activity {
 
         roomPasswordOffRadio.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                roomPasswordCreation.setVisibility(v.INVISIBLE);
+                roomPasswordCreation.setVisibility(View.INVISIBLE);
                 roomPasswordOnRadio.setChecked(false);
             }
         });
 
         roomPasswordOnRadio.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                roomPasswordCreation.setVisibility(v.VISIBLE);
+                roomPasswordCreation.setVisibility(View.VISIBLE);
                 roomPasswordOffRadio.setChecked(false);
             }
         });

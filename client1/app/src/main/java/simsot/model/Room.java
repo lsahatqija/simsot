@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 import simsot.socket.SocketConstants;
 
@@ -46,7 +45,7 @@ public class Room implements Serializable {
         JSONObject json = new JSONObject();
 
         json.put(SocketConstants.ROOM_NAME, roomName);
-        if (isPassword == false) {
+        if (!isPassword) {
             json.put("room_password", null);
             json.put("is_password", false);
         } else {

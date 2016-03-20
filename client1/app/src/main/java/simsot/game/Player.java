@@ -94,11 +94,7 @@ public class Player {
             centerY = 630;
         }
 
-        if (GameScreen.isPowerMode) {
-            this.vulnerable = true;
-        } else {
-            this.vulnerable = false;
-        }
+        this.vulnerable = GameScreen.isPowerMode;
 
         // Collision
         rect.set(centerX - PacManConstants.HALF_NB_PIXELS_IN_CELL,
@@ -229,10 +225,7 @@ public class Player {
     }
 
     private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
-        if (event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1)
-            return true;
-        else
-            return false;
+        return event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1;
     }
 
     public void callAI() {

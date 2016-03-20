@@ -102,12 +102,8 @@ public class Enemy {
 				centerY = 799;
 				setSpeedY(-MOVESPEED);
 			}
-			
-			if (getSpeedX() != 0 || getSpeedY() !=0){
-				isMoving = true;
-			} else {
-				isMoving = false;
-			}
+
+			isMoving = getSpeedX() != 0 || getSpeedY() != 0;
 			
 			if(walkCounter < 100){
 				walkCounter++;
