@@ -136,7 +136,7 @@
                 android:id="@+id/roomCustomMapLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Custom Map :"
+                android:text="@string/room_custom_map_label"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <RadioButton
@@ -144,13 +144,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="No" />
+                android:text="@string/room_custom_map_no" />
 
             <RadioButton
                 android:id="@+id/roomCustomMapYes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yes" />
+                android:text="@string/room_custom_map_yes" />
 
         </LinearLayout>
 

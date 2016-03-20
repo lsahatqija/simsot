@@ -605,7 +605,7 @@ public class ConnectionActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(ConnectionActivity.this);
-            progressDialog.setMessage("Search location ...");
+            progressDialog.setMessage(getString(R.string.search_location));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.show();

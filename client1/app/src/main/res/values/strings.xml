@@ -37,7 +37,8 @@
     <string name="username_or_password_incorrect">Username or password is incorrect.</string>
     <string name="user_taken">Username taken.</string>
     <string name="username_or_password_empty">Username or password is empty.</string>
-    <string name="loading_message">Loading...</string>
+    <string name="loading_message">Loading</string>
+    <string name="search_location">Search location</string>
     <string name="room_not_found">Room not found</string>
     <string name="room_full">Room full</string>
     <string name="player_already_in_room">Player already in the room</string>
@@ -49,7 +50,6 @@
     <string name="no_room_found">No room found</string>
     <string name="start_game_room_button">Start Game</string>
     <string name="join_room_choice_button">Join Room</string>
-    <string name="refresh_room_player_list">Refresh player list</string>
     <string name="create_room_choice_button">Create room</string>
     <string name="room_name_creation_label">Room name</string>
     <string name="room_name_creation_hint">room name</string>
@@ -57,6 +57,11 @@
     <string name="room_password_off_radio">Off</string>
     <string name="room_password_on_radio">On</string>
     <string name="room_password_creation_hint">password</string>
+    <string name="room_custom_map_label">Custom Map :</string>
+    <string name="room_custom_map_no">No</string>
+    <string name="room_custom_map_yes">Yes</string>
     <string name="create_room_button">Create Room</string>
+    <string name="password_input_hint">password</string>
+
 
 </resources>
