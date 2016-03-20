@@ -1,7 +1,5 @@
 package simsot.game;
 
-import simsot.socket.MySocket;
-
 public class Blinky extends Player {
 
 

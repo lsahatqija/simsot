@@ -1,7 +1,5 @@
 package simsot.game;
 
-import simsot.socket.MySocket;
-
 public class Clyde extends Player {
 
     public Clyde(int centerX, int centerY, String mode, String playerName){

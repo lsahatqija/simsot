@@ -1,7 +1,5 @@
 package simsot.game;
 
-import simsot.socket.MySocket;
-
 public class Pinky extends Player {
 
     public Pinky(int centerX, int centerY, String mode, String playerName){

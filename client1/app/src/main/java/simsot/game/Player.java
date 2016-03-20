@@ -11,7 +11,6 @@ import java.util.Map;
 
 import simsot.framework.Image;
 import simsot.framework.Input;
-import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
 public class Player {

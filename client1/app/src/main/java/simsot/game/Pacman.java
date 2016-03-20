@@ -1,7 +1,5 @@
 package simsot.game;
 
-import simsot.socket.MySocket;
-
 public class Pacman extends Player {
 
     public Pacman(int centerX, int centerY, String mode, String playerName){

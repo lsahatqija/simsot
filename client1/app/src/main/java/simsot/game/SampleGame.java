@@ -68,7 +68,6 @@ public class SampleGame extends AndroidGame {
             @Override
             public void call(Object... args) {
                 if (args[0] instanceof JSONObject) {
-                    //System.out.println("receiving  : " + ((JSONObject) args[0]).toString());
                     receivedCharacterChoiceJSONList.add((JSONObject) args[0]);
                 } else {
                     Log.e("SocketError", SocketConstants.CHARACTER_CHOICE_RESPONSE + " args[0]  not instanceof JSONObject");
@@ -81,14 +80,13 @@ public class SampleGame extends AndroidGame {
             public void call(Object... args) {
                 if (args[0] instanceof JSONObject) {
                     try {
-                        // System.out.println("receiving  : "+((JSONObject) args[0]).toString());
                         String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
 
                         if (!playerName.equals(name)) {
                             receivedCharacterPositionJSONMap.put(name, (JSONObject) args[0]);
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("JSONException", e.getMessage(), e);
                     }
                 } else {
                     Log.e("SocketError", SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
