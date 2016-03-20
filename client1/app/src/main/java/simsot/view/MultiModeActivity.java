@@ -67,8 +67,6 @@ public class MultiModeActivity extends Activity {
 
     private List<Room> foundRooms;
 
-    private Location locationGPS;
-
     private enum MultiModeActivityActualLayout {
         JOINCREATEROOMCHOICE,
         JOINROOM,

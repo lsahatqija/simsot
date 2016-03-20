@@ -100,8 +100,8 @@ public final class MySocket {
         return MySocket.instance;
     }
 
-    public Emitter on(String event, Emitter.Listener fn) {
-        return mSocket.on(event, fn);
+    public void on(String event, Emitter.Listener fn) {
+        mSocket.on(event, fn);
     }
 
     public void sendConnectionRequest(JSONObject data) {

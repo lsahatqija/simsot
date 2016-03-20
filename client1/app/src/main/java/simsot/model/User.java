@@ -19,10 +19,6 @@ public class User implements Serializable {
         this.userPassword = userPassword;
     }
 
-    public String getUserLogin() {
-        return userLogin;
-    }
-
     public JSONObject ToJSONObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(USERNAME, userLogin);
