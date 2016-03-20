@@ -23,6 +23,7 @@ import simsot.framework.implementation.AndroidGame;
 import simsot.model.IntentParameters;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
+import simsot.view.MusicManager;
 
 public class SampleGame extends AndroidGame {
 
@@ -164,16 +165,14 @@ public class SampleGame extends AndroidGame {
     @Override
     public void onResume() {
         super.onResume();
-
-        Assets.theme.play();
+        MusicManager.getInstance().start(this);
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Assets.theme.pause();
-
+        MusicManager.getInstance().pause();
     }
 
     public MySocket getMySocket() {

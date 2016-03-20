@@ -118,6 +118,19 @@ public class MultiModeActivity extends Activity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MusicManager.getInstance().start(this);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MusicManager.getInstance().pause();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable(ACTUAL_LAYOUT, actualLayout);
         super.onSaveInstanceState(savedInstanceState);

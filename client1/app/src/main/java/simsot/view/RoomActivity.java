@@ -69,6 +69,19 @@ public class RoomActivity extends Activity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        MusicManager.getInstance().start(this);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MusicManager.getInstance().pause();
+    }
+
+    @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
         builder.setTitle(R.string.exit_room);
@@ -100,9 +113,7 @@ public class RoomActivity extends Activity {
         } else {
             startMultiGameButton.setVisibility(View.INVISIBLE);
         }
-
     }
-
 
     protected void initComponentsEvents() {
         startMultiGameButton.setOnClickListener(new View.OnClickListener() {
