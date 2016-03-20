@@ -126,7 +126,6 @@ public class Player {
                 stopRight();
             }
             animate();
-            mySocket.sendPositionUpdate(playerName, getCharacter(), roomName, centerX, centerY, null);
         } else if (PacManConstants.REMOTE.equals(mode)) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
             if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
@@ -154,7 +153,6 @@ public class Player {
                 stopRight();
             }
             animate();
-            mySocket.sendPositionUpdate(playerName, getCharacter(), roomName, centerX, centerY, null);
         }
 
         if (walkCounter > 1000) {
@@ -464,8 +462,24 @@ public class Player {
         return centerY;
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
     public String getCharacter() {
         return null;
+    }
+
+    public boolean isLocal(){
+        return PacManConstants.LOCAL.equals(mode);
+    }
+
+    public boolean isAI(){
+        return PacManConstants.AI.equals(mode);
     }
 
     public void setVulnerable(boolean vulnerable) {

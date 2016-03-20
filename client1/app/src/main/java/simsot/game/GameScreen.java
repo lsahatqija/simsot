@@ -7,6 +7,7 @@ import java.util.Scanner;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +58,7 @@ public class GameScreen extends Screen {
 
     MySocket mySocket;
     String playerName;
+    String roomName;
 
     private long clock = System.currentTimeMillis();
 
@@ -65,6 +67,7 @@ public class GameScreen extends Screen {
 
         mySocket = ((SampleGame) game).getMySocket();
         playerName = ((SampleGame) game).getPlayerName();
+        roomName = ((SampleGame) game).getRoomName();
 
         score = 0;
         // Initialize game objects here
@@ -253,6 +256,25 @@ public class GameScreen extends Screen {
             walkCounter = 0;
         }
         walkCounter++;
+
+        for (int i = 0; i < playerarray.size(); i++) {
+            Player play = playerarray.get(i);
+            if(play.isLocal() || play.isAI()){
+                if(Pacman.class.isInstance(play)){
+                    try {
+                        JSONObject gameState = new JSONObject();
+                        gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
+                        gameState.put(SocketConstants.MAX_SCORE, maxScore);
+                        gameState.put(SocketConstants.SCORE, score);
+                        mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
+                    } catch (JSONException e) {
+                        Log.e("JSONException", e.getMessage(), e);
+                    }
+                } else{
+                    mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), null);
+                }
+            }
+        }
     }
 
     private void checkPlayerCollision() {
@@ -584,7 +606,7 @@ public class GameScreen extends Screen {
         pelletarray = new ArrayList<>();
 
         for(int i = 0; i < pelletJSONArray.length(); ++i){
-            JSONObject pelletJSONObject = pelletJSONArray.getJSONObject(0);
+            JSONObject pelletJSONObject = pelletJSONArray.getJSONObject(i);
             String pelletType = pelletJSONObject.getString(SocketConstants.PELLET_TYPE);
             if(PacManConstants.PELLET_TYPE_NORMAL.equals(pelletType)){
                 pelletarray.add(new Pellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
