@@ -124,13 +124,19 @@ public final class MySocket {
         getSoloRoomCreationRequestFlags().setSendingFlag(true);
     }
 
-    public void sendPositionUpdate(String playerName, String roomName, int x, int y) {
+    public void sendPositionUpdate(String playerName, String character, String roomName, int x, int y, JSONObject gameState) {
         try {
             JSONObject json = new JSONObject();
             json.put(SocketConstants.PLAYER_NAME, playerName);
+            json.put(SocketConstants.CHARACTER, character);
+            json.put(SocketConstants.ROOM_NAME, roomName);
             json.put(SocketConstants.X, x);
             json.put(SocketConstants.Y, y);
-            json.put(SocketConstants.ROOM_NAME, roomName);
+
+            if(gameState != null){
+                json.put(SocketConstants.GAME_STATE, gameState);
+            }
+
             mSocket.emit(SocketConstants.CHARACTER_POSITION, json);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -15,4 +15,9 @@ public class Clyde extends Player {
         //currentSprite = characterLeft1;
     }
 
+    @Override
+    public String getCharacter() {
+        return PacManConstants.CLYDE;
+    }
+
 }

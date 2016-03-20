@@ -15,4 +15,9 @@ public class Pacman extends Player {
         lives = 3;
         //currentSprite = characterLeft1;
     }
+
+    @Override
+    public String getCharacter() {
+        return PacManConstants.PACMAN;
+    }
 }

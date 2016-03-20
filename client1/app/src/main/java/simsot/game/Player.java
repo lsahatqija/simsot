@@ -50,7 +50,7 @@ public class Player {
     public String collisionDirection;
     private double direction;
 
-    public boolean vulnerable=false;
+    public boolean vulnerable = false;
 
     // 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
     private int isShooting = 0;
@@ -101,7 +101,7 @@ public class Player {
             centerY = 630;
         }
 
-        if(GameScreen.isPowerMode){
+        if (GameScreen.isPowerMode) {
             this.vulnerable = true;
         } else {
             this.vulnerable = false;
@@ -128,7 +128,7 @@ public class Player {
                 stopRight();
             }
             animate();
-            mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
+            mySocket.sendPositionUpdate(playerName, getCharacter(), roomName, centerX, centerY, null);
         } else if (PacManConstants.REMOTE.equals(mode)) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
             if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
@@ -156,7 +156,7 @@ public class Player {
                 stopRight();
             }
             animate();
-            mySocket.sendPositionUpdate(playerName, roomName, centerX, centerY);
+            mySocket.sendPositionUpdate(playerName, getCharacter(), roomName, centerX, centerY, null);
         }
 
         if (walkCounter > 1000) {
@@ -413,6 +413,7 @@ public class Player {
             currentSprite = vulnerableMode;
         }
     }
+
     public boolean isMovingVer() {
         return isMovingVer;
     }
@@ -465,6 +466,10 @@ public class Player {
         return centerY;
     }
 
+    public String getCharacter() {
+        return null;
+    }
+
     public void setVulnerable(boolean vulnerable) {
         this.vulnerable = vulnerable;
     }
@@ -476,7 +481,7 @@ public class Player {
     public void setHealth(int health) {
         this.health = health;
     }
-	
+
 	/*
 	public void setWeapon(Firearm weapon) {
 		this.weapon = weapon;

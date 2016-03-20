@@ -44,6 +44,7 @@ public final class SocketConstants {
     public static final String Y = "y";
     public static final String ROOM_NAME = "room_name";
     public static final String CHARACTER = "character";
+    public static final String GAME_STATE = "game_state";
     public static final String HOST = "host";
     public static final String SLOT_EMPTY = "slot_empty";
     public static final String ROOMS = "rooms";

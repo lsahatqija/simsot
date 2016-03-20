@@ -15,4 +15,9 @@ public class Blinky extends Player {
         vulnerableMode = Assets.powerModeGhost;
         //currentSprite = characterLeft1;
     }
+
+    @Override
+    public String getCharacter() {
+        return PacManConstants.BLINKY;
+    }
 }
