@@ -5,6 +5,8 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 
 import simsot.framework.Image;
+import simsot.game.player.Player;
+import simsot.game.screen.GameScreen;
 
 public class Tile {
 
@@ -20,7 +22,6 @@ public class Tile {
 
 	//private Background bg = StartingClass.getBg1();
 	private ArrayList<Player> playerarray = GameScreen.playerarray;
-	private ArrayList<Enemy> enemyarray = GameScreen.getEnemyarray();
 
 	private Rect r;
 	

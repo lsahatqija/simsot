@@ -1,4 +1,4 @@
-package simsot.game;
+package simsot.game.screen;
 
 import java.util.List;
 
@@ -7,6 +7,8 @@ import simsot.framework.Graphics;
 import simsot.framework.Graphics.ImageFormat;
 import simsot.framework.Input.TouchEvent;
 import simsot.framework.Screen;
+import simsot.game.Assets;
+import simsot.game.SampleGame;
 
 public class MainMenuScreen extends Screen {
 	public MainMenuScreen(Game game) {

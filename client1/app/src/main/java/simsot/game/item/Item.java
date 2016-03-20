@@ -1,10 +1,12 @@
-package simsot.game;
+package simsot.game.item;
 
 import android.graphics.Rect;
 
 import java.util.ArrayList;
 
 import simsot.framework.Image;
+import simsot.game.screen.GameScreen;
+import simsot.game.player.Player;
 
 public class Item {
 

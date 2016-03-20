@@ -1,4 +1,4 @@
-package simsot.game;
+package simsot.game.screen;
 
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +12,15 @@ import simsot.framework.Game;
 import simsot.framework.Graphics;
 import simsot.framework.Input;
 import simsot.framework.Screen;
+import simsot.game.Assets;
+import simsot.game.PacManConstants;
+import simsot.game.SampleGame;
+import simsot.game.player.Blinky;
+import simsot.game.player.Clyde;
+import simsot.game.player.Inky;
+import simsot.game.player.Pacman;
+import simsot.game.player.Pinky;
+import simsot.game.player.Player;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 

@@ -1,4 +1,4 @@
-package simsot.game;
+package simsot.game.screen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,17 @@ import simsot.framework.Graphics;
 import simsot.framework.Image;
 import simsot.framework.Input.TouchEvent;
 import simsot.framework.Screen;
+import simsot.game.Animation;
+import simsot.game.Assets;
+import simsot.game.Background;
+import simsot.game.PacManConstants;
+import simsot.game.SampleGame;
+import simsot.game.Tile;
+import simsot.game.item.Item;
+import simsot.game.item.Pellet;
+import simsot.game.item.PowerPellet;
+import simsot.game.player.Pacman;
+import simsot.game.player.Player;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;
 
@@ -47,7 +58,6 @@ public class GameScreen extends Screen {
     private Animation anim;
 
     public static ArrayList<Tile> tilearray = new ArrayList<Tile>();
-    public static ArrayList<Enemy> enemyarray = new ArrayList<Enemy>();
     public static ArrayList<Pellet> pelletarray = new ArrayList<Pellet>();
     public static ArrayList<Player> playerarray = new ArrayList<Player>();
 
@@ -368,11 +378,6 @@ public class GameScreen extends Screen {
         paintTiles(g);
         paintItems(g);
 
-		/*ArrayList projectiles = player.getProjectiles();
-        for (int i = 0; i < projectiles.size(); i++) {
-			Projectile p = (Projectile) projectiles.get(i);
-			g.drawRect(p.getCenterX(), p.getCenterY(), 10, 5, Color.YELLOW);
-		}*/
         // First draw the game elements.
 
         for (int i = 0; i < playerarray.size(); i++) {
@@ -383,16 +388,6 @@ public class GameScreen extends Screen {
                 play.touched = false;
             }
         }
-
-        for (int i = 0; i < getEnemyarray().size(); i++) {
-            Enemy e = getEnemyarray().get(i);
-            g.drawImage(e.currentSprite, e.getCenterX() - 30, e.getCenterY() - 30);
-        }
-
-
-        // Example:
-        // g.drawImage(Assets.background, 0, 0);
-        // g.drawImage(Assets.character, characterX, characterY);
 
         // Secondly, draw the UI above the game elements.
         if (state == GameState.Ready)
@@ -475,11 +470,11 @@ public class GameScreen extends Screen {
         g.drawImage(Assets.buttonPause, 0, 0);    //pause
 
         g.drawString("" + score, 50, 700, paint);
-        if (pacman.lives > 0)
+        if (pacman.getLives() > 0)
             g.drawImage(Assets.characterRight1, 50, 750);
-        if (pacman.lives > 1)
+        if (pacman.getLives() > 1)
             g.drawImage(Assets.characterRight1, 85, 750);
-        if (pacman.lives > 2)
+        if (pacman.getLives() > 2)
             g.drawImage(Assets.characterRight1, 120, 750);
     }
 
@@ -535,8 +530,8 @@ public class GameScreen extends Screen {
     }
 
     public void pacmanDeath() {
-        pacman.lives--;
-        if (pacman.lives == 0) {
+        pacman.decrementLives();
+        if (pacman.getLives() == 0) {
             state = GameState.GameOver;
         } else {
             state = GameState.Round;
@@ -639,14 +634,6 @@ public class GameScreen extends Screen {
 
     public void setTilearray(ArrayList<Tile> tilearray) {
         this.tilearray = tilearray;
-    }
-
-    public static ArrayList<Enemy> getEnemyarray() {
-        return enemyarray;
-    }
-
-    public static void setEnemyarray(ArrayList<Enemy> enemyarray) {
-        GameScreen.enemyarray = enemyarray;
     }
 
 }

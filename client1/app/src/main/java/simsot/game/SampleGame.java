@@ -20,6 +20,7 @@ import java.util.Map;
 
 import simsot.framework.Screen;
 import simsot.framework.implementation.AndroidGame;
+import simsot.game.screen.SplashLoadingScreen;
 import simsot.model.IntentParameters;
 import simsot.socket.MySocket;
 import simsot.socket.SocketConstants;

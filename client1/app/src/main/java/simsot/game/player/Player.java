@@ -1,4 +1,4 @@
-package simsot.game;
+package simsot.game.player;
 
 import android.graphics.Rect;
 
@@ -11,6 +11,11 @@ import java.util.Map;
 
 import simsot.framework.Image;
 import simsot.framework.Input;
+import simsot.game.Assets;
+import simsot.game.screen.GameScreen;
+import simsot.game.PacManConstants;
+import simsot.game.SampleGame;
+import simsot.game.Tile;
 import simsot.socket.SocketConstants;
 
 public class Player {
@@ -31,7 +36,6 @@ public class Player {
     private int speedX = 0;
     private int speedY = 0;
     private int scrollingSpeed = 0;
-    private int health = 10;
     private String forceMove = FORCE_MOVE_NO;
     private String lastButtonPressed = BUTTON_LEFT;
     private boolean isMovingVer = false;
@@ -39,7 +43,6 @@ public class Player {
     public boolean isColliding = false;
     public boolean touched = false;
     public Rect rect = new Rect(0, 0, 0, 0);
-    public int commandType;
     public boolean alive = true;
     private String mode;
     public int walkCounter = 1;
@@ -49,13 +52,8 @@ public class Player {
 
     public boolean vulnerable = false;
 
-    // 0 = not, 1 = left, 2 = top, 3 = right, 4 = bottom
-    private int isShooting = 0;
-
     public Image characterLeft1, characterLeft2, characterRight1, characterRight2, characterUp1,
             characterUp2, characterDown1, characterDown2, characterClosed, currentSprite, vulnerableMode;
-
-    private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 
     private String playerName;
     protected int lives;
@@ -450,6 +448,14 @@ public class Player {
         return centerY;
     }
 
+    public int getLives() {
+        return lives;
+    }
+
+    public void decrementLives(){
+        lives--;
+    }
+
     public String getPlayerName() {
         return playerName;
     }
@@ -470,21 +476,4 @@ public class Player {
         this.vulnerable = vulnerable;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-	/*
-	public void setWeapon(Firearm weapon) {
-		this.weapon = weapon;
-	}
-	
-	public Firearm getWeapon() {
-		return this.weapon;
-	}
-	*/
 }

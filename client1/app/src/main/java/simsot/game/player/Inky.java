@@ -1,4 +1,7 @@
-package simsot.game;
+package simsot.game.player;
+
+import simsot.game.Assets;
+import simsot.game.PacManConstants;
 
 public class Inky extends Player {
 

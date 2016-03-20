@@ -1,8 +1,9 @@
-package simsot.game;
+package simsot.game.item;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import simsot.game.PacManConstants;
 import simsot.socket.SocketConstants;
 
 public class Pellet extends Item {

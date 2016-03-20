@@ -1,9 +1,10 @@
-package simsot.game;
+package simsot.game.screen;
 
 import simsot.framework.Game;
 import simsot.framework.Graphics;
 import simsot.framework.Screen;
 import simsot.framework.Graphics.ImageFormat;
+import simsot.game.Assets;
 
 public class SplashLoadingScreen extends Screen {
     public SplashLoadingScreen(Game game) {
