@@ -23,14 +23,20 @@ public class Player {
     private final int WALK_COUNTER_LOOP = NB_PIXELS_IN_CELL / MOVESPEED;
     private final int HALF_WALK_COUNTER_LOOP = WALK_COUNTER_LOOP / 2;
 
+    protected final static String BUTTON_UP = "up";
+    protected final static String BUTTON_DOWN = "down";
+    protected final static String BUTTON_LEFT = "left";
+    protected final static String BUTTON_RIGHT = "right";
+    protected final static String FORCE_MOVE_NO = "no";
+
     private int centerX = 100;
     private int centerY = 100;
     private int speedX = 0;
     private int speedY = 0;
     private int scrollingSpeed = 0;
     private int health = 10;
-    private String forceMove = "no";
-    private String lastButtonPressed = "left";
+    private String forceMove = FORCE_MOVE_NO;
+    private String lastButtonPressed = BUTTON_LEFT;
     private boolean isMovingVer = false;
     private boolean isMovingHor = false;
     public boolean isColliding = false;
@@ -109,16 +115,16 @@ public class Player {
 
         //movement
         if (PacManConstants.LOCAL.equals(mode)) {
-            if ("no".equals(forceMove)) {
+            if (FORCE_MOVE_NO.equals(forceMove)) {
                 movementControl(touchEvents);
                 checkTileCollisions(tilearray);
-            } else if ("up".equals(forceMove)) {
+            } else if (BUTTON_UP.equals(forceMove)) {
                 stopUp();
-            } else if ("down".equals(forceMove)) {
+            } else if (BUTTON_DOWN.equals(forceMove)) {
                 stopDown();
-            } else if ("left".equals(forceMove)) {
+            } else if (BUTTON_LEFT.equals(forceMove)) {
                 stopLeft();
-            } else if ("right".equals(forceMove)) {
+            } else if (BUTTON_RIGHT.equals(forceMove)) {
                 stopRight();
             }
             animate();
@@ -136,17 +142,17 @@ public class Player {
                 }
             }
         } else if (PacManConstants.AI.equals(mode)) {
-            if ("no".equals(forceMove)) {
+            if (FORCE_MOVE_NO.equals(forceMove)) {
                 direction = Math.random();
                 callAI();
                 checkTileCollisions(tilearray);
-            } else if ("up".equals(forceMove)) {
+            } else if (BUTTON_UP.equals(forceMove)) {
                 stopUp();
-            } else if ("down".equals(forceMove)) {
+            } else if (BUTTON_DOWN.equals(forceMove)) {
                 stopDown();
-            } else if ("left".equals(forceMove)) {
+            } else if (BUTTON_LEFT.equals(forceMove)) {
                 stopLeft();
-            } else if ("right".equals(forceMove)) {
+            } else if (BUTTON_RIGHT.equals(forceMove)) {
                 stopRight();
             }
             animate();
@@ -161,21 +167,21 @@ public class Player {
 
     public void movementControl(List touchEvents) {
         int len = touchEvents.size();
-        if ("no".equals(forceMove)) {
+        if (FORCE_MOVE_NO.equals(forceMove)) {
             for (int i = 0; i < len; i++) {
                 Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_DOWN) {
                     if (inBounds(event, 215, 645, 50, 50)) {
-                        lastButtonPressed = "up";
+                        lastButtonPressed = BUTTON_UP;
                         moveUp();
                     } else if (inBounds(event, 215, 715, 50, 50)) {
-                        lastButtonPressed = "down";
+                        lastButtonPressed = BUTTON_DOWN;
                         moveDown();
                     } else if (inBounds(event, 165, 675, 50, 50)) {
-                        lastButtonPressed = "left";
+                        lastButtonPressed = BUTTON_LEFT;
                         moveLeft();
                     } else if (inBounds(event, 265, 675, 50, 50)) {
-                        lastButtonPressed = "right";
+                        lastButtonPressed = BUTTON_RIGHT;
                         moveRight();
                     }
                 }
@@ -197,13 +203,13 @@ public class Player {
                 Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
                 if (event.type == Input.TouchEvent.TOUCH_DOWN) {
                     if (inBounds(event, 215, 645, 50, 50)) {
-                        lastButtonPressed = "up";
+                        lastButtonPressed = BUTTON_UP;
                     } else if (inBounds(event, 215, 715, 50, 50)) {
-                        lastButtonPressed = "down";
+                        lastButtonPressed = BUTTON_DOWN;
                     } else if (inBounds(event, 165, 675, 50, 50)) {
-                        lastButtonPressed = "left";
+                        lastButtonPressed = BUTTON_LEFT;
                     } else if (inBounds(event, 265, 675, 50, 50)) {
-                        lastButtonPressed = "right";
+                        lastButtonPressed = BUTTON_RIGHT;
                     }
                 }
             }
@@ -242,16 +248,16 @@ public class Player {
         if (alive) {
             if (colliding || walkCounter % 50 == 1) {
                 if (direction < 0.25) {
-                    lastButtonPressed = "right";
+                    lastButtonPressed = BUTTON_RIGHT;
                     moveRight();
                 } else if (direction < 0.50) {
-                    lastButtonPressed = "left";
+                    lastButtonPressed = BUTTON_LEFT;
                     moveLeft();
                 } else if (direction < 0.75) {
-                    lastButtonPressed = "up";
+                    lastButtonPressed = BUTTON_UP;
                     moveUp();
                 } else if (direction < 1.00) {
-                    lastButtonPressed = "down";
+                    lastButtonPressed = BUTTON_DOWN;
                     moveDown();
                 }
             }
@@ -292,10 +298,10 @@ public class Player {
         if (distanceToCenter <= MOVESPEED) {
             centerX -= distanceToCenter;
             setMovingHor(false);
-            forceMove = "no";
+            forceMove = FORCE_MOVE_NO;
         } else {
             centerX -= MOVESPEED;
-            forceMove = "left";
+            forceMove = BUTTON_LEFT;
         }
         speedX = 0;
     }
@@ -306,10 +312,10 @@ public class Player {
         if (distanceToCenter <= MOVESPEED) {
             centerX += distanceToCenter;
             setMovingHor(false);
-            forceMove = "no";
+            forceMove = FORCE_MOVE_NO;
         } else {
             centerX += MOVESPEED;
-            forceMove = "right";
+            forceMove = BUTTON_RIGHT;
         }
         speedX = 0;
     }
@@ -320,10 +326,10 @@ public class Player {
         if (distanceToCenter <= MOVESPEED) {
             centerY -= distanceToCenter;
             setMovingVer(false);
-            forceMove = "no";
+            forceMove = FORCE_MOVE_NO;
         } else {
             centerY -= MOVESPEED;
-            forceMove = "up";
+            forceMove = BUTTON_UP;
         }
         speedY = 0;
     }
@@ -334,17 +340,17 @@ public class Player {
         if (distanceToCenter <= MOVESPEED) {
             centerY += distanceToCenter;
             setMovingVer(false);
-            forceMove = "no";
+            forceMove = FORCE_MOVE_NO;
         } else {
             centerY += MOVESPEED;
-            forceMove = "down";
+            forceMove = BUTTON_DOWN;
         }
         speedY = 0;
     }
 
     public void animate() {
         if (Pacman.class.isInstance(this)) {
-            if ("left".equals(lastButtonPressed)) {
+            if (BUTTON_LEFT.equals(lastButtonPressed)) {
                 if (getSpeedX() == 0) {
                     currentSprite = characterLeft1;
                     walkCounter = 0;
@@ -353,7 +359,7 @@ public class Player {
                 } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
                     currentSprite = characterLeft2;
                 }
-            } else if ("right".equals(lastButtonPressed)) {
+            } else if (BUTTON_RIGHT.equals(lastButtonPressed)) {
                 if (getSpeedX() == 0) {
                     currentSprite = characterRight1;
                     walkCounter = 0;
@@ -362,7 +368,7 @@ public class Player {
                 } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
                     currentSprite = characterRight2;
                 }
-            } else if ("up".equals(lastButtonPressed)) {
+            } else if (BUTTON_UP.equals(lastButtonPressed)) {
                 if (getSpeedY() == 0) {
                     currentSprite = characterUp1;
                     walkCounter = 0;
@@ -371,7 +377,7 @@ public class Player {
                 } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
                     currentSprite = characterUp2;
                 }
-            } else if ("down".equals(lastButtonPressed)) {
+            } else if (BUTTON_DOWN.equals(lastButtonPressed)) {
                 if (getSpeedY() == 0) {
                     currentSprite = characterDown1;
                     walkCounter = 0;
@@ -382,7 +388,7 @@ public class Player {
                 }
             }
         } else if (!vulnerable) {
-            if ("left".equals(lastButtonPressed)) {
+            if (BUTTON_LEFT.equals(lastButtonPressed)) {
                 if (getSpeedX() == 0) {
                     currentSprite = characterLeft1;
                     walkCounter = 0;
@@ -391,7 +397,7 @@ public class Player {
                 } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
                     currentSprite = characterLeft2;
                 }
-            } else if ("right".equals(lastButtonPressed)) {
+            } else if (BUTTON_RIGHT.equals(lastButtonPressed)) {
                 if (getSpeedX() == 0) {
                     currentSprite = characterRight1;
                     walkCounter = 0;
