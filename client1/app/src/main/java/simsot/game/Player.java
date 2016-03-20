@@ -17,10 +17,8 @@ import simsot.socket.SocketConstants;
 public class Player {
 
     final int MOVESPEED = 4;
-    private final int NB_PIXELS_IN_CELL = PacManConstants.NB_PIXELS_IN_CELL;
-    private final int HALF_NB_PIXELS_IN_CELL = PacManConstants.HALF_NB_PIXELS_IN_CELL;
 
-    private final int WALK_COUNTER_LOOP = NB_PIXELS_IN_CELL / MOVESPEED;
+    private final int WALK_COUNTER_LOOP = PacManConstants.NB_PIXELS_IN_CELL / MOVESPEED;
     private final int HALF_WALK_COUNTER_LOOP = WALK_COUNTER_LOOP / 2;
 
     protected final static String BUTTON_UP = "up";
@@ -108,10 +106,10 @@ public class Player {
         }
 
         // Collision
-        rect.set(centerX - HALF_NB_PIXELS_IN_CELL,
-                centerY - HALF_NB_PIXELS_IN_CELL,
-                centerX + HALF_NB_PIXELS_IN_CELL,
-                centerY + HALF_NB_PIXELS_IN_CELL);
+        rect.set(centerX - PacManConstants.HALF_NB_PIXELS_IN_CELL,
+                centerY - PacManConstants.HALF_NB_PIXELS_IN_CELL,
+                centerX + PacManConstants.HALF_NB_PIXELS_IN_CELL,
+                centerY + PacManConstants.HALF_NB_PIXELS_IN_CELL);
 
         //movement
         if (PacManConstants.LOCAL.equals(mode)) {
@@ -294,7 +292,7 @@ public class Player {
 
     public void stopLeft() {
         // Keep going until center of next cell is reached
-        int distanceToCenter = (centerX + HALF_NB_PIXELS_IN_CELL) % NB_PIXELS_IN_CELL;
+        int distanceToCenter = (centerX + PacManConstants.HALF_NB_PIXELS_IN_CELL) % PacManConstants.NB_PIXELS_IN_CELL;
         if (distanceToCenter <= MOVESPEED) {
             centerX -= distanceToCenter;
             setMovingHor(false);
@@ -308,7 +306,7 @@ public class Player {
 
     public void stopRight() {
         // Keep going until center of next cell is reached
-        int distanceToCenter = (900 + HALF_NB_PIXELS_IN_CELL - centerX) % NB_PIXELS_IN_CELL;
+        int distanceToCenter = (900 + PacManConstants.HALF_NB_PIXELS_IN_CELL - centerX) % PacManConstants.NB_PIXELS_IN_CELL;
         if (distanceToCenter <= MOVESPEED) {
             centerX += distanceToCenter;
             setMovingHor(false);
@@ -322,7 +320,7 @@ public class Player {
 
     public void stopUp() {
         // Keep going until center of next cell is reached
-        int distanceToCenter = (centerY - HALF_NB_PIXELS_IN_CELL) % NB_PIXELS_IN_CELL;
+        int distanceToCenter = (centerY - PacManConstants.HALF_NB_PIXELS_IN_CELL) % PacManConstants.NB_PIXELS_IN_CELL;
         if (distanceToCenter <= MOVESPEED) {
             centerY -= distanceToCenter;
             setMovingVer(false);
@@ -336,7 +334,7 @@ public class Player {
 
     public void stopDown() {
         // Keep going until center of next cell is reached
-        int distanceToCenter = (900 + HALF_NB_PIXELS_IN_CELL - centerY) % NB_PIXELS_IN_CELL;
+        int distanceToCenter = (900 + PacManConstants.HALF_NB_PIXELS_IN_CELL - centerY) % PacManConstants.NB_PIXELS_IN_CELL;
         if (distanceToCenter <= MOVESPEED) {
             centerY += distanceToCenter;
             setMovingVer(false);
