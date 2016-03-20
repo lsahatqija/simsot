@@ -240,26 +240,20 @@ public class Player {
 
     public void callAI() {
         if (alive) {
-            if (!colliding) {
-                if (walkCounter % 50 == 1) {
-                    if (direction < 0.25)
-                        moveRight();
-                    else if (direction < 0.50)
-                        moveLeft();
-                    else if (direction < 0.75)
-                        moveUp();
-                    else if (direction < 1.00)
-                        moveDown();
-                }
-            } else {
-                if (direction < 0.25)
+            if (colliding || walkCounter % 50 == 1) {
+                if (direction < 0.25) {
+                    lastButtonPressed = "right";
                     moveRight();
-                else if (direction < 0.50)
+                } else if (direction < 0.50) {
+                    lastButtonPressed = "left";
                     moveLeft();
-                else if (direction < 0.75)
+                } else if (direction < 0.75) {
+                    lastButtonPressed = "up";
                     moveUp();
-                else if (direction < 1.00)
+                } else if (direction < 1.00) {
+                    lastButtonPressed = "down";
                     moveDown();
+                }
             }
         }
     }
@@ -388,27 +382,31 @@ public class Player {
                 }
             }
         } else if (!vulnerable) {
-            if ((isMovingVer() || isMovingHor()) && getSpeedX() < 0) {
-                if (walkCounter % WALK_COUNTER_LOOP == 0) {
+            if ("left".equals(lastButtonPressed)) {
+                if (getSpeedX() == 0) {
+                    currentSprite = characterLeft1;
+                    walkCounter = 0;
+                } else if (walkCounter % WALK_COUNTER_LOOP == 0) {
                     currentSprite = characterLeft1;
                 } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
                     currentSprite = characterLeft2;
                 }
-            } else if ((isMovingVer() || isMovingHor()) && getSpeedX() > 0) {
-                if (walkCounter % WALK_COUNTER_LOOP == 0) {
+            } else if ("right".equals(lastButtonPressed)) {
+                if (getSpeedX() == 0) {
+                    currentSprite = characterRight1;
+                    walkCounter = 0;
+                } else if (walkCounter % WALK_COUNTER_LOOP == 0) {
                     currentSprite = characterRight1;
                 } else if (walkCounter % WALK_COUNTER_LOOP == HALF_WALK_COUNTER_LOOP) {
                     currentSprite = characterRight2;
                 }
-            } else // in case ghost isn't moving or is colliding
-            {
+            } else if (currentSprite == vulnerableMode) {
                 currentSprite = characterLeft1;
             }
         } else {
             currentSprite = vulnerableMode;
         }
     }
-
     public boolean isMovingVer() {
         return isMovingVer;
     }
