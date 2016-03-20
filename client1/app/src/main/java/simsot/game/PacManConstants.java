@@ -18,4 +18,7 @@ public final class PacManConstants {
 
     public static final int NB_PIXELS_IN_CELL = 30;
     public static final int HALF_NB_PIXELS_IN_CELL = NB_PIXELS_IN_CELL / 2;
+
+    public static final String PELLET_TYPE_NORMAL = "pellet_type_normal";
+    public static final String PELLET_TYPE_POWER = "pellet_type_power";
 }

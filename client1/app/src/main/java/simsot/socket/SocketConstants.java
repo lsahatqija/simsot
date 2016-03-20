@@ -5,7 +5,7 @@ public final class SocketConstants {
 
     public static final String SERVER_URL = "https://simsot-server.herokuapp.com";
 
-    public static final long REQUEST_TIMEOUT = 10*1000;
+    public static final long REQUEST_TIMEOUT = 10 * 1000;
     public static final long RESPONSE_CHECK_TIME = 100;
 
     public static final String LIST_PLAYER = "list_player";
@@ -52,6 +52,13 @@ public final class SocketConstants {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String MAP = "map";
+    public static final String PELLET_ARRAY = "pellet_array";
+    public static final String PELLET_CENTER_X = "pellet_center_x";
+    public static final String PELLET_CENTER_Y = "pellet_center_y";
+    public static final String PELLET_TYPE = "pellet_type";
+    public static final String MAX_SCORE = "max_score";
+    public static final String SCORE = "score";
+
 
     public enum SocketRequestType {
         CONNECTION_REQUEST,
