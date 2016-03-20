@@ -200,6 +200,17 @@ public final class MySocket {
         }
     }
 
+    public void sendLeaveMultiRoom(String roomName, String playerName){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(SocketConstants.ROOM_NAME, roomName);
+            json.put(SocketConstants.PLAYER_NAME, playerName);
+            mSocket.emit(SocketConstants.LEAVE_MULTI_ROOM, json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /***
      * CONNECT
      ***/

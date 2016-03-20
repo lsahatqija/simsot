@@ -23,6 +23,7 @@ public final class SocketConstants {
     public static final String CHARACTER_POSITION = "character_position";
     public static final String CHARACTER_TIMEOUT_ENDED = "character_timeout_ended";
     public static final String LEAVE_SOLO_ROOM = "leave_solo_room";
+    public static final String LEAVE_MULTI_ROOM = "leave_multi_room";
 
     public static final String CONNECTION_RESPONSE = "response_connect";
     public static final String REGISTRATION_RESPONSE = "response_subscribe";

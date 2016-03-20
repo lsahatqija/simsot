@@ -105,7 +105,7 @@ public class SampleGame extends AndroidGame {
                         if (errorCode == 0) {
                             gameCanStart = true;
                         } else {
-                            Log.e("SocketError", SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE+ "errorCode isn't 0");
+                            Log.e("SocketError", SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + "errorCode isn't 0");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -219,4 +219,19 @@ public class SampleGame extends AndroidGame {
             return map;
         }
     }
+
+    public void leaveGame() {
+        //TODO to remplace by the comments
+        setScreen(new MainMenuScreen(this));
+
+        /*if (isMultiMode()) {
+            mySocket.sendLeaveMultiRoom(roomName, playerName);
+            finish();
+        } else {
+            mySocket.sendLeaveSoloRoom(roomName);
+            finish();
+        }*/
+    }
+
+
 }
