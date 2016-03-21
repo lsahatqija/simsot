@@ -227,7 +227,7 @@ public class GameScreen extends Screen {
         if (countDown > 0) {
             countDown--;
         } else {
-            setStateOnlyIfPacman(GameState.Running);
+            state = GameState.Running;
         }
     }
 
@@ -381,7 +381,7 @@ public class GameScreen extends Screen {
         }
 
         if (score == maxScore) {
-            setStateOnlyIfPacman(GameState.Win);
+            state = GameState.Win;
         }
     }
 
@@ -533,7 +533,7 @@ public class GameScreen extends Screen {
         roundCountDown--;
         repositionCharacters();
         if (roundCountDown == 0) {
-            setStateOnlyIfPacman(GameState.Running);
+            state = GameState.Running;
             roundCountDown = 180;
         }
     }
@@ -547,9 +547,9 @@ public class GameScreen extends Screen {
     public void pacmanDeath() {
         pacman.decrementLives();
         if (pacman.getLives() == 0) {
-            setStateOnlyIfPacman(GameState.GameOver);
+            state = GameState.GameOver;
         } else {
-            setStateOnlyIfPacman(GameState.Round);
+            state = GameState.Round;
 
             //Pacman reset
             pacman.setCenterX(PACMAN_START_X);
@@ -588,13 +588,13 @@ public class GameScreen extends Screen {
     @Override
     public void pause() {
         if (state == GameState.Running)
-            setStateOnlyIfPacman(GameState.Paused);
+            state = GameState.Paused;
     }
 
     @Override
     public void resume() {
         if (state == GameState.Paused)
-            setStateOnlyIfPacman(GameState.Running);
+            state = GameState.Running;
     }
 
     @Override
@@ -666,11 +666,5 @@ public class GameScreen extends Screen {
 
     public void setTilearray(ArrayList<Tile> tilearray) {
         this.tilearray = tilearray;
-    }
-
-    public void setStateOnlyIfPacman(GameState gameState) {
-        if (pacman.isLocal()) {
-            state = gameState;
-        }
     }
 }

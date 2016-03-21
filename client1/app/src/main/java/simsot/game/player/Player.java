@@ -129,24 +129,20 @@ public class Player {
                 stopRight();
             }
         } else if (isRemote()) {
-            int oldCenterX = centerX;
-            int oldCenterY = centerY;
-
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
             if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
+                int oldCenterX = centerX;
+                int oldCenterY = centerY;
+
                 try {
                     JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
                     centerX = json.getInt(SocketConstants.X);
                     centerY = json.getInt(SocketConstants.Y);
-
-                    if(Pacman.class.isInstance(this)){
-                        gameScreen.synchroniseGame(json.getJSONObject(SocketConstants.GAME_STATE));
-                    }
-
-                    calculateRemoteSpeed(oldCenterX, oldCenterY);
                 } catch (JSONException e) {
                     Log.e("JSONException", e.getMessage(), e);
                 }
+
+                calculateRemoteSpeed(oldCenterX, oldCenterY);
             }
         }
 
