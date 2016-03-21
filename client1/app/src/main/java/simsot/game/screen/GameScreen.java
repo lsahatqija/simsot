@@ -275,6 +275,7 @@ public class GameScreen extends Screen {
                         try {
                             JSONObject gameState = new JSONObject();
                             gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
+                            gameState.put(SocketConstants.STATE, state.toString());
                             mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
                         } catch (JSONException e) {
                             Log.e("JSONException", e.getMessage(), e);
@@ -622,6 +623,8 @@ public class GameScreen extends Screen {
         try {
             JSONArray pelletJSONArray = gameState.getJSONArray(SocketConstants.PELLET_ARRAY);
             setPelletarray(pelletJSONArray);
+
+            state = GameState.valueOf(gameState.getString(SocketConstants.STATE));
 
         } catch (JSONException e) {
             Log.e("JSONException", e.getMessage(), e);
