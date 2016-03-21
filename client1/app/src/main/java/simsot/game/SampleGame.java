@@ -226,6 +226,12 @@ public class SampleGame extends AndroidGame {
             mySocket.sendLeaveSoloRoom(roomName);
         }
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Log.e("InterruptedException", e.getMessage(), e);
+        }
+
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 

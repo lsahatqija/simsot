@@ -139,7 +139,7 @@ public final class MySocket {
 
             mSocket.emit(SocketConstants.CHARACTER_POSITION, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.getMessage(), e);
         }
     }
 
@@ -166,7 +166,7 @@ public final class MySocket {
 
             mSocket.emit(SocketConstants.CHARACTER_CHOICE, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.getMessage(), e);
         }
     }
 
@@ -176,7 +176,7 @@ public final class MySocket {
             json.put(SocketConstants.ROOM_NAME, roomName);
             mSocket.emit(SocketConstants.GAME_START, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.getMessage(), e);
         }
     }
 
@@ -186,7 +186,7 @@ public final class MySocket {
             json.put(SocketConstants.ROOM_NAME, roomName);
             mSocket.emit(SocketConstants.CHARACTER_TIMEOUT_ENDED, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.getMessage(), e);
         }
     }
 
@@ -196,7 +196,7 @@ public final class MySocket {
             json.put(SocketConstants.ROOM_NAME, roomName);
             mSocket.emit(SocketConstants.LEAVE_SOLO_ROOM, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.getMessage(), e);
         }
     }
 
@@ -207,7 +207,7 @@ public final class MySocket {
             json.put(SocketConstants.PLAYER_NAME, playerName);
             mSocket.emit(SocketConstants.LEAVE_MULTI_ROOM, json);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", e.getMessage(), e);
         }
     }
 
