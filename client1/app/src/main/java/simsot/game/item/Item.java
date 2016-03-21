@@ -16,12 +16,15 @@ public class Item {
     public Image sprite;
     private ArrayList<Player> playerarray = GameScreen.playerarray;
     private Player pacman = GameScreen.getPlayer();
+    private boolean isVisible;
 
     public Item(int x, int y){
         centerX = (x * 30) + 15;
         centerY = (y * 30) + 15;
 
         r = new Rect(getCenterX(), getCenterY(), getCenterX() + 10, getCenterY() + 10);
+
+        isVisible = true;
     }
 
     public void update() {
@@ -59,4 +62,11 @@ public class Item {
         this.r = r;
     }
 
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setIsVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
 }

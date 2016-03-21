@@ -1,17 +1,16 @@
 package simsot.game.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import simsot.framework.Game;
 import simsot.framework.Graphics;
@@ -141,7 +140,6 @@ public class GameScreen extends Screen {
         Graphics g = game.getGraphics();
         g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
         paintTiles(g);
-
     }
 
     private void repositionCharacters() {
@@ -226,16 +224,14 @@ public class GameScreen extends Screen {
     }
 
     private void updateReady(List touchEvents) {
-
         if (countDown > 0) {
             countDown--;
         } else {
-            state = GameState.Running;
+            setStateOnlyIfPacman(GameState.Running);
         }
     }
 
     private void updateRunning(List touchEvents, float deltaTime) {
-
         // Sleep
         try {
             Thread.sleep(Math.abs(17 - System.currentTimeMillis() + clock));
@@ -274,7 +270,7 @@ public class GameScreen extends Screen {
                     if(Pacman.class.isInstance(play)){
                         try {
                             JSONObject gameState = new JSONObject();
-                            gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
+                            //gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
                             gameState.put(SocketConstants.STATE, state.toString());
                             mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
                         } catch (JSONException e) {
@@ -331,7 +327,7 @@ public class GameScreen extends Screen {
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 if (inBounds(event, 0, 0, 480, 800)) {
                     nullify();
-                    game.setScreen(new MainMenuScreen(game));
+                    leaveGame();
                     return;
                 }
             }
@@ -349,14 +345,33 @@ public class GameScreen extends Screen {
         for (int i = 0; i < pelletarray.size(); i++) {
             Item p = (Item) pelletarray.get(i);
             p.update();
-            if (p.touched) {
+            if (p.touched && p.isVisible()) {
                 if (PowerPellet.class.isInstance(p)) {
                     isPowerMode = true;
                     PowerModeTimer = 300;
                 }
-                pelletarray.remove(i);
+                p.setIsVisible(false);
+                score++;
+
+                if(((SampleGame) game).isMultiMode() && (pacman.isLocal() || pacman.isAI())){
+                    mySocket.sendPelletTaken(roomName, i);
+                }
+            }
+        }
+
+        if(pacman.isRemote() && !((SampleGame) game).getPelletTakenList().isEmpty()){
+            int pelletIndex = ((SampleGame) game).getPelletTakenList().get(0);
+            Item p = (Item) pelletarray.get(pelletIndex);
+            if(p.isVisible()){
+                if (PowerPellet.class.isInstance(p)) {
+                    isPowerMode = true;
+                    PowerModeTimer = 300;
+                }
+                p.setIsVisible(false);
                 score++;
             }
+
+            ((SampleGame) game).getPelletTakenList().remove(0);
         }
         if (PowerModeTimer > 0) {
             PowerModeTimer--;
@@ -366,7 +381,7 @@ public class GameScreen extends Screen {
         }
 
         if (score == maxScore) {
-            state = GameState.Win;
+            setStateOnlyIfPacman(GameState.Win);
         }
     }
 
@@ -418,7 +433,9 @@ public class GameScreen extends Screen {
     private void paintItems(Graphics g) {
         for (int i = 0; i < pelletarray.size(); i++) {
             Item t = (Item) pelletarray.get(i);
-            g.drawImage(t.sprite, t.getCenterX() - 27, t.getCenterY() - 27);
+            if(t.isVisible()){
+                g.drawImage(t.sprite, t.getCenterX() - 27, t.getCenterY() - 27);
+            }
         }
     }
 
@@ -457,7 +474,6 @@ public class GameScreen extends Screen {
         g.drawARGB(155, 0, 0, 0);
         g.drawString("Start in...", 240, 400, paint);
         g.drawString("" + (countDown / 60 + 1), 240, 550, paint);
-
     }
 
     private void drawRunningUI() {
@@ -506,7 +522,7 @@ public class GameScreen extends Screen {
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 if (inBounds(event, 0, 0, 480, 800)) {
                     nullify();
-                    game.setScreen(new MainMenuScreen(game));
+                    leaveGame();
                     return;
                 }
             }
@@ -517,7 +533,7 @@ public class GameScreen extends Screen {
         roundCountDown--;
         repositionCharacters();
         if (roundCountDown == 0) {
-            state = GameState.Running;
+            setStateOnlyIfPacman(GameState.Running);
             roundCountDown = 180;
         }
     }
@@ -531,9 +547,9 @@ public class GameScreen extends Screen {
     public void pacmanDeath() {
         pacman.decrementLives();
         if (pacman.getLives() == 0) {
-            state = GameState.GameOver;
+            setStateOnlyIfPacman(GameState.GameOver);
         } else {
-            state = GameState.Round;
+            setStateOnlyIfPacman(GameState.Round);
 
             //Pacman reset
             pacman.setCenterX(PACMAN_START_X);
@@ -572,13 +588,13 @@ public class GameScreen extends Screen {
     @Override
     public void pause() {
         if (state == GameState.Running)
-            state = GameState.Paused;
+            setStateOnlyIfPacman(GameState.Paused);
     }
 
     @Override
     public void resume() {
         if (state == GameState.Paused)
-            state = GameState.Running;
+            setStateOnlyIfPacman(GameState.Running);
     }
 
     @Override
@@ -595,16 +611,21 @@ public class GameScreen extends Screen {
         ((SampleGame) game).leaveGame();
     }
 
-    private void setPelletarray(JSONArray pelletJSONArray) throws JSONException {
-        pelletarray = new ArrayList<>();
+    /*private void setPelletarray(JSONArray pelletJSONArray) throws JSONException {
+        pelletarray.clear();
 
         for(int i = 0; i < pelletJSONArray.length(); ++i){
             JSONObject pelletJSONObject = pelletJSONArray.getJSONObject(i);
             String pelletType = pelletJSONObject.getString(SocketConstants.PELLET_TYPE);
+
             if(PacManConstants.PELLET_TYPE_NORMAL.equals(pelletType)){
-                pelletarray.add(new Pellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
+                Pellet pellet =    new Pellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y));
+                pellet.sprite = Assets.pelletSprite;
+                pelletarray.add(pellet);
             } else if(PacManConstants.PELLET_TYPE_POWER.equals(pelletType)){
-                pelletarray.add(new PowerPellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
+                PowerPellet powerPellet =   new PowerPellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y));
+                powerPellet.sprite = Assets.powerPelletSprite;
+                pelletarray.add(powerPellet);
             }
         }
     }
@@ -617,12 +638,12 @@ public class GameScreen extends Screen {
         }
 
         return jsonArray;
-    }
+    }*/
 
     public void synchroniseGame(JSONObject gameState){
         try {
-            JSONArray pelletJSONArray = gameState.getJSONArray(SocketConstants.PELLET_ARRAY);
-            setPelletarray(pelletJSONArray);
+            /*JSONArray pelletJSONArray = gameState.getJSONArray(SocketConstants.PELLET_ARRAY);
+            setPelletarray(pelletJSONArray);*/
 
             state = GameState.valueOf(gameState.getString(SocketConstants.STATE));
 
@@ -647,4 +668,9 @@ public class GameScreen extends Screen {
         this.tilearray = tilearray;
     }
 
+    public void setStateOnlyIfPacman(GameState gameState) {
+        if (pacman.isLocal()) {
+            state = gameState;
+        }
+    }
 }

@@ -58,7 +58,7 @@ public class MultiModeActivity extends Activity {
     private Button buttonJoinChoice, buttonCreateChoice, createRoomButton, refreshRoomsButton, joinCreateRoomChoiceBackButton, createRoomBackButton, joinRoomBackButton;
 
     private RadioButton roomPasswordOffRadio, roomPasswordOnRadio, roomCustomMapNo, roomCustomMapYes;
-    private EditText roomNameCreation, roomPasswordCreation, roomDistanceMaxCreation;
+    private EditText roomNameCreation, roomPasswordCreation;
 
     private MySocket mySocket;
 
@@ -170,7 +170,6 @@ public class MultiModeActivity extends Activity {
         roomPasswordOnRadio = (RadioButton) findViewById(R.id.roomPasswordOnRadio);
         roomNameCreation = (EditText) findViewById(R.id.roomNameCreation);
         roomPasswordCreation = (EditText) findViewById(R.id.roomPasswordCreation);
-        roomDistanceMaxCreation = (EditText) findViewById(R.id.roomDistanceMaxCreation);
         roomCustomMapNo = (RadioButton) findViewById(R.id.roomCustomMapNo);
         roomCustomMapYes = (RadioButton) findViewById(R.id.roomCustomMapYes);
         createRoomButton = (Button) findViewById(R.id.createRoomButton);
@@ -278,11 +277,9 @@ public class MultiModeActivity extends Activity {
                 } else {
                     Room room;
                     if (roomPasswordOffRadio.isChecked()) {
-                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()));
+                        room = new Room(roomNameCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null);
                     } else {
-                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null,
-                                Integer.valueOf(roomDistanceMaxCreation.getText().toString()), true);
+                        room = new Room(roomNameCreation.getText().toString(), roomPasswordCreation.getText().toString(), getSharedPreferencesUserLogin(), null, null, true);
                     }
 
                     if (roomCustomMapYes.isChecked()) {

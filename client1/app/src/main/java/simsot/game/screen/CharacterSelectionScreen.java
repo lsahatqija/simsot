@@ -2,6 +2,7 @@ package simsot.game.screen;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -182,7 +183,6 @@ public class CharacterSelectionScreen extends Screen {
                         playerSelect = true;
                     }
                 }
-
             }
         }
         timeout--;
@@ -194,6 +194,10 @@ public class CharacterSelectionScreen extends Screen {
         }
         clock = System.currentTimeMillis();
 
+        if(((SampleGame) game).isGameCanStart()) {
+            timeout = 0;
+        }
+
         if (timeout == 0) {
             String characterMode;
             if (isHost) {
@@ -204,23 +208,18 @@ public class CharacterSelectionScreen extends Screen {
 
             if (!pacmanTaken) {
                 pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, characterMode, PacManConstants.PACMAN);
-                mySocket.sendCharacterChoice(PacManConstants.PACMAN, PacManConstants.PACMAN, roomName);
             }
             if (!inkyTaken) {
                 inky = new Inky(PACMAN_START_X, 500, characterMode, PacManConstants.INKY);
-                mySocket.sendCharacterChoice(PacManConstants.INKY, PacManConstants.INKY, roomName);
             }
             if (!pinkyTaken) {
                 pinky = new Pinky(300, 100, characterMode, PacManConstants.PINKY);
-                mySocket.sendCharacterChoice(PacManConstants.PINKY, PacManConstants.PINKY, roomName);
             }
             if (!blinkyTaken) {
                 blinky = new Blinky(300, 500, characterMode, PacManConstants.BLINKY);
-                mySocket.sendCharacterChoice(PacManConstants.BLINKY, PacManConstants.BLINKY, roomName);
             }
             if (!clydeTaken) {
                 clyde = new Clyde(PACMAN_START_X, 100, characterMode, PacManConstants.CLYDE);
-                mySocket.sendCharacterChoice(PacManConstants.CLYDE, PacManConstants.CLYDE, roomName);
             }
 
             if(((SampleGame) game).isMultiMode()){
@@ -228,7 +227,14 @@ public class CharacterSelectionScreen extends Screen {
                     mySocket.sendCharacterTimeoutEnded(roomName);
                 }
 
-                while(!((SampleGame) game).isGameCanStart());
+                while(!((SampleGame) game).isGameCanStart())
+                {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        Log.e("InterruptedException", e.getMessage(), e);
+                    }
+                }
                 ((SampleGame) game).setGameCanStart(false);
             }
 
