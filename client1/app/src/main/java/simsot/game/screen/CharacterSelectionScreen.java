@@ -31,7 +31,7 @@ public class CharacterSelectionScreen extends Screen {
     private static final int PACMAN_START_Y = PacManConstants.PACMAN_START_Y;
 
     Paint paint = new Paint();
-    int timeout = 900;
+    int timeout = 600;
     private long clock = System.currentTimeMillis();
 
     public static Player pacman;
@@ -71,6 +71,9 @@ public class CharacterSelectionScreen extends Screen {
         playerName = ((SampleGame) game).getPlayerName();
         roomName = ((SampleGame) game).getRoomName();
         isHost = ((SampleGame) game).isHost();
+        if(!((SampleGame) game).isMultiMode()) {
+            timeout /= 2;
+        }
     }
 
 
