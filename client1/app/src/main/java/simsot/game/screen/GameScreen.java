@@ -274,7 +274,7 @@ public class GameScreen extends Screen {
                     if(Pacman.class.isInstance(play)){
                         try {
                             JSONObject gameState = new JSONObject();
-                            gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
+                            //gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
                             gameState.put(SocketConstants.STATE, state.toString());
                             mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
                         } catch (JSONException e) {
@@ -595,7 +595,7 @@ public class GameScreen extends Screen {
         ((SampleGame) game).leaveGame();
     }
 
-    private void setPelletarray(JSONArray pelletJSONArray) throws JSONException {
+    /*private void setPelletarray(JSONArray pelletJSONArray) throws JSONException {
         pelletarray.clear();
 
         for(int i = 0; i < pelletJSONArray.length(); ++i){
@@ -622,12 +622,12 @@ public class GameScreen extends Screen {
         }
 
         return jsonArray;
-    }
+    }*/
 
     public void synchroniseGame(JSONObject gameState){
         try {
-            JSONArray pelletJSONArray = gameState.getJSONArray(SocketConstants.PELLET_ARRAY);
-            setPelletarray(pelletJSONArray);
+            /*JSONArray pelletJSONArray = gameState.getJSONArray(SocketConstants.PELLET_ARRAY);
+            setPelletarray(pelletJSONArray);*/
 
             state = GameState.valueOf(gameState.getString(SocketConstants.STATE));
 
