@@ -13,10 +13,10 @@ import java.util.Map;
 import simsot.framework.Image;
 import simsot.framework.Input;
 import simsot.game.Assets;
-import simsot.game.screen.GameScreen;
 import simsot.game.PacManConstants;
 import simsot.game.SampleGame;
 import simsot.game.Tile;
+import simsot.game.screen.GameScreen;
 import simsot.socket.SocketConstants;
 
 public class Player {
@@ -36,7 +36,6 @@ public class Player {
     private int centerY = 100;
     private int speedX = 0;
     private int speedY = 0;
-    private int scrollingSpeed = 0;
     private String forceMove = FORCE_MOVE_NO;
     private String lastButtonPressed = BUTTON_LEFT;
     private boolean isMovingVer = false;
@@ -81,6 +80,8 @@ public class Player {
     public void update(List touchEvents, SampleGame game, GameScreen gameScreen) {
         ArrayList<Tile> tilearray = GameScreen.tilearray;
 
+        this.vulnerable = GameScreen.isPowerMode;
+
         if (centerX > 510) {
             centerX = 0;
         } else if (centerX < 0) {
@@ -93,8 +94,6 @@ public class Player {
             centerY = 630;
         }
 
-        this.vulnerable = GameScreen.isPowerMode;
-
         // Collision
         rect.set(centerX - PacManConstants.HALF_NB_PIXELS_IN_CELL,
                 centerY - PacManConstants.HALF_NB_PIXELS_IN_CELL,
@@ -102,7 +101,7 @@ public class Player {
                 centerY + PacManConstants.HALF_NB_PIXELS_IN_CELL);
 
         //movement
-        if (PacManConstants.LOCAL.equals(mode)) {
+        if (isLocal()) {
             if (FORCE_MOVE_NO.equals(forceMove)) {
                 movementControl(touchEvents);
                 checkTileCollisions(tilearray);
@@ -115,25 +114,7 @@ public class Player {
             } else if (BUTTON_RIGHT.equals(forceMove)) {
                 stopRight();
             }
-            animate();
-        } else if (PacManConstants.REMOTE.equals(mode)) {
-            Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
-            if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
-                try {
-                    JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
-                    centerX = json.getInt(SocketConstants.X);
-                    centerY = json.getInt(SocketConstants.Y);
-
-                    if(Pacman.class.isInstance(this)){
-                        gameScreen.synchroniseGame(json.getJSONObject(SocketConstants.GAME_STATE));
-                    }
-
-                    animate();
-                } catch (JSONException e) {
-                    Log.e("JSONException", e.getMessage(), e);
-                }
-            }
-        } else if (PacManConstants.AI.equals(mode)) {
+        } else if (isAI()) {
             if (FORCE_MOVE_NO.equals(forceMove)) {
                 direction = Math.random();
                 callAI();
@@ -147,8 +128,29 @@ public class Player {
             } else if (BUTTON_RIGHT.equals(forceMove)) {
                 stopRight();
             }
-            animate();
+        } else if (isRemote()) {
+            int oldCenterX = centerX;
+            int oldCenterY = centerY;
+
+            Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
+            if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
+                try {
+                    JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
+                    centerX = json.getInt(SocketConstants.X);
+                    centerY = json.getInt(SocketConstants.Y);
+
+                    if(Pacman.class.isInstance(this)){
+                        gameScreen.synchroniseGame(json.getJSONObject(SocketConstants.GAME_STATE));
+                    }
+
+                    calculateRemoteSpeed(oldCenterX, oldCenterY);
+                } catch (JSONException e) {
+                    Log.e("JSONException", e.getMessage(), e);
+                }
+            }
         }
+
+        animate();
 
         if (walkCounter > 1000) {
             walkCounter = 0;
@@ -158,53 +160,40 @@ public class Player {
 
     public void movementControl(List touchEvents) {
         int len = touchEvents.size();
-        if (FORCE_MOVE_NO.equals(forceMove)) {
-            for (int i = 0; i < len; i++) {
-                Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
-                if (event.type == Input.TouchEvent.TOUCH_DOWN) {
-                    if (inBounds(event, 215, 645, 50, 50)) {
-                        lastButtonPressed = BUTTON_UP;
-                        moveUp();
-                    } else if (inBounds(event, 215, 715, 50, 50)) {
-                        lastButtonPressed = BUTTON_DOWN;
-                        moveDown();
-                    } else if (inBounds(event, 165, 675, 50, 50)) {
-                        lastButtonPressed = BUTTON_LEFT;
-                        moveLeft();
-                    } else if (inBounds(event, 265, 675, 50, 50)) {
-                        lastButtonPressed = BUTTON_RIGHT;
-                        moveRight();
-                    }
-                }
-
-                if (event.type == Input.TouchEvent.TOUCH_UP) {
-                    if (inBounds(event, 215, 645, 50, 50)) {
-                        stopUp();
-                    } else if (inBounds(event, 215, 715, 50, 50)) {
-                        stopDown();
-                    } else if (inBounds(event, 165, 675, 50, 50)) {
-                        stopLeft();
-                    } else if (inBounds(event, 265, 675, 50, 50)) {
-                        stopRight();
-                    }
+        for (int i = 0; i < len; i++) {
+            Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
+            if (event.type == Input.TouchEvent.TOUCH_DOWN) {
+                if (inBounds(event, 215, 645, 50, 50)) {
+                    lastButtonPressed = BUTTON_UP;
+                    moveUp();
+                } else if (inBounds(event, 215, 715, 50, 50)) {
+                    lastButtonPressed = BUTTON_DOWN;
+                    moveDown();
+                } else if (inBounds(event, 165, 675, 50, 50)) {
+                    lastButtonPressed = BUTTON_LEFT;
+                    moveLeft();
+                } else if (inBounds(event, 265, 675, 50, 50)) {
+                    lastButtonPressed = BUTTON_RIGHT;
+                    moveRight();
                 }
             }
-        } else {
-            for (int i = 0; i < len; i++) {
-                Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
-                if (event.type == Input.TouchEvent.TOUCH_DOWN) {
-                    if (inBounds(event, 215, 645, 50, 50)) {
-                        lastButtonPressed = BUTTON_UP;
-                    } else if (inBounds(event, 215, 715, 50, 50)) {
-                        lastButtonPressed = BUTTON_DOWN;
-                    } else if (inBounds(event, 165, 675, 50, 50)) {
-                        lastButtonPressed = BUTTON_LEFT;
-                    } else if (inBounds(event, 265, 675, 50, 50)) {
-                        lastButtonPressed = BUTTON_RIGHT;
-                    }
+
+            if (event.type == Input.TouchEvent.TOUCH_UP) {
+                if (inBounds(event, 215, 645, 50, 50)) {
+                    stopUp();
+                } else if (inBounds(event, 215, 715, 50, 50)) {
+                    stopDown();
+                } else if (inBounds(event, 165, 675, 50, 50)) {
+                    stopLeft();
+                } else if (inBounds(event, 265, 675, 50, 50)) {
+                    stopRight();
                 }
             }
         }
+    }
+
+    private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
+        return event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1;
     }
 
     private void checkTileCollisions(ArrayList<Tile> tilearray) {
@@ -223,13 +212,12 @@ public class Player {
             }
         }
         if (!colliding) {
-            setCenterX(getCenterX() + getSpeedX());
-            setCenterY(getCenterY() + getSpeedY());
+            if (speedX != 0) {
+                setCenterX(getCenterX() + getSpeedX());
+            } else {
+                setCenterY(getCenterY() + getSpeedY());
+            }
         }
-    }
-
-    private boolean inBounds(Input.TouchEvent event, int x, int y, int width, int height) {
-        return event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1;
     }
 
     public void callAI() {
@@ -402,56 +390,18 @@ public class Player {
         }
     }
 
-    public boolean isMovingVer() {
-        return isMovingVer;
-    }
-
-    public void setMovingVer(boolean isMovingVer) {
-        this.isMovingVer = isMovingVer;
-    }
-
-    public boolean isMovingHor() {
-        return isMovingHor;
-    }
-
-    public void setMovingHor(boolean isMovingHor) {
-        this.isMovingHor = isMovingHor;
-    }
-
-    public int getSpeedX() {
-        return speedX;
-    }
-
-    public int getSpeedY() {
-        return speedY;
-    }
-
-    public int getScrollingSpeed() {
-        return this.scrollingSpeed;
-    }
-
-    public void setCenterX(int centerX) {
-        this.centerX = centerX;
-    }
-
-    public void setCenterY(int centerY) {
-        this.centerY = centerY;
-    }
-
-    public void setSpeedX(int speedX) {
-        this.speedX = speedX;
-    }
-
-    public void setSpeedY(int speedY) {
-        this.speedY = speedY;
-    }
-
-    public int getCenterX() {
-        return centerX;
-    }
-
-    public int getCenterY() {
-        return centerY;
+    public void calculateRemoteSpeed(int oldCenterX, int oldCenterY) {
+        speedX = oldCenterX - centerX;
+        speedY = oldCenterY - centerY;
+        if (speedX < 0) {
+            lastButtonPressed = BUTTON_RIGHT;
+        } else if (speedX > 0) {
+            lastButtonPressed = BUTTON_LEFT;
+        } else if (speedY < 0) {
+            lastButtonPressed = BUTTON_DOWN;
+        } else if (speedY > 0) {
+            lastButtonPressed = BUTTON_UP;
+        }
     }
 
     public int getLives() {
@@ -478,12 +428,59 @@ public class Player {
         return PacManConstants.AI.equals(mode);
     }
 
-    public boolean isRemote(){
+    public boolean isRemote() {
         return PacManConstants.REMOTE.equals(mode);
+    }
+
+    public boolean isMovingVer() {
+        return isMovingVer;
+    }
+
+    public void setMovingVer(boolean isMovingVer) {
+        this.isMovingVer = isMovingVer;
+    }
+
+    public boolean isMovingHor() {
+        return isMovingHor;
+    }
+
+    public void setMovingHor(boolean isMovingHor) {
+        this.isMovingHor = isMovingHor;
+    }
+
+    public int getSpeedX() {
+        return speedX;
+    }
+
+    public void setSpeedX(int speedX) {
+        this.speedX = speedX;
+    }
+
+    public int getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(int speedY) {
+        this.speedY = speedY;
+    }
+
+    public int getCenterX() {
+        return centerX;
+    }
+
+    public void setCenterX(int centerX) {
+        this.centerX = centerX;
+    }
+
+    public int getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(int centerY) {
+        this.centerY = centerY;
     }
 
     public void setVulnerable(boolean vulnerable) {
         this.vulnerable = vulnerable;
     }
-
 }
