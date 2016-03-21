@@ -158,35 +158,97 @@ public class Player {
         walkCounter++;
     }
 
+    public int norme(int x, int y, int x_center, int y_center){
+        return (int) Math.sqrt((double) (x-x_center)*(x-x_center)+(y-y_center)*(y-y_center));
+    }
+
+    public double angle(int x, int y, int x_center, int y_center){
+        return Math.atan((double) (y-y_center) / (x-x_center));
+    }
+
     public void movementControl(List touchEvents) {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
             Input.TouchEvent event = (Input.TouchEvent) touchEvents.get(i);
-            if (event.type == Input.TouchEvent.TOUCH_DOWN) {
-                if (inBounds(event, 215, 645, 50, 50)) {
-                    lastButtonPressed = BUTTON_UP;
-                    moveUp();
-                } else if (inBounds(event, 215, 715, 50, 50)) {
-                    lastButtonPressed = BUTTON_DOWN;
-                    moveDown();
-                } else if (inBounds(event, 165, 675, 50, 50)) {
-                    lastButtonPressed = BUTTON_LEFT;
-                    moveLeft();
-                } else if (inBounds(event, 265, 675, 50, 50)) {
-                    lastButtonPressed = BUTTON_RIGHT;
-                    moveRight();
+            if (event.type == Input.TouchEvent.TOUCH_UP) {
+                GameScreen.joystickSelectioned = false;
+                GameScreen.positionJoystickX = GameScreen.offsetJoystickX;
+                GameScreen.positionJoystickY = GameScreen.offsetJoystickY;
+                setSpeedX(0);
+                setSpeedY(0);
+            } else if (event.type == Input.TouchEvent.TOUCH_DOWN) {
+                if (inBounds(event, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY, 200, 200)) {
+                    GameScreen.joystickSelectioned = true;
                 }
             }
 
-            if (event.type == Input.TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 215, 645, 50, 50)) {
-                    stopUp();
-                } else if (inBounds(event, 215, 715, 50, 50)) {
-                    stopDown();
-                } else if (inBounds(event, 165, 675, 50, 50)) {
-                    stopLeft();
-                } else if (inBounds(event, 265, 675, 50, 50)) {
-                    stopRight();
+            if (GameScreen.joystickSelectioned) {
+
+                int posx = event.x;
+                int posy = event.y;
+
+                double angle = angle(posx, posy, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY);
+
+                if (norme(posx, posy, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY) > 50) {
+                    if (posx > GameScreen.positionJoystickX) {
+                        GameScreen.positionJoystickX = (int) (Math.cos(angle) * 50) + GameScreen.offsetJoystickX;
+                        GameScreen.positionJoystickY = (int) (Math.sin(angle) * 50) + GameScreen.offsetJoystickY;
+                    } else {
+                        GameScreen.positionJoystickX = -(int) (Math.cos(angle) * 50) + GameScreen.offsetJoystickX;
+                        GameScreen.positionJoystickY = -(int) (Math.sin(angle) * 50) + GameScreen.offsetJoystickY;
+                    }
+                } else {
+                    GameScreen.positionJoystickX = posx;
+                    GameScreen.positionJoystickY = posy;
+                }
+
+                int speed = (MOVESPEED * norme(GameScreen.positionJoystickX, GameScreen.positionJoystickY, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY))/50;
+                speedX=0;
+                speedY=0;
+
+
+                if (angle>Math.PI/8){
+                    setMovingVer(true);
+                    if(GameScreen.positionJoystickX>GameScreen.offsetJoystickX) {
+                        setSpeedY(speed);
+                        lastButtonPressed = BUTTON_RIGHT;
+                    }
+                    else{
+                        setSpeedY(-speed);
+                        lastButtonPressed = BUTTON_LEFT;
+                    }
+                }
+                else if (angle<-Math.PI/8){
+                    setMovingVer(true);
+                    if(GameScreen.positionJoystickX>GameScreen.offsetJoystickX) {
+                        setSpeedY(-speed);
+                        lastButtonPressed = BUTTON_LEFT;
+                    }
+                    else{
+                        setSpeedY(speed);
+                        lastButtonPressed = BUTTON_RIGHT;
+                    }
+                }
+                else{
+                    setSpeedY(0);
+                    setMovingVer(false);
+                }
+
+
+                if (angle<3*Math.PI/8&&angle>-3*Math.PI/8){
+                    setMovingHor(true);
+                    if(GameScreen.positionJoystickX>GameScreen.offsetJoystickX) {
+                        setSpeedX(speed);
+                        lastButtonPressed = BUTTON_UP;
+                    }
+                    else {
+                        setSpeedX(-speed);
+                        lastButtonPressed = BUTTON_DOWN;
+                    }
+                }
+                else{
+                    setSpeedX(0);
+                    setMovingHor(false);
                 }
             }
         }
@@ -204,7 +266,7 @@ public class Player {
                     t.checkRightCollision(this);
                 } else if (speedX < 0) {
                     t.checkLeftCollision(this);
-                } else if (speedY > 0) {
+                } if (speedY > 0) {
                     t.checkDownCollision(this);
                 } else if (speedY < 0) {
                     t.checkUpCollision(this);

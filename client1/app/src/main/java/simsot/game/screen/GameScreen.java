@@ -71,6 +71,13 @@ public class GameScreen extends Screen {
 
     private long clock = System.currentTimeMillis();
 
+    public static final int offsetJoystickX = 200;
+    public static final int offsetJoystickY = 650;
+    public static int positionJoystickX = offsetJoystickX;
+    public static int positionJoystickY = offsetJoystickY;
+    public static boolean joystickSelectioned = false;
+    public static final int maxDistanceJoystick = 50;
+
     public GameScreen(Game game) {
         super(game);
 
@@ -478,10 +485,8 @@ public class GameScreen extends Screen {
 
     private void drawRunningUI() {
         Graphics g = game.getGraphics();
-        g.drawImage(Assets.buttonUp, 215, 645);        //up
-        g.drawImage(Assets.buttonDown, 215, 715);    //down
-        g.drawImage(Assets.buttonLeft, 165, 675);        //left
-        g.drawImage(Assets.buttonRight, 265, 675);    //right
+        g.drawImage(Assets.joypad, offsetJoystickX, offsetJoystickY);
+        g.drawImage(Assets.joystick, positionJoystickX, positionJoystickY);
         g.drawImage(Assets.buttonPause, 0, 0);    //pause
 
         g.drawString("" + score, 50, 700, paint);
