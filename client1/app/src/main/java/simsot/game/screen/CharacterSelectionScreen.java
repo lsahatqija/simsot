@@ -2,6 +2,7 @@ package simsot.game.screen;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -182,7 +183,6 @@ public class CharacterSelectionScreen extends Screen {
                         playerSelect = true;
                     }
                 }
-
             }
         }
         timeout--;
@@ -227,7 +227,14 @@ public class CharacterSelectionScreen extends Screen {
                     mySocket.sendCharacterTimeoutEnded(roomName);
                 }
 
-                while(!((SampleGame) game).isGameCanStart());
+                while(!((SampleGame) game).isGameCanStart())
+                {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        Log.e("InterruptedException", e.getMessage(), e);
+                    }
+                }
                 ((SampleGame) game).setGameCanStart(false);
             }
 
