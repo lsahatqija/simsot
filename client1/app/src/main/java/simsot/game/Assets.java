@@ -16,6 +16,7 @@ public class Assets {
     public static Image clydeLeft1, clydeLeft2, clydeRight1, clydeRight2;
     public static Image playerSelectionLocal, playerSelectionRemote;
     public static Image powerModeGhost;
+    public static Image joypad, joystick;
 
     public static Image pacmanSelection, inkySelection, pinkySelection, blinkySelection, clydeSelection;
 
