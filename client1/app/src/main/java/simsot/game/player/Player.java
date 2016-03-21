@@ -1,6 +1,7 @@
 package simsot.game.player;
 
 import android.graphics.Rect;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,7 +78,7 @@ public class Player {
         currentSprite = characterLeft1;
     }
 
-    public void update(List touchEvents, SampleGame game) {
+    public void update(List touchEvents, SampleGame game, GameScreen gameScreen) {
         ArrayList<Tile> tilearray = GameScreen.tilearray;
 
         if (centerX > 510) {
@@ -122,9 +123,14 @@ public class Player {
                     JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
                     centerX = json.getInt(SocketConstants.X);
                     centerY = json.getInt(SocketConstants.Y);
+
+                    if(Pacman.class.isInstance(this)){
+                        gameScreen.synchroniseGame(json.getJSONObject(SocketConstants.GAME_STATE));
+                    }
+
                     animate();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e("JSONException", e.getMessage(), e);
                 }
             }
         } else if (PacManConstants.AI.equals(mode)) {

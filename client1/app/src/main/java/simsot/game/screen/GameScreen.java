@@ -255,7 +255,7 @@ public class GameScreen extends Screen {
 
         for (int i = 0; i < playerarray.size(); i++) {
             Player play = playerarray.get(i);
-            play.update(touchEvents, (SampleGame) game);
+            play.update(touchEvents, (SampleGame) game, this);
         }
 
         checkPlayerCollision();
@@ -618,6 +618,10 @@ public class GameScreen extends Screen {
         }
 
         return jsonArray;
+    }
+
+    public void synchroniseGame(JSONObject gameState){
+        //TODO to complete
     }
 
     public static Background getBg1() {
