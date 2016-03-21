@@ -56,8 +56,6 @@ public final class SocketConstants {
     public static final String PELLET_CENTER_X = "pellet_center_x";
     public static final String PELLET_CENTER_Y = "pellet_center_y";
     public static final String PELLET_TYPE = "pellet_type";
-    public static final String MAX_SCORE = "max_score";
-    public static final String SCORE = "score";
 
 
     public enum SocketRequestType {

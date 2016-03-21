@@ -275,8 +275,6 @@ public class GameScreen extends Screen {
                         try {
                             JSONObject gameState = new JSONObject();
                             gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
-                            gameState.put(SocketConstants.MAX_SCORE, maxScore);
-                            gameState.put(SocketConstants.SCORE, score);
                             mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
                         } catch (JSONException e) {
                             Log.e("JSONException", e.getMessage(), e);
@@ -621,7 +619,13 @@ public class GameScreen extends Screen {
     }
 
     public void synchroniseGame(JSONObject gameState){
-        //TODO to complete
+        try {
+            JSONArray pelletJSONArray = gameState.getJSONArray(SocketConstants.PELLET_ARRAY);
+            setPelletarray(pelletJSONArray);
+
+        } catch (JSONException e) {
+            Log.e("JSONException", e.getMessage(), e);
+        }
     }
 
     public static Background getBg1() {
