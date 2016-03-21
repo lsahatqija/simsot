@@ -349,15 +349,36 @@ public class GameScreen extends Screen {
         for (int i = 0; i < pelletarray.size(); i++) {
             Item p = (Item) pelletarray.get(i);
             p.update();
-            if (p.touched) {
+            if (p.touched && p.isVisible()) {
                 if (PowerPellet.class.isInstance(p)) {
                     isPowerMode = true;
                     PowerModeTimer = 300;
                 }
-                pelletarray.remove(i);
+              //  pelletarray.remove(i);
+                p.setIsVisible(false);
                 score++;
+
+                if(((SampleGame) game).isMultiMode() && (pacman.isLocal() || pacman.isAI())){
+                    mySocket.sendPelletTaken(roomName, i);
+                }
             }
         }
+
+        if(pacman.isRemote() && !((SampleGame) game).getPelletTakenList().isEmpty()){
+            int pelletIndex = ((SampleGame) game).getPelletTakenList().get(0);
+            Item p = (Item) pelletarray.get(pelletIndex);
+            if(p.isVisible()){
+                if (PowerPellet.class.isInstance(p)) {
+                    isPowerMode = true;
+                    PowerModeTimer = 300;
+                }
+                p.setIsVisible(false);
+                score++;
+            }
+
+            ((SampleGame) game).getPelletTakenList().remove(0);
+        }
+
         if (PowerModeTimer > 0) {
             PowerModeTimer--;
         }
@@ -418,7 +439,9 @@ public class GameScreen extends Screen {
     private void paintItems(Graphics g) {
         for (int i = 0; i < pelletarray.size(); i++) {
             Item t = (Item) pelletarray.get(i);
-            g.drawImage(t.sprite, t.getCenterX() - 27, t.getCenterY() - 27);
+            if(t.isVisible()){
+                g.drawImage(t.sprite, t.getCenterX() - 27, t.getCenterY() - 27);
+            }
         }
     }
 

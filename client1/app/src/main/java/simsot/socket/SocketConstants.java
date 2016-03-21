@@ -24,6 +24,7 @@ public final class SocketConstants {
     public static final String CHARACTER_TIMEOUT_ENDED = "character_timeout_ended";
     public static final String LEAVE_SOLO_ROOM = "leave_solo_room";
     public static final String LEAVE_MULTI_ROOM = "leave_multi_room";
+    public static final String PELLET_TAKEN = "pellet_taken";
 
     public static final String CONNECTION_RESPONSE = "response_connect";
     public static final String REGISTRATION_RESPONSE = "response_subscribe";
@@ -37,6 +38,7 @@ public final class SocketConstants {
     public static final String CHARACTER_TIMEOUT_ENDED_RESPONSE = "character_timeout_ended_response";
     public static final String IS_PASSWORD = "is_password";
     public static final String ROOM_PASSWORD = "room_password";
+    public static final String PELLET_TAKEN_RESPONSE = "pellet_taken_response";
 
 
     public static final String ERROR_CODE = "error_code";
@@ -57,6 +59,7 @@ public final class SocketConstants {
     public static final String PELLET_CENTER_Y = "pellet_center_y";
     public static final String PELLET_TYPE = "pellet_type";
     public static final String STATE = "state";
+    public static final String PELLET_INDEX  = "pellet_index";
 
 
     public enum SocketRequestType {

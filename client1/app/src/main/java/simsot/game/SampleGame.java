@@ -40,6 +40,8 @@ public class SampleGame extends AndroidGame {
 
     private volatile Map<String, JSONObject> receivedCharacterPositionJSONMap;
 
+    private volatile List<Integer> pelletTakenList;
+
     private volatile boolean gameCanStart;
 
     private MySocket mySocket;
@@ -60,6 +62,8 @@ public class SampleGame extends AndroidGame {
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
 
         receivedCharacterPositionJSONMap = new HashMap<String, JSONObject>();
+
+        pelletTakenList = new ArrayList<Integer>();
 
         gameCanStart = false;
 
@@ -112,6 +116,23 @@ public class SampleGame extends AndroidGame {
                     }
                 } else {
                     Log.e("SocketError", SocketConstants.CHARACTER_TIMEOUT_ENDED_RESPONSE + " args[0]  not instanceof JSONObject");
+                }
+            }
+        });
+
+        mySocket.on(SocketConstants.PELLET_TAKEN_RESPONSE, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                if (args[0] instanceof JSONObject) {
+                    try {
+                        int pelletIndex = ((JSONObject) args[0]).getInt(SocketConstants.PELLET_INDEX);
+
+                        pelletTakenList.add(pelletIndex);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.e("SocketError", SocketConstants.PELLET_TAKEN_RESPONSE + " args[0]  not instanceof JSONObject");
                 }
             }
         });
@@ -200,6 +221,10 @@ public class SampleGame extends AndroidGame {
 
     public Map<String, JSONObject> getReceivedCharacterPositionJSONMap() {
         return receivedCharacterPositionJSONMap;
+    }
+
+    public List<Integer> getPelletTakenList() {
+        return pelletTakenList;
     }
 
     public boolean isGameCanStart() {

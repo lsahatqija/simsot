@@ -211,6 +211,17 @@ public final class MySocket {
         }
     }
 
+    public void sendPelletTaken(String roomName, int index){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(SocketConstants.ROOM_NAME, roomName);
+            json.put(SocketConstants.PELLET_INDEX, index);
+            mSocket.emit(SocketConstants.PELLET_TAKEN, json);
+        } catch (JSONException e) {
+            Log.e("JSONException", e.getMessage(), e);
+        }
+    }
+
     /***
      * CONNECT
      ***/

@@ -478,6 +478,10 @@ public class Player {
         return PacManConstants.AI.equals(mode);
     }
 
+    public boolean isRemote(){
+        return PacManConstants.REMOTE.equals(mode);
+    }
+
     public void setVulnerable(boolean vulnerable) {
         this.vulnerable = vulnerable;
     }
