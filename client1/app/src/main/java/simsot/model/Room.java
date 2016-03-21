@@ -16,28 +16,26 @@ public class Room implements Serializable {
     int empty_slot = 0;
     Double latitude;
     Double longitude;
-    int distanceMin;
     boolean isPassword;
     String map;
 
     public Room(String roomName, String host, int empty_slot, boolean isPassword, String map) {
-        this(roomName, "", host, null, null, 100, isPassword);
+        this(roomName, "", host, null, null, isPassword);
         this.empty_slot = empty_slot;
         this.isPassword = isPassword;
         this.map = map;
     }
 
-    public Room(String roomName, String host, Double latitude, Double longitude, int distanceMin) {
-        this(roomName, "", host, latitude, longitude, distanceMin, false);
+    public Room(String roomName, String host, Double latitude, Double longitude) {
+        this(roomName, "", host, latitude, longitude, false);
     }
 
-    public Room(String roomName, String roomPassword, String host, Double latitude, Double longitude, int distanceMin, boolean isPassword) {
+    public Room(String roomName, String roomPassword, String host, Double latitude, Double longitude, boolean isPassword) {
         this.roomName = roomName;
         this.roomPassword = roomPassword;
         this.host = host;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.distanceMin = distanceMin;
         this.isPassword = isPassword;
     }
 
@@ -56,7 +54,6 @@ public class Room implements Serializable {
         json.put(SocketConstants.HOST, host);
         json.put(SocketConstants.LATITUDE, latitude);
         json.put(SocketConstants.LONGITUDE, longitude);
-        json.put("distance_min", distanceMin);
 
         return json;
     }
