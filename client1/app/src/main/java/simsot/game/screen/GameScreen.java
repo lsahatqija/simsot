@@ -1,17 +1,16 @@
 package simsot.game.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import simsot.framework.Game;
 import simsot.framework.Graphics;
@@ -141,7 +140,6 @@ public class GameScreen extends Screen {
         Graphics g = game.getGraphics();
         g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
         paintTiles(g);
-
     }
 
     private void repositionCharacters() {
@@ -226,16 +224,14 @@ public class GameScreen extends Screen {
     }
 
     private void updateReady(List touchEvents) {
-
         if (countDown > 0) {
             countDown--;
         } else {
-            state = GameState.Running;
+            setStateOnlyIfPacman(GameState.Running);
         }
     }
 
     private void updateRunning(List touchEvents, float deltaTime) {
-
         // Sleep
         try {
             Thread.sleep(Math.abs(17 - System.currentTimeMillis() + clock));
@@ -354,7 +350,6 @@ public class GameScreen extends Screen {
                     isPowerMode = true;
                     PowerModeTimer = 300;
                 }
-              //  pelletarray.remove(i);
                 p.setIsVisible(false);
                 score++;
 
@@ -378,7 +373,6 @@ public class GameScreen extends Screen {
 
             ((SampleGame) game).getPelletTakenList().remove(0);
         }
-
         if (PowerModeTimer > 0) {
             PowerModeTimer--;
         }
@@ -387,7 +381,7 @@ public class GameScreen extends Screen {
         }
 
         if (score == maxScore) {
-            state = GameState.Win;
+            setStateOnlyIfPacman(GameState.Win);
         }
     }
 
@@ -480,7 +474,6 @@ public class GameScreen extends Screen {
         g.drawARGB(155, 0, 0, 0);
         g.drawString("Start in...", 240, 400, paint);
         g.drawString("" + (countDown / 60 + 1), 240, 550, paint);
-
     }
 
     private void drawRunningUI() {
@@ -540,7 +533,7 @@ public class GameScreen extends Screen {
         roundCountDown--;
         repositionCharacters();
         if (roundCountDown == 0) {
-            state = GameState.Running;
+            setStateOnlyIfPacman(GameState.Running);
             roundCountDown = 180;
         }
     }
@@ -554,9 +547,9 @@ public class GameScreen extends Screen {
     public void pacmanDeath() {
         pacman.decrementLives();
         if (pacman.getLives() == 0) {
-            state = GameState.GameOver;
+            setStateOnlyIfPacman(GameState.GameOver);
         } else {
-            state = GameState.Round;
+            setStateOnlyIfPacman(GameState.Round);
 
             //Pacman reset
             pacman.setCenterX(PACMAN_START_X);
@@ -595,13 +588,13 @@ public class GameScreen extends Screen {
     @Override
     public void pause() {
         if (state == GameState.Running)
-            state = GameState.Paused;
+            setStateOnlyIfPacman(GameState.Paused);
     }
 
     @Override
     public void resume() {
         if (state == GameState.Paused)
-            state = GameState.Running;
+            setStateOnlyIfPacman(GameState.Running);
     }
 
     @Override
@@ -675,4 +668,9 @@ public class GameScreen extends Screen {
         this.tilearray = tilearray;
     }
 
+    public void setStateOnlyIfPacman(GameState gameState) {
+        if (pacman.isLocal()) {
+            state = gameState;
+        }
+    }
 }
