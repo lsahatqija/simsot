@@ -70,6 +70,9 @@ public class LoadingScreen extends Screen {
         Assets.pelletSprite = g.newImage("pellet.png", ImageFormat.RGB565);
         Assets.powerPelletSprite = g.newImage("powerpellet.png", ImageFormat.RGB565);
 
+        Assets.joypad = g.newImage("joypad.png", ImageFormat.RGB565);
+        Assets.joystick = g.newImage("joystick.png", ImageFormat.RGB565);
+
         //This is how you would load a sound if you had one.
         //Assets.click = game.getAudio().createSound("explode.ogg");
      
