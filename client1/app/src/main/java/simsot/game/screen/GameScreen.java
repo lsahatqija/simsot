@@ -327,7 +327,7 @@ public class GameScreen extends Screen {
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 if (inBounds(event, 0, 0, 480, 800)) {
                     nullify();
-                    game.setScreen(new MainMenuScreen(game));
+                    leaveGame();
                     return;
                 }
             }
@@ -522,7 +522,7 @@ public class GameScreen extends Screen {
             if (event.type == TouchEvent.TOUCH_DOWN) {
                 if (inBounds(event, 0, 0, 480, 800)) {
                     nullify();
-                    game.setScreen(new MainMenuScreen(game));
+                    leaveGame();
                     return;
                 }
             }
