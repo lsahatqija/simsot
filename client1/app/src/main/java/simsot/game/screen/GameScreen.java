@@ -596,7 +596,7 @@ public class GameScreen extends Screen {
     }
 
     private void setPelletarray(JSONArray pelletJSONArray) throws JSONException {
-        pelletarray = new ArrayList<>();
+        pelletarray.clear();
 
         for(int i = 0; i < pelletJSONArray.length(); ++i){
             JSONObject pelletJSONObject = pelletJSONArray.getJSONObject(i);
