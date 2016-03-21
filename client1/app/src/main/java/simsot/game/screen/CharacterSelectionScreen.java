@@ -204,23 +204,33 @@ public class CharacterSelectionScreen extends Screen {
 
             if (!pacmanTaken) {
                 pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, characterMode, PacManConstants.PACMAN);
-                mySocket.sendCharacterChoice(PacManConstants.PACMAN, PacManConstants.PACMAN, roomName);
+                if (isHost) {
+                    mySocket.sendCharacterChoice(PacManConstants.PACMAN, PacManConstants.PACMAN, roomName);
+                }
             }
             if (!inkyTaken) {
                 inky = new Inky(PACMAN_START_X, 500, characterMode, PacManConstants.INKY);
-                mySocket.sendCharacterChoice(PacManConstants.INKY, PacManConstants.INKY, roomName);
+                if (isHost) {
+                    mySocket.sendCharacterChoice(PacManConstants.INKY, PacManConstants.INKY, roomName);
+                }
             }
             if (!pinkyTaken) {
                 pinky = new Pinky(300, 100, characterMode, PacManConstants.PINKY);
-                mySocket.sendCharacterChoice(PacManConstants.PINKY, PacManConstants.PINKY, roomName);
+                if (isHost) {
+                    mySocket.sendCharacterChoice(PacManConstants.PINKY, PacManConstants.PINKY, roomName);
+                }
             }
             if (!blinkyTaken) {
                 blinky = new Blinky(300, 500, characterMode, PacManConstants.BLINKY);
-                mySocket.sendCharacterChoice(PacManConstants.BLINKY, PacManConstants.BLINKY, roomName);
+                if (isHost) {
+                    mySocket.sendCharacterChoice(PacManConstants.BLINKY, PacManConstants.BLINKY, roomName);
+                }
             }
             if (!clydeTaken) {
                 clyde = new Clyde(PACMAN_START_X, 100, characterMode, PacManConstants.CLYDE);
-                mySocket.sendCharacterChoice(PacManConstants.CLYDE, PacManConstants.CLYDE, roomName);
+                if (isHost) {
+                    mySocket.sendCharacterChoice(PacManConstants.CLYDE, PacManConstants.CLYDE, roomName);
+                }
             }
 
             if(((SampleGame) game).isMultiMode()){
