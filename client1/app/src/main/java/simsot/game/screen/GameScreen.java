@@ -601,10 +601,15 @@ public class GameScreen extends Screen {
         for(int i = 0; i < pelletJSONArray.length(); ++i){
             JSONObject pelletJSONObject = pelletJSONArray.getJSONObject(i);
             String pelletType = pelletJSONObject.getString(SocketConstants.PELLET_TYPE);
+
             if(PacManConstants.PELLET_TYPE_NORMAL.equals(pelletType)){
-                pelletarray.add(new Pellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
+                Pellet pellet =    new Pellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y));
+                pellet.sprite = Assets.pelletSprite;
+                pelletarray.add(pellet);
             } else if(PacManConstants.PELLET_TYPE_POWER.equals(pelletType)){
-                pelletarray.add(new PowerPellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y)));
+                PowerPellet powerPellet =   new PowerPellet(pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_X), pelletJSONObject.getInt(SocketConstants.PELLET_CENTER_Y));
+                powerPellet.sprite = Assets.powerPelletSprite;
+                pelletarray.add(powerPellet);
             }
         }
     }
