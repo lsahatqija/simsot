@@ -48,7 +48,7 @@ public class ConnectionActivity extends Activity {
     private int difficulty = 0;
 
     private Button registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
-    private Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
+    private Button buttonSolo, buttonMulti, buttonSettings;
     private EditText userPseudoConnection, userPasswordConnection, userPseudoRegistration, userPasswordRegistration, userPassword2Registration;
     private TextView welcomeText;
     private LinearLayout layoutConnection, layoutRegistration, layoutMenu;
@@ -157,7 +157,6 @@ public class ConnectionActivity extends Activity {
         buttonSolo = (Button) findViewById(R.id.buttonSolo);
         buttonMulti = (Button) findViewById(R.id.buttonMulti);
         buttonSettings = (Button) findViewById(R.id.buttonSettings);
-        buttonHow = (Button) findViewById(R.id.buttonHow);
         disconnectButton = (Button) findViewById(R.id.disconnectButton);
     }
 
@@ -279,13 +278,6 @@ public class ConnectionActivity extends Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(ConnectionActivity.this, SettingsActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        buttonHow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Not implemented yet !");
             }
         });
 
