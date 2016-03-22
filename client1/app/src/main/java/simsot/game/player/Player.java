@@ -189,20 +189,20 @@ public class Player {
 
                 double angle = angle(posx, posy, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY);
 
-                if (norme(posx, posy, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY) > 50) {
+                if (norme(posx, posy, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY) > GameScreen.maxDistanceJoystick) {
                     if (posx > GameScreen.positionJoystickX) {
-                        GameScreen.positionJoystickX = (int) (Math.cos(angle) * 50) + GameScreen.offsetJoystickX;
-                        GameScreen.positionJoystickY = (int) (Math.sin(angle) * 50) + GameScreen.offsetJoystickY;
+                        GameScreen.positionJoystickX = (int) (Math.cos(angle) * GameScreen.maxDistanceJoystick) + GameScreen.offsetJoystickX;
+                        GameScreen.positionJoystickY = (int) (Math.sin(angle) * GameScreen.maxDistanceJoystick) + GameScreen.offsetJoystickY;
                     } else {
-                        GameScreen.positionJoystickX = -(int) (Math.cos(angle) * 50) + GameScreen.offsetJoystickX;
-                        GameScreen.positionJoystickY = -(int) (Math.sin(angle) * 50) + GameScreen.offsetJoystickY;
+                        GameScreen.positionJoystickX = -(int) (Math.cos(angle) * GameScreen.maxDistanceJoystick) + GameScreen.offsetJoystickX;
+                        GameScreen.positionJoystickY = -(int) (Math.sin(angle) * GameScreen.maxDistanceJoystick) + GameScreen.offsetJoystickY;
                     }
                 } else {
                     GameScreen.positionJoystickX = posx;
                     GameScreen.positionJoystickY = posy;
                 }
 
-                int speed = (MOVESPEED * norme(GameScreen.positionJoystickX, GameScreen.positionJoystickY, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY))/50;
+                int speed = (MOVESPEED * norme(GameScreen.positionJoystickX, GameScreen.positionJoystickY, GameScreen.offsetJoystickX, GameScreen.offsetJoystickY))/GameScreen.maxDistanceJoystick;
                 speedX=0;
                 speedY=0;
 

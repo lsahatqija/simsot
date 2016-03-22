@@ -71,12 +71,12 @@ public class GameScreen extends Screen {
 
     private long clock = System.currentTimeMillis();
 
-    public static final int offsetJoystickX = 200;
-    public static final int offsetJoystickY = 650;
+    public static final int offsetJoystickX = 180;
+    public static final int offsetJoystickY = 620;
     public static int positionJoystickX = offsetJoystickX;
     public static int positionJoystickY = offsetJoystickY;
     public static boolean joystickSelectioned = false;
-    public static final int maxDistanceJoystick = 50;
+    public static final int maxDistanceJoystick = 75;
 
     public GameScreen(Game game) {
         super(game);
