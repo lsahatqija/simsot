@@ -13,6 +13,7 @@ public final class PacManConstants {
     public static final String LOCAL = "local";
     public static final String REMOTE = "remote";
 
+    public static final int MOVESPEED_DEFAULT = 4;
     public static final int PACMAN_START_X = 105;
     public static final int PACMAN_START_Y = 195;
 

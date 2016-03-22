@@ -21,9 +21,9 @@ import simsot.socket.SocketConstants;
 
 public class Player {
 
-    final int MOVESPEED = 4;
+    final int PACMAN_MOVESPEED = 4;
 
-    private final int WALK_COUNTER_LOOP = PacManConstants.NB_PIXELS_IN_CELL / MOVESPEED;
+    private final int WALK_COUNTER_LOOP = PacManConstants.NB_PIXELS_IN_CELL / PACMAN_MOVESPEED;
     private final int HALF_WALK_COUNTER_LOOP = WALK_COUNTER_LOOP / 2;
 
     protected final static String BUTTON_UP = "up";
@@ -36,6 +36,7 @@ public class Player {
     private int centerY = 100;
     private int speedX = 0;
     private int speedY = 0;
+    private int movespeed = 4;
     private String forceMove = FORCE_MOVE_NO;
     private String lastButtonPressed = BUTTON_LEFT;
     private boolean isMovingVer = false;
@@ -59,10 +60,15 @@ public class Player {
     protected int lives;
 
     public Player(int x, int y, String mode, String playerName) {
+        this(x, y, mode, playerName, PacManConstants.MOVESPEED_DEFAULT);
+    }
+
+    public Player(int x, int y, String mode, String playerName, int movespeed) {
         this.centerX = x;
         this.centerY = y;
         this.mode = mode;
         this.playerName = playerName;
+        this.movespeed = movespeed;
         lives = 1;
         characterLeft1 = Assets.characterLeft1;
         characterLeft2 = Assets.characterLeft2;
@@ -238,28 +244,28 @@ public class Player {
 
     public void moveRight() {
         if (!isColliding) {
-            speedX = MOVESPEED;
+            speedX = movespeed;
             setMovingHor(true);
         }
     }
 
     public void moveLeft() {
         if (!isColliding) {
-            speedX = -MOVESPEED;
+            speedX = -movespeed;
             setMovingHor(true);
         }
     }
 
     public void moveUp() {
         if (!isColliding) {
-            speedY = -MOVESPEED;
+            speedY = -movespeed;
             setMovingVer(true);
         }
     }
 
     public void moveDown() {
         if (!isColliding) {
-            speedY = MOVESPEED;
+            speedY = movespeed;
             setMovingVer(true);
         }
     }
@@ -267,12 +273,12 @@ public class Player {
     public void stopLeft() {
         // Keep going until center of next cell is reached
         int distanceToCenter = (centerX + PacManConstants.HALF_NB_PIXELS_IN_CELL) % PacManConstants.NB_PIXELS_IN_CELL;
-        if (distanceToCenter <= MOVESPEED) {
+        if (distanceToCenter <= movespeed) {
             centerX -= distanceToCenter;
             setMovingHor(false);
             forceMove = FORCE_MOVE_NO;
         } else {
-            centerX -= MOVESPEED;
+            centerX -= movespeed;
             forceMove = BUTTON_LEFT;
         }
         speedX = 0;
@@ -281,12 +287,12 @@ public class Player {
     public void stopRight() {
         // Keep going until center of next cell is reached
         int distanceToCenter = (900 + PacManConstants.HALF_NB_PIXELS_IN_CELL - centerX) % PacManConstants.NB_PIXELS_IN_CELL;
-        if (distanceToCenter <= MOVESPEED) {
+        if (distanceToCenter <= movespeed) {
             centerX += distanceToCenter;
             setMovingHor(false);
             forceMove = FORCE_MOVE_NO;
         } else {
-            centerX += MOVESPEED;
+            centerX += movespeed;
             forceMove = BUTTON_RIGHT;
         }
         speedX = 0;
@@ -295,12 +301,12 @@ public class Player {
     public void stopUp() {
         // Keep going until center of next cell is reached
         int distanceToCenter = (centerY - PacManConstants.HALF_NB_PIXELS_IN_CELL) % PacManConstants.NB_PIXELS_IN_CELL;
-        if (distanceToCenter <= MOVESPEED) {
+        if (distanceToCenter <= movespeed) {
             centerY -= distanceToCenter;
             setMovingVer(false);
             forceMove = FORCE_MOVE_NO;
         } else {
-            centerY -= MOVESPEED;
+            centerY -= movespeed;
             forceMove = BUTTON_UP;
         }
         speedY = 0;
@@ -309,12 +315,12 @@ public class Player {
     public void stopDown() {
         // Keep going until center of next cell is reached
         int distanceToCenter = (900 + PacManConstants.HALF_NB_PIXELS_IN_CELL - centerY) % PacManConstants.NB_PIXELS_IN_CELL;
-        if (distanceToCenter <= MOVESPEED) {
+        if (distanceToCenter <= movespeed) {
             centerY += distanceToCenter;
             setMovingVer(false);
             forceMove = FORCE_MOVE_NO;
         } else {
-            centerY += MOVESPEED;
+            centerY += movespeed;
             forceMove = BUTTON_DOWN;
         }
         speedY = 0;

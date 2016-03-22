@@ -44,6 +44,7 @@ public class CharacterSelectionScreen extends Screen {
     private String playerName;
     private String roomName;
     private boolean isHost;
+    private int ghostMovespeed;
 
     private boolean pacmanTaken;
     private boolean pinkyTaken;
@@ -71,6 +72,7 @@ public class CharacterSelectionScreen extends Screen {
         playerName = ((SampleGame) game).getPlayerName();
         roomName = ((SampleGame) game).getRoomName();
         isHost = ((SampleGame) game).isHost();
+        ghostMovespeed = ((SampleGame) game).getGhostMovespeed();
         if(!((SampleGame) game).isMultiMode()) {
             timeout /= 2;
         }
@@ -213,16 +215,16 @@ public class CharacterSelectionScreen extends Screen {
                 pacman = new Pacman(PACMAN_START_X, PACMAN_START_Y, characterMode, PacManConstants.PACMAN);
             }
             if (!inkyTaken) {
-                inky = new Inky(PACMAN_START_X, 500, characterMode, PacManConstants.INKY);
+                inky = new Inky(PACMAN_START_X, 500, characterMode, PacManConstants.INKY, ghostMovespeed);
             }
             if (!pinkyTaken) {
-                pinky = new Pinky(300, 100, characterMode, PacManConstants.PINKY);
+                pinky = new Pinky(300, 100, characterMode, PacManConstants.PINKY, ghostMovespeed);
             }
             if (!blinkyTaken) {
-                blinky = new Blinky(300, 500, characterMode, PacManConstants.BLINKY);
+                blinky = new Blinky(300, 500, characterMode, PacManConstants.BLINKY, ghostMovespeed);
             }
             if (!clydeTaken) {
-                clyde = new Clyde(PACMAN_START_X, 100, characterMode, PacManConstants.CLYDE);
+                clyde = new Clyde(PACMAN_START_X, 100, characterMode, PacManConstants.CLYDE, ghostMovespeed);
             }
 
             if(((SampleGame) game).isMultiMode()){

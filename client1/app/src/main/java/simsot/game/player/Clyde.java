@@ -13,6 +13,16 @@ public class Clyde extends Player {
         characterRight2 = Assets.clydeRight2;
         vulnerable = false;
         vulnerableMode = Assets.powerModeGhost;
+    }
+
+    public Clyde(int centerX, int centerY, String mode, String playerName, int movespeed){
+        super(centerX, centerY, mode, playerName, movespeed);
+        characterLeft1 = Assets.clydeLeft1;
+        characterLeft2 = Assets.clydeLeft2;
+        characterRight1 = Assets.clydeRight1;
+        characterRight2 = Assets.clydeRight2;
+        vulnerable = false;
+        vulnerableMode = Assets.powerModeGhost;
         //currentSprite = characterLeft1;
     }
 

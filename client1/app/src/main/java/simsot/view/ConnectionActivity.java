@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,10 +40,12 @@ public class ConnectionActivity extends Activity {
     private static final String ACTUAL_LAYOUT = "actualLayout";
 
     private static final String LOGIN_IN_PREFERENCES = "login";
+    private static final String DIFFICULTY_IN_PREFERENCES = "difficulty";
 
     private MySocket mySocket;
 
     private int logoCounter = 0;
+    private int difficulty = 0;
 
     private Button registrationChoiceButton, connectButton, registerButton, disconnectButton, backToConnectionButton;
     private Button buttonSolo, buttonMulti, buttonSettings, buttonHow;
@@ -274,7 +277,8 @@ public class ConnectionActivity extends Activity {
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Not implemented yet !");
+                Intent intent = new Intent(ConnectionActivity.this, SettingsActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -368,6 +372,7 @@ public class ConnectionActivity extends Activity {
                                 intent.putExtra(IntentParameters.ROOM_NAME, roomCreated);
                                 intent.putExtra(IntentParameters.IS_MULTI_MODE, false);
                                 intent.putExtra(IntentParameters.MAP, map);
+                                intent.putExtra(IntentParameters.GHOST_MOVESPEED, getSharedPreferencesDifficulty());
                                 startActivity(intent);
                             }
                         } catch (JSONException e) {
@@ -497,6 +502,11 @@ public class ConnectionActivity extends Activity {
     protected String getSharedPreferencesUserLogin() {
         SharedPreferences settings = getSharedPreferences("preferences", MODE_PRIVATE);
         return settings.getString(LOGIN_IN_PREFERENCES, null);
+    }
+
+    protected int getSharedPreferencesDifficulty() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return Integer.parseInt(preferences.getString(DIFFICULTY_IN_PREFERENCES, "4"));
     }
 
     protected class ProgressTask extends AsyncTask<Void, Void, Void> {

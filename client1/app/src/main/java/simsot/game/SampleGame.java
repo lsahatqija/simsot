@@ -35,6 +35,7 @@ public class SampleGame extends AndroidGame {
     private boolean isHost;
     private String roomName;
     private boolean isMultiMode;
+    private int ghostMovespeed;
 
     private volatile List<JSONObject> receivedCharacterChoiceJSONList;
 
@@ -57,7 +58,8 @@ public class SampleGame extends AndroidGame {
         isHost = intent.getBooleanExtra(IntentParameters.IS_HOST, false);
         roomName = intent.getStringExtra(IntentParameters.ROOM_NAME);
         isMultiMode = intent.getBooleanExtra(IntentParameters.IS_MULTI_MODE, false);
-        customMap = intent.getStringExtra(IntentParameters.MAP);
+        customMap = intent.getStringExtra(IntentParameters.MAP);;
+        ghostMovespeed = intent.getIntExtra(IntentParameters.GHOST_MOVESPEED, 4);
 
         receivedCharacterChoiceJSONList = new ArrayList<JSONObject>();
 
@@ -205,6 +207,10 @@ public class SampleGame extends AndroidGame {
 
     public String getRoomName() {
         return roomName;
+    }
+
+    public int getGhostMovespeed() {
+        return ghostMovespeed;
     }
 
     public boolean isHost() {
