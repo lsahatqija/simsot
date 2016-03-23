@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,19 +86,21 @@ public class SampleGame extends AndroidGame {
         mySocket.on(SocketConstants.CHARACTER_POSITION_RESPONSE, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                if (args[0] instanceof JSONObject) {
-                    try {
-                        String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
-                        String character = ((JSONObject) args[0]).getString(SocketConstants.CHARACTER);
+                if (args[0] instanceof JSONArray) {
+                    for (int i = 0; i < 5; i++) {
+                        try {
+                            String name = ((JSONArray) args[0]).getJSONObject(i).getString(SocketConstants.PLAYER_NAME);
+                            String character = ((JSONArray) args[0]).getJSONObject(i).getString(SocketConstants.CHARACTER);
 
-                        if (!playerName.equals(name)) {
-                            receivedCharacterPositionJSONMap.put(character, (JSONObject) args[0]);
+                            if (!playerName.equals(name)) {
+                                receivedCharacterPositionJSONMap.put(character, ((JSONArray) args[0]).getJSONObject(i));
+                            }
+                        } catch (JSONException e) {
+                            Log.e("JSONException", e.getMessage(), e);
                         }
-                    } catch (JSONException e) {
-                        Log.e("JSONException", e.getMessage(), e);
                     }
                 } else {
-                    Log.e("SocketError", SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONObject");
+                    Log.e("SocketError", SocketConstants.CHARACTER_POSITION_RESPONSE + " args[0]  not instanceof JSONArray");
                 }
             }
         });
