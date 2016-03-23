@@ -136,12 +136,12 @@ public class Player {
             }
         } else if (isRemote()) {
             Map<String, JSONObject> receivedCharacterPositionJSONMap = game.getReceivedCharacterPositionJSONMap();
-            if (receivedCharacterPositionJSONMap.containsKey(playerName)) {
+            if (receivedCharacterPositionJSONMap.containsKey(getCharacter())) {
                 int oldCenterX = centerX;
                 int oldCenterY = centerY;
 
                 try {
-                    JSONObject json = receivedCharacterPositionJSONMap.get(playerName);
+                    JSONObject json = receivedCharacterPositionJSONMap.get(getCharacter());
                     centerX = json.getInt(SocketConstants.X);
                     centerY = json.getInt(SocketConstants.Y);
                 } catch (JSONException e) {
@@ -419,6 +419,22 @@ public class Player {
     }
 
     public String getCharacter() {
+        if (Pacman.class.isInstance(this)) {
+            return PacManConstants.PACMAN;
+        }
+        else if (Blinky.class.isInstance(this)) {
+            return PacManConstants.BLINKY;
+        }
+        else if (Clyde.class.isInstance(this)) {
+            return PacManConstants.CLYDE;
+        }
+        else if (Inky.class.isInstance(this)) {
+            return PacManConstants.INKY;
+        }
+        else if (Pinky.class.isInstance(this)) {
+            return PacManConstants.PINKY;
+        }
+
         return null;
     }
 

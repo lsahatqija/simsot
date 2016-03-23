@@ -88,9 +88,10 @@ public class SampleGame extends AndroidGame {
                 if (args[0] instanceof JSONObject) {
                     try {
                         String name = ((JSONObject) args[0]).getString(SocketConstants.PLAYER_NAME);
+                        String character = ((JSONObject) args[0]).getString(SocketConstants.CHARACTER);
 
                         if (!playerName.equals(name)) {
-                            receivedCharacterPositionJSONMap.put(name, (JSONObject) args[0]);
+                            receivedCharacterPositionJSONMap.put(character, (JSONObject) args[0]);
                         }
                     } catch (JSONException e) {
                         Log.e("JSONException", e.getMessage(), e);
