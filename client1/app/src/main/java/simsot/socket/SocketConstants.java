@@ -40,7 +40,6 @@ public final class SocketConstants {
     public static final String ROOM_PASSWORD = "room_password";
     public static final String PELLET_TAKEN_RESPONSE = "pellet_taken_response";
 
-
     public static final String ERROR_CODE = "error_code";
     public static final String PLAYER_NAME = "player_name";
     public static final String X = "x";
@@ -54,11 +53,10 @@ public final class SocketConstants {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String MAP = "map";
-    public static final String PELLET_ARRAY = "pellet_array";
+    public static final String STATE = "state";
     public static final String PELLET_CENTER_X = "pellet_center_x";
     public static final String PELLET_CENTER_Y = "pellet_center_y";
     public static final String PELLET_TYPE = "pellet_type";
-    public static final String STATE = "state";
     public static final String PELLET_INDEX  = "pellet_index";
 
 

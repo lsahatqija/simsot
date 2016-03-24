@@ -267,18 +267,7 @@ public class GameScreen extends Screen {
             for (int i = 0; i < playerarray.size(); i++) {
                 Player play = playerarray.get(i);
                 if(play.isLocal() || play.isAI()){
-                    if(Pacman.class.isInstance(play)){
-                        try {
-                            JSONObject gameState = new JSONObject();
-                            //gameState.put(SocketConstants.PELLET_ARRAY, convertPelletArrayToJSONArray());
-                            gameState.put(SocketConstants.STATE, state.toString());
-                            mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), gameState);
-                        } catch (JSONException e) {
-                            Log.e("JSONException", e.getMessage(), e);
-                        }
-                    } else{
-                        mySocket.sendPositionUpdate(play.getPlayerName(), play.getCharacter(), roomName, play.getCenterX(), play.getCenterY(), null);
-                    }
+                    mySocket.sendPositionUpdate(roomName, play.getCharacter(), play.getCenterX(), play.getCenterY());
                 }
             }
         }

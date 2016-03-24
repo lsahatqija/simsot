@@ -36,7 +36,7 @@ public class Player {
     private int centerY = 100;
     private int speedX = 0;
     private int speedY = 0;
-    private int movespeed = 4;
+    private int movespeed = PACMAN_MOVESPEED;
     private String forceMove = FORCE_MOVE_NO;
     private String lastButtonPressed = BUTTON_LEFT;
     private boolean isMovingVer = false;
