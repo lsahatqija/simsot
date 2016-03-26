@@ -17,10 +17,8 @@ import simsot.framework.Graphics;
 import simsot.framework.Image;
 import simsot.framework.Input.TouchEvent;
 import simsot.framework.Screen;
-import simsot.game.Animation;
 import simsot.game.Assets;
 import simsot.game.Background;
-import simsot.game.PacManConstants;
 import simsot.game.SampleGame;
 import simsot.game.Tile;
 import simsot.game.item.Item;
@@ -39,10 +37,6 @@ public class GameScreen extends Screen {
     GameState state = GameState.Ready;
 
     // Variable Setup
-
-    private static final int PACMAN_START_X = PacManConstants.PACMAN_START_X;
-    private static final int PACMAN_START_Y = PacManConstants.PACMAN_START_Y;
-
     private int walkCounter = 1;
     private int countDown = 180;
     private int roundCountDown = 180;
@@ -54,7 +48,6 @@ public class GameScreen extends Screen {
     private int PowerModeTimer = 0;
 
     public static Image tileTree, tileGrass, background;
-    private Animation anim;
 
     public static ArrayList<Tile> tilearray = new ArrayList<Tile>();
     public static ArrayList<Pellet> pelletarray = new ArrayList<Pellet>();
@@ -142,20 +135,9 @@ public class GameScreen extends Screen {
         paintTiles(g);
     }
 
-    private void repositionCharacters() {
-        float j = 1;
-        for (int i = 1; i < 6; i++) {
-            j = pelletarray.size() * i / 5;
-            Player e = playerarray.get(i - 1);
-            e.setCenterX(pelletarray.get((int) j - 1).getCenterX());
-            e.setCenterY(pelletarray.get((int) j - 1).getCenterY());
-        }
-    }
-
     private void loadMap() {
         ArrayList lines = new ArrayList();
         int width = 0;
-        int height = 0;
 
         Scanner scanner = new Scanner(((SampleGame) game).getMap());
         while (scanner.hasNextLine()) {
@@ -172,7 +154,7 @@ public class GameScreen extends Screen {
 
             }
         }
-        height = lines.size();
+        int height = lines.size();
 
         for (int j = 0; j < height; j++) {
             String line = (String) lines.get(j);
@@ -200,6 +182,19 @@ public class GameScreen extends Screen {
         }
     }
 
+    private void repositionCharacters() {
+        for (int i = 1; i < 6; i++) {
+            float j = pelletarray.size() * i / 5;
+            Player e = playerarray.get(i - 1);
+            e.setCenterX(pelletarray.get((int) j - 1).getCenterX());
+            e.setCenterY(pelletarray.get((int) j - 1).getCenterY());
+        }
+    }
+
+    private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {
+        return event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1;
+    }
+
     @Override
     public void update(float deltaTime) {
         List touchEvents = game.getInput().getTouchEvents();
@@ -210,9 +205,9 @@ public class GameScreen extends Screen {
         // update methods.
 
         if (state == GameState.Ready)
-            updateReady(touchEvents);
+            updateReady();
         if (state == GameState.Running)
-            updateRunning(touchEvents, deltaTime);
+            updateRunning(touchEvents);
         if (state == GameState.Paused)
             updatePaused(touchEvents);
         if (state == GameState.GameOver)
@@ -223,7 +218,7 @@ public class GameScreen extends Screen {
             updateRound();
     }
 
-    private void updateReady(List touchEvents) {
+    private void updateReady() {
         if (countDown > 0) {
             countDown--;
         } else {
@@ -231,7 +226,7 @@ public class GameScreen extends Screen {
         }
     }
 
-    private void updateRunning(List touchEvents, float deltaTime) {
+    private void updateRunning(List touchEvents) {
         // Sleep
         try {
             Thread.sleep(Math.abs(17 - System.currentTimeMillis() + clock));
@@ -273,24 +268,6 @@ public class GameScreen extends Screen {
         }
     }
 
-    private void checkPlayerCollision() {
-        for (int i = 0; i < playerarray.size(); i++) {
-            Player p = playerarray.get(i);
-            if (!Pacman.class.isInstance(p)) {
-                if (Rect.intersects(p.rect, pacman.rect)) {
-                    if (!isPowerMode)
-                        pacmanDeath();
-                    else
-                        ghostDeath(p);
-                }
-            }
-        }
-    }
-
-    private boolean inBounds(TouchEvent event, int x, int y, int width, int height) {
-        return event.x > x && event.x < x + width - 1 && event.y > y && event.y < y + height - 1;
-    }
-
     private void updatePaused(List touchEvents) {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
@@ -323,16 +300,54 @@ public class GameScreen extends Screen {
         }
     }
 
+    private void updateWin(List touchEvents) {
+        drawPacmanWinUI();
+        int len = touchEvents.size();
+        for (int i = 0; i < len; i++) {
+            TouchEvent event = (TouchEvent) touchEvents.get(i);
+            if (event.type == TouchEvent.TOUCH_DOWN) {
+                if (inBounds(event, 0, 0, 480, 800)) {
+                    nullify();
+                    leaveGame();
+                    return;
+                }
+            }
+        }
+    }
+
+    private void updateRound() {
+        roundCountDown--;
+        repositionCharacters();
+        if (roundCountDown == 0) {
+            state = GameState.Running;
+            roundCountDown = 180;
+        }
+    }
+
+    private void checkPlayerCollision() {
+        for (int i = 0; i < playerarray.size(); i++) {
+            Player p = playerarray.get(i);
+            if (!Pacman.class.isInstance(p)) {
+                if (Rect.intersects(p.rect, pacman.rect)) {
+                    if (!isPowerMode)
+                        pacmanDeath();
+                    else
+                        ghostDeath(p);
+                }
+            }
+        }
+    }
+
     private void updateTiles() {
         for (int i = 0; i < tilearray.size(); i++) {
-            Tile t = (Tile) tilearray.get(i);
+            Tile t = tilearray.get(i);
             t.update();
         }
     }
 
     private void updateItems() {
         for (int i = 0; i < pelletarray.size(); i++) {
-            Item p = (Item) pelletarray.get(i);
+            Item p = pelletarray.get(i);
             p.update();
             if (p.touched && p.isVisible()) {
                 if (PowerPellet.class.isInstance(p)) {
@@ -350,7 +365,7 @@ public class GameScreen extends Screen {
 
         if(pacman.isRemote() && !((SampleGame) game).getPelletTakenList().isEmpty()){
             int pelletIndex = ((SampleGame) game).getPelletTakenList().get(0);
-            Item p = (Item) pelletarray.get(pelletIndex);
+            Item p = pelletarray.get(pelletIndex);
             if(p.isVisible()){
                 if (PowerPellet.class.isInstance(p)) {
                     isPowerMode = true;
@@ -410,7 +425,7 @@ public class GameScreen extends Screen {
 
     private void paintTiles(Graphics g) {
         for (int i = 0; i < tilearray.size(); i++) {
-            Tile t = (Tile) tilearray.get(i);
+            Tile t = tilearray.get(i);
             if (t.getType() != '0') {
                 t.setTileImage(tileTree);
                 //g.drawImage(tileTree, t.getCenterX() - 27, t.getCenterY() - 27);
@@ -421,15 +436,11 @@ public class GameScreen extends Screen {
 
     private void paintItems(Graphics g) {
         for (int i = 0; i < pelletarray.size(); i++) {
-            Item t = (Item) pelletarray.get(i);
+            Item t = pelletarray.get(i);
             if(t.isVisible()){
                 g.drawImage(t.sprite, t.getCenterX() - 27, t.getCenterY() - 27);
             }
         }
-    }
-
-    public void animate() {
-        anim.update(10);
     }
 
     private void nullify() {
@@ -500,31 +511,7 @@ public class GameScreen extends Screen {
     private void drawRestartingUI() {
         Graphics g = game.getGraphics();
         g.drawRect(0, 300, 480, 200, Color.BLACK);
-        g.drawString("Next round in " + (int) (roundCountDown / 60), 220, 400, paint);
-    }
-
-    private void updateWin(List touchEvents) {
-        drawPacmanWinUI();
-        int len = touchEvents.size();
-        for (int i = 0; i < len; i++) {
-            TouchEvent event = (TouchEvent) touchEvents.get(i);
-            if (event.type == TouchEvent.TOUCH_DOWN) {
-                if (inBounds(event, 0, 0, 480, 800)) {
-                    nullify();
-                    leaveGame();
-                    return;
-                }
-            }
-        }
-    }
-
-    private void updateRound() {
-        roundCountDown--;
-        repositionCharacters();
-        if (roundCountDown == 0) {
-            state = GameState.Running;
-            roundCountDown = 180;
-        }
+        g.drawString("Next round in " + (roundCountDown / 60), 220, 400, paint);
     }
 
     private void drawPacmanWinUI() {
@@ -539,37 +526,14 @@ public class GameScreen extends Screen {
             state = GameState.GameOver;
         } else {
             state = GameState.Round;
-
-            //Pacman reset
-            pacman.setCenterX(PACMAN_START_X);
-            pacman.setCenterY(PACMAN_START_Y);
-
-            //Inky reset
-            inky.setCenterX(PACMAN_START_X);
-            inky.setCenterY(500);
-
-            //Pinky reset
-            pinky.setCenterX(300);
-            pinky.setCenterY(100);
-
-            //Blinky reset
-            blinky.setCenterX(300);
-            blinky.setCenterY(500);
-
-            //Clyde reset
-            clyde.setCenterX(50);
-            clyde.setCenterY(100);
-
-            //state = GameState.Running;
-
         }
     }
 
     public void ghostDeath(Player p) {
         int q = (int) (Math.random() * 5);
-        System.out.println((int) (pelletarray.size() * q / 5));
-        p.setCenterX(pelletarray.get((int) (pelletarray.size() * q / 5)).getCenterX());
-        p.setCenterY(pelletarray.get((int) (pelletarray.size() * q / 5)).getCenterY());
+        System.out.println((pelletarray.size() * q / 5));
+        p.setCenterX(pelletarray.get((pelletarray.size() * q / 5)).getCenterX());
+        p.setCenterY(pelletarray.get((pelletarray.size() * q / 5)).getCenterY());
         p.vulnerable = false;
         p.alive = true;
     }
